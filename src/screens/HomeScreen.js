@@ -1,11 +1,16 @@
 import React from 'react';
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { useColorMode, Box, Text} from 'native-base';
 
 const HomeScreen = () => {
     return(
-        <View style={styles.container}>
+        <Box
+            style={styles.container}
+            _dark={{ bg: "#484848"}}
+            _light={{ bg: "#fff"}}
+        >
             <Text>Home</Text>
-        </View>
+        </Box>
     );
 }
 
@@ -14,7 +19,6 @@ export default HomeScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
     },
