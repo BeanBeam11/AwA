@@ -47,7 +47,7 @@ const HomeStackNavigator = () => {
                 headerTitle: '首頁',
                 headerRight: () => (
                     <TouchableOpacity onPress={null}>
-                        <MaterialIcon name="notifications" size={24} color="#484848" />
+                        <MaterialIcon name="notifications" size={24} color={ colorMode == 'dark' ? '#fff' : '#484848' } />
                     </TouchableOpacity>
                 ),
             })}
@@ -169,7 +169,7 @@ const AccountStackNavigator = () => {
                 headerTitle: '個人資訊',
                 headerRight: () => (
                     <TouchableOpacity onPress={()=> navigation.navigate('SettingScreen')}>
-                        <MaterialIcon name="settings" size={24} color="#484848" />
+                        <MaterialIcon name="settings" size={24} color={ colorMode == 'dark' ? '#fff' : '#484848' } />
                     </TouchableOpacity>
                 ),
             })}
