@@ -10,6 +10,7 @@ import SearchScreen from '../screens/SearchScreen';
 import PlannerScreen from '../screens/PlannerScreen';
 import ShareScreen from '../screens/ShareScreen';
 import AccountScreen from '../screens/AccountScreen';
+import SettingScreen from '../screens/SettingScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -148,10 +149,22 @@ const AccountStackNavigator = () => {
                     fontWeight: '500',
                 },
                 headerRight: () => (
-                    <TouchableOpacity onPress={null}>
+                    <TouchableOpacity onPress={()=> navigation.navigate('SettingScreen')}>
                         <MaterialIcon name="settings" size={24} color="#484848" />
                     </TouchableOpacity>
                 ),
+            })}
+        />
+        <Stack.Screen
+            name="SettingScreen"
+            component={SettingScreen}
+            options={({ navigation }) => ({
+                headerTitle: '設定',
+                headerTintColor: '#484848',
+                headerTitleStyle: {
+                    fontWeight: '500',
+                },
+                headerBackTitleVisible: false,
             })}
         />
       </Stack.Navigator>
