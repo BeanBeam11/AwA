@@ -23,15 +23,15 @@ const SettingScreen = () => {
             </Box>
             <TouchableOpacity style={styles.optionBox}>
                 <Text>意見回饋</Text>
-                <MaterialIcon name="arrow-forward-ios" size={18} color="#484848" style={styles.optionIcon(colorMode)}/>
+                <MaterialIcon name="arrow-forward-ios" size={18} style={styles.optionIcon(colorMode)}/>
             </TouchableOpacity>
             <TouchableOpacity style={styles.optionBox}>
                 <Text>服務條款</Text>
-                <MaterialIcon name="arrow-forward-ios" size={18} color="#484848" style={styles.optionIcon(colorMode)}/>
+                <MaterialIcon name="arrow-forward-ios" size={18} style={styles.optionIcon(colorMode)}/>
             </TouchableOpacity>
             <TouchableOpacity style={styles.optionBox}>
                 <Text>隱私聲明</Text>
-                <MaterialIcon name="arrow-forward-ios" size={18} color="#484848" style={styles.optionIcon(colorMode)}/>
+                <MaterialIcon name="arrow-forward-ios" size={18} style={styles.optionIcon(colorMode)}/>
             </TouchableOpacity>
         </Box>
     );

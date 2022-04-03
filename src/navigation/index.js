@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Image, Pressable, View, Text, TouchableOpacity } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -11,6 +11,7 @@ import PlannerScreen from '../screens/PlannerScreen';
 import ShareScreen from '../screens/ShareScreen';
 import AccountScreen from '../screens/AccountScreen';
 import SettingScreen from '../screens/SettingScreen';
+import ProfileEditScreen from '../screens/ProfileEditScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -167,8 +168,41 @@ const AccountStackNavigator = () => {
                 headerBackTitleVisible: false,
             })}
         />
+        <Stack.Screen
+            name="ProfileEditScreen"
+            component={ProfileEditScreen}
+            options={({ navigation }) => ({
+                headerTitle: '編輯個人資訊',
+                headerTintColor: '#484848',
+                headerTitleStyle: {
+                    fontWeight: '500',
+                },
+                // presentation: 'fullScreenModal', //this will hide select
+                animation: 'slide_from_bottom',
+                headerLeft: () => (
+                    <TouchableOpacity onPress={()=> navigation.navigate('AccountScreen')}>
+                        <Text style={{ color: '#969696'}}>取消</Text>
+                    </TouchableOpacity>
+                ),
+                headerRight: () => (
+                    <TouchableOpacity onPress={()=> navigation.navigate('AccountScreen')}>
+                        <Text>完成</Text>
+                    </TouchableOpacity>
+                ),
+            })}
+        />
       </Stack.Navigator>
     );
+}
+
+function getTabBarVisibility(route) {
+    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Account';
+    switch (routeName) {
+        case 'ProfileEditScreen':
+          return { display: 'none' };
+        default:
+          return { display: 'flex' };
+    }
 }
 
 const TabNavigator = () => {
@@ -176,31 +210,31 @@ const TabNavigator = () => {
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
-    
-                if (route.name === 'Home') {
-                    iconName = focused
-                    ? <MaterialIcon name="home" size={24} color="#484848" />
-                    : <MaterialIcon name="home" size={24} color="#C4C4C4" />
-                } else if (route.name === 'Search') {
-                    iconName = focused
-                    ? <MaterialIcon name="search" size={24} color="#484848" />
-                    : <MaterialIcon name="search" size={24} color="#C4C4C4" />
-                } else if (route.name === 'Planner') {
-                    iconName = focused
-                    ? <MaterialIcon name="note" size={24} color="#484848" />
-                    : <MaterialIcon name="note" size={24} color="#C4C4C4" />
-                } else if (route.name === 'Share') {
-                    iconName = focused
-                    ? <MaterialIcon name="group" size={24} color="#484848" />
-                    : <MaterialIcon name="group" size={24} color="#C4C4C4" />
-                } else if (route.name === 'Account') {
-                    iconName = focused
-                    ? <MaterialIcon name="account-circle" size={24} color="#484848" />
-                    : <MaterialIcon name="account-circle" size={24} color="#C4C4C4" />
-                }
+                    let iconName;
+        
+                    if (route.name === 'Home') {
+                        iconName = focused
+                        ? <MaterialIcon name="home" size={24} color="#484848" />
+                        : <MaterialIcon name="home" size={24} color="#C4C4C4" />
+                    } else if (route.name === 'Search') {
+                        iconName = focused
+                        ? <MaterialIcon name="search" size={24} color="#484848" />
+                        : <MaterialIcon name="search" size={24} color="#C4C4C4" />
+                    } else if (route.name === 'Planner') {
+                        iconName = focused
+                        ? <MaterialIcon name="note" size={24} color="#484848" />
+                        : <MaterialIcon name="note" size={24} color="#C4C4C4" />
+                    } else if (route.name === 'Share') {
+                        iconName = focused
+                        ? <MaterialIcon name="group" size={24} color="#484848" />
+                        : <MaterialIcon name="group" size={24} color="#C4C4C4" />
+                    } else if (route.name === 'Account') {
+                        iconName = focused
+                        ? <MaterialIcon name="account-circle" size={24} color="#484848" />
+                        : <MaterialIcon name="account-circle" size={24} color="#C4C4C4" />
+                    }
 
-                return iconName;
+                    return iconName;
                 },
                 tabBarActiveTintColor: '#484848',
                 tabBarInactiveTintColor: '#C4C4C4',
@@ -212,7 +246,12 @@ const TabNavigator = () => {
             <Tab.Screen name="Search" component={SearchStackNavigator} />
             <Tab.Screen name="Planner" component={PlannerStackNavigator} />
             <Tab.Screen name="Share" component={ShareStackNavigator} />
-            <Tab.Screen name="Account" component={AccountStackNavigator} />
+            <Tab.Screen 
+                name="Account" component={AccountStackNavigator}
+                options={({route})=>({
+                    tabBarStyle: getTabBarVisibility(route),
+                })}
+            />
       </Tab.Navigator>
     );
 }

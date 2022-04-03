@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useColorMode, Box, Text} from 'native-base';
 
-const AccountScreen = () => {
+const AccountScreen = ({ navigation }) => {
     const { colorMode, toggleColorMode } = useColorMode();
 
     return(
@@ -47,7 +47,7 @@ const AccountScreen = () => {
                     <Text style={styles.text}>吃飯、睡覺、打東東</Text>
                 </Box>
             </Box>
-            <TouchableOpacity style={styles.editBtn}>
+            <TouchableOpacity style={styles.editBtn} onPress={()=> navigation.navigate('ProfileEditScreen')}>
                 <Text style={styles.editBtnText}>編輯</Text>
             </TouchableOpacity>
         </Box>
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
         width: 120,
         height: 35,
         borderRadius: 17.5,
-        backgroundColor: '#E5E5E5',
+        backgroundColor: '#969696',
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 80,
