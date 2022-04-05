@@ -10,6 +10,7 @@ import { useColorMode } from 'native-base';
 import HomeScreen from '../screens/HomeScreen';
 import SearchScreen from '../screens/SearchScreen';
 import PlannerScreen from '../screens/PlannerScreen';
+import PlanDetailScreen from '../screens/PlanDetailScreen';
 import ShareScreen from '../screens/ShareScreen';
 import AccountScreen from '../screens/AccountScreen';
 import SettingScreen from '../screens/SettingScreen';
@@ -110,6 +111,20 @@ const PlannerStackNavigator = () => {
                 headerRight: () => (
                     <TouchableOpacity onPress={null}>
                         <Text style={{color: colorMode == 'dark' ? '#fff' : '#484848'}}>編輯</Text>
+                    </TouchableOpacity>
+                ),
+            })}
+        />
+        <Stack.Screen
+            name="PlanDetailScreen"
+            component={PlanDetailScreen}
+            options={({ navigation }) => ({
+                headerTitle: '行程細節',
+                headerTintColor: colorMode == 'dark' ? '#fff' : '#484848',
+                headerBackTitleVisible: false,
+                headerRight: () => (
+                    <TouchableOpacity onPress={null}>
+                        <MaterialIcon name="more-horiz" size={24} color={ colorMode == 'dark' ? '#fff' : '#484848' } />
                     </TouchableOpacity>
                 ),
             })}

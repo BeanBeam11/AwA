@@ -6,7 +6,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import myPlanData from '../json/myPlan.json';
 
-const PlannerScreen = () => {
+const PlannerScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const [ selectedIndex, setSelectedIndex ] = useState(0);
     const [ modalVisible, setModalVisible ] = useState(false);
@@ -35,7 +35,7 @@ const PlannerScreen = () => {
     const MyPlan = () => {
         const renderItem = ({ item }) =>{
             return (
-                <Pressable style={styles.planBox} onPress={null}>
+                <Pressable style={styles.planBox} onPress={()=> navigation.navigate('PlanDetailScreen')}>
                     <Box style={styles.planImageBox}>
                         <Image source={{uri: item.cover_image}} style={styles.planImage} resizeMode="cover" />
                     </Box>
@@ -134,6 +134,11 @@ const PlannerScreen = () => {
             day = '0' + day;
     
         return [year, month, day].join('/');
+    }
+
+    const handleNextStep = () => {
+        setModalVisible(!modalVisible);
+        navigation.navigate('PlanDetailScreen');
     }
 
     return(
@@ -236,7 +241,7 @@ const PlannerScreen = () => {
                             _dark={{ bg: "#C4C4C4"}}
                             _light={{ bg: "#C4C4C4"}}
                             style={styles.nextBtn}
-                            onPress={() => setModalVisible(!modalVisible)}
+                            onPress={()=> handleNextStep()}
                         >
                             <Text>下一步</Text>
                         </Pressable>
