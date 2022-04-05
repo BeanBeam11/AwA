@@ -3,12 +3,17 @@ import { StyleSheet, TouchableOpacity, Modal, View, Image } from 'react-native';
 import { useColorMode, Box, Text, Pressable, Input } from 'native-base';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const PlannerScreen = () => {
     const { colorMode } = useColorMode();
     const [ selectedIndex, setSelectedIndex ] = useState(0);
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ title, setTitle ] = useState('');
+    const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
+    const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
+    const [ startDate, setStartDate ] = useState(new Date());
+    const [ endDate, setEndDate ] = useState(new Date());
 
     const SegmentedContent = () => {
         if(selectedIndex == 0) {
@@ -41,6 +46,43 @@ const PlannerScreen = () => {
          }
     }
 
+    const showStartDatePicker = () => {
+        setStartDatePickerVisibility(true);
+    };
+    const showEndDatePicker = () => {
+        setEndDatePickerVisibility(true);
+    };
+
+    const hideStartDatePicker = () => {
+        setStartDatePickerVisibility(false);
+    };
+    const hideEndDatePicker = () => {
+        setEndDatePickerVisibility(false);
+    };
+
+    const handleStartConfirm = (date) => {
+        setStartDate(date);
+        hideStartDatePicker();
+    };
+    const handleEndConfirm = (date) => {
+        setEndDate(date);
+        hideEndDatePicker();
+    };
+
+    const formatDate = (date) => {
+        let d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+    
+        if (month.length < 2) 
+            month = '0' + month;
+        if (day.length < 2) 
+            day = '0' + day;
+    
+        return [year, month, day].join('/');
+    }
+
     return(
         <Box
             style={styles.container}
@@ -53,11 +95,14 @@ const PlannerScreen = () => {
                 onChange={(event) => {
                     setSelectedIndex(event.nativeEvent.selectedSegmentIndex);
                 }}
-                tintColor="#fff"
                 style={styles.segmentedControlStyle}
                 fontStyle={{
                     fontSize: 14,
                     color: colorMode === "dark" ? '#fff' : '#484848',
+                }}
+                activeFontStyle={{
+                    fontSize: 14,
+                    color: '#484848',
                 }}
             />
             <SegmentedContent />
@@ -65,7 +110,7 @@ const PlannerScreen = () => {
                 <Box
                     _dark={{ bg: "#fff" }}
                     _light={{ bg: "#484848" }}
-                    style={styles.fab}
+                    style={styles.fab(colorMode)}
                 >
                     <MaterialIcon name="add" size={36} color={ colorMode === "dark" ? '#484848' : '#fff' } />
                 </Box>
@@ -80,7 +125,7 @@ const PlannerScreen = () => {
                         setModalVisible(!modalVisible);
                     }}
                 >
-                    <View style={styles.modalView}>
+                    <View style={styles.modalView(colorMode)}>
                         <Box style={styles.modalHeader}>
                             <Text style={styles.modalHeaderText}>建立行程</Text>
                             <TouchableOpacity style={styles.modalClose} onPress={() => setModalVisible(!modalVisible)}>
@@ -97,10 +142,45 @@ const PlannerScreen = () => {
                                 value={title} onChangeText={text => setTitle(text)}
                             />
                             <Text style={styles.modalLabel}>日期</Text>
+                            <Box style={styles.dateWrapper}>
+                                <Pressable
+                                    _dark={{ bg: "#C4C4C4"}}
+                                    _light={{ bg: "#E5E5E5"}}
+                                    style={styles.dateBox}
+                                    onPress={showStartDatePicker}
+                                >
+                                    <Text>{formatDate(startDate)}</Text>
+                                </Pressable>
+                                <Box
+                                    _dark={{ bg: "#C4C4C4"}}
+                                    _light={{ bg: "#E5E5E5"}}
+                                    style={styles.dateDivider}
+                                ></Box>
+                                <Pressable
+                                    _dark={{ bg: "#C4C4C4"}}
+                                    _light={{ bg: "#E5E5E5"}}
+                                    style={styles.dateBox}
+                                    onPress={showEndDatePicker}
+                                >
+                                    <Text>{formatDate(endDate)}</Text>
+                                </Pressable>
+                            </Box>
+                            <DateTimePickerModal
+                                isVisible={isStartDatePickerVisible}
+                                mode="date"
+                                onConfirm={handleStartConfirm}
+                                onCancel={hideStartDatePicker}
+                            />
+                            <DateTimePickerModal
+                                isVisible={isEndDatePickerVisible}
+                                mode="date"
+                                onConfirm={handleEndConfirm}
+                                onCancel={hideEndDatePicker}
+                            />
                         </Box>
                         <Pressable
-                            _dark={{ bg: "#fff"}}
-                            _light={{ bg: "#C4C4C4"}}
+                            _dark={{ bg: "#C4C4C4"}}
+                            _light={{ bg: "#fff"}}
                             style={styles.nextBtn}
                             onPress={() => setModalVisible(!modalVisible)}
                         >
@@ -131,19 +211,19 @@ const styles = StyleSheet.create({
         bottom: 20,
         right: 20,
     },
-    fab: {
+    fab: (colorMode) => ({
         width: 50,
         height: 50,
         borderRadius: 25,
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: '#484848',
-        shadowOffset: {width: 0, height: 4},
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 10, //Android only
-    },
-    modalView: {
+        shadowColor: colorMode === 'dark' ? "#fff" : "#484848",
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 8, //Android only
+    }),
+    modalView: (colorMode) => ({
         width: '100%',
         height: '95%',
         marginTop: 'auto',
@@ -152,6 +232,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingTop: 10,
         alignItems: 'center',
+        backgroundColor: colorMode === "dark" ? '#484848' : '#fff',
         shadowColor: '#000',
         shadowOffset: {
           width: 0,
@@ -160,7 +241,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 10,
         elevation: 10,
-    },
+    }),
     button: {
         borderRadius: 20,
         padding: 10,
@@ -214,5 +295,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 100,
-    }
+    },
+    dateWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 15,
+    },
+    dateBox: {
+        paddingVertical: 8,
+        paddingHorizontal: 32,
+        borderRadius: 5,
+    },
+    dateDivider: {
+        width: 16,
+        height: 2,
+        marginHorizontal: 10,
+    },
 });
