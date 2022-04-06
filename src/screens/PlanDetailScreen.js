@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
-import { StyleSheet, Image } from 'react-native';
-import { useColorMode, Box, Text, Pressable } from 'native-base';
+import { StyleSheet, Image, View, Modal, TouchableOpacity } from 'react-native';
+import { useColorMode, Box, Text, Pressable, Input } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import RNPickerSelect from 'react-native-picker-select';
 
 const PlanDetailScreen = () => {
     const { colorMode } = useColorMode();
+    const [ modalVisible, setModalVisible ] = useState(false);
+    const [ sightName, setSightName ] = useState('');
+    const [ sightType, setSightType ] = useState('');
+
+    const handleFinished = () => {
+        setModalVisible(!modalVisible);
+    }
     
     return(
         <Box
@@ -66,12 +74,113 @@ const PlanDetailScreen = () => {
                     _dark={{ bg: "#E5E5E5"}}
                     _light={{ bg: "#969696"}}
                     style={styles.addPlanDetailBtn}
-                    onPress={null}
+                    onPress={() => setModalVisible(!modalVisible)}
                 >
                     <MaterialIcon name="add" size={16} color={ colorMode === "dark" ? '#fff' : '#484848' } />
                     <Text style={styles.addPlanDetailBtnText}>新增</Text>
                 </Pressable>
             </Box>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.modalView(colorMode)}>
+                    <Box style={styles.modalHeader}>
+                        <Text style={styles.modalHeaderText}>新增景點</Text>
+                        <TouchableOpacity style={styles.modalClose} onPress={() => setModalVisible(!modalVisible)}>
+                            <MaterialIcon name="close" size={24} color={ colorMode === "dark" ? '#fff' : '#484848' }/>
+                        </TouchableOpacity>
+                    </Box>
+                    <Box style={styles.imageWrapper}>
+                        <Image src={null} style={styles.image} />
+                    </Box>
+                    <Box style={styles.modalContent}>
+                        <Box style={styles.optionWrapper}>
+                            <Text style={styles.modalLabel}>行程名稱</Text>
+                            <Box style={styles.optionRight}>
+                                <Input 
+                                    variant="underlined" placeholder="九份一日遊" size="md" minWidth="75%" mt={1}
+                                    isDisabled={true}
+                                    style={styles.optionRight}
+                                />
+                            </Box>
+                            
+                        </Box>
+                        <Box style={styles.optionWrapper}>
+                            <Text style={styles.modalLabel}>景點名稱</Text>
+                            <Box style={styles.optionRight}>
+                                <Input 
+                                    variant="underlined" placeholder="輸入景點名稱" size="md" minWidth="75%" mt={1}
+                                    value={sightName} onChangeText={text => setSightName(text)}
+                                    style={styles.optionRight}
+                                />
+                            </Box>
+                        </Box>
+                        <Box style={styles.optionWrapper}>
+                            <Text style={styles.modalLabel}>景點類別</Text>
+                            <Box
+                                _dark={{ bg: "#C4C4C4"}}
+                                _light={{ bg: "#E5E5E5"}}
+                                style={[
+                                    styles.optionRightBox,
+                                    styles.optionRight,
+                                    { paddingHorizontal: 45 }
+                                ]}
+                            >
+                                <RNPickerSelect
+                                    placeholder={{}}
+                                    onValueChange={(value) => setSightType(value)}
+                                    items={[
+                                        { label: '景點', value: 'landmark' },
+                                        { label: '美食', value: 'food' },
+                                        { label: '購物', value: 'shopping' },
+                                        { label: '住宿', value: 'hotel' },
+                                    ]}
+                                    style={{
+                                        
+                                    }}
+                                />
+                            </Box>
+                            
+                        </Box>
+                        <Box style={styles.optionWrapper}>
+                            <Text style={styles.modalLabel}>加入天數</Text>
+                            <Pressable
+                                _dark={{ bg: "#C4C4C4"}}
+                                _light={{ bg: "#E5E5E5"}}
+                                style={[styles.optionRightBox, styles.optionRight]}
+                                onPress={null}
+                            >
+                                <Text style={{color: '#969696'}}>Day 1</Text>
+                            </Pressable>
+                        </Box>
+                        <Box style={styles.optionWrapper}>
+                            <Text style={styles.modalLabel}>停留時間</Text>
+                            <Pressable
+                                _dark={{ bg: "#C4C4C4"}}
+                                _light={{ bg: "#E5E5E5"}}
+                                style={[styles.optionRightBox, styles.optionRight]}
+                                onPress={null}
+                            >
+                                <Text>00時00分</Text>
+                            </Pressable>
+                        </Box>
+                    </Box>
+                    <Pressable
+                        _dark={{ bg: "#C4C4C4"}}
+                        _light={{ bg: "#C4C4C4"}}
+                        style={styles.nextBtn}
+                        onPress={()=> handleFinished()}
+                    >
+                        <Text>完成</Text>
+                    </Pressable>
+                </View>
+            </Modal>
+            
         </Box>
     );
 }
@@ -207,5 +316,98 @@ const styles = StyleSheet.create({
     },
     addPlanDetailBtnText: {
         fontSize: 12,
+    },
+    modalView: (colorMode) => ({
+        width: '100%',
+        height: '95%',
+        marginTop: 'auto',
+        backgroundColor: 'white',
+        borderRadius: 20,
+        paddingHorizontal: 16,
+        paddingTop: 10,
+        alignItems: 'center',
+        backgroundColor: colorMode === "dark" ? '#484848' : '#fff',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: -10,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 10,
+        elevation: 10,
+    }),
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonOpen: {
+        backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalHeader: {
+        width: '100%',
+        height: 45,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#E5E5E5',
+    },
+    modalHeaderText: {
+        fontSize: 18,
+        fontWeight: '500',
+    },
+    modalClose: {
+        position: 'absolute',
+        right: 0,
+    },
+    modalContent: {
+        marginTop: 10,
+    },
+    imageWrapper: {
+        width: 340,
+        height: 190,
+        borderRadius: 5,
+        backgroundColor: '#C4C4C4',
+        marginTop: 20,
+    },
+    optionWrapper: {
+        width: '100%',
+        height: 30,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        marginTop: 15,
+    },
+    optionRightBox: {
+        width: 120,
+        height: 25,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 'auto',
+    },
+    modalLabel: {
+        fontSize: 14,
+        fontWeight: '500',
+        marginRight: 20,
+    },
+    nextBtn: {
+        width: 120,
+        height: 35,
+        borderRadius: 17.5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 100,
     },
 });
