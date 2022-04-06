@@ -3,8 +3,10 @@ import { StyleSheet, FlatList, Image } from 'react-native';
 import { useColorMode, Box, Text, Pressable} from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import sightData from '../json/recommendSight';
+import myPlanData from '../json/myPlan';
+import { MyPlan } from '../components/MyPlan';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
 
     const renderItem = ({ item }) =>{
@@ -56,6 +58,14 @@ const HomeScreen = () => {
                         <Text style={styles.sectionTitleRight}>查看全部</Text>
                     </Pressable>
                 </Box>
+                <FlatList
+                    data={myPlanData}
+                    renderItem={({item})=> <MyPlan item={item} navigation={navigation} />}
+                    keyExtractor={(item, index) => index}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ paddingHorizontal: 16 }}
+                />
             </Box>
             <Box style={styles.sectionWrapper}>
                 <Box style={styles.sectionHeader}>

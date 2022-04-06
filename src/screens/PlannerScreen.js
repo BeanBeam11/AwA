@@ -47,7 +47,7 @@ const PlannerScreen = ({ navigation }) => {
                         style={styles.ownerAvatar}
                         onPress={null}
                     >
-                        <Image source={{uri: null}} style={styles.ownerImage} resizeMode="cover" />
+                        <Image source={{uri: item.owner_image}} style={styles.ownerImage} resizeMode="cover" />
                     </Pressable>
                 </Pressable>
             );
@@ -413,6 +413,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         bottom: 12,
         right: 10,
+    },
+    ownerImage: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
     },
     planNullBox: {
         flex: 1,
