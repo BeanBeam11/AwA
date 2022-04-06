@@ -203,8 +203,7 @@ const AccountStackNavigator = () => {
             component={ProfileEditScreen}
             options={({ navigation }) => ({
                 headerTitle: '編輯個人資訊',
-                // presentation: 'fullScreenModal', //this will hide select
-                animation: 'slide_from_bottom',
+                presentation: 'fullScreenModal',
                 headerLeft: () => (
                     <TouchableOpacity onPress={()=> navigation.navigate('AccountScreen')}>
                         <Text style={{ color: '#969696'}}>取消</Text>

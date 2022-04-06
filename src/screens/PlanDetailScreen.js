@@ -101,7 +101,7 @@ const PlanDetailScreen = () => {
                     <Box style={styles.modalContent}>
                         <Box style={styles.optionWrapper}>
                             <Text style={styles.modalLabel}>行程名稱</Text>
-                            <Box style={styles.optionRight}>
+                            <Box>
                                 <Input 
                                     variant="underlined" placeholder="九份一日遊" size="md" minWidth="75%" mt={1}
                                     isDisabled={true}
@@ -112,7 +112,7 @@ const PlanDetailScreen = () => {
                         </Box>
                         <Box style={styles.optionWrapper}>
                             <Text style={styles.modalLabel}>景點名稱</Text>
-                            <Box style={styles.optionRight}>
+                            <Box>
                                 <Input 
                                     variant="underlined" placeholder="輸入景點名稱" size="md" minWidth="75%" mt={1}
                                     value={sightName} onChangeText={text => setSightName(text)}
@@ -125,25 +125,20 @@ const PlanDetailScreen = () => {
                             <Box
                                 _dark={{ bg: "#C4C4C4"}}
                                 _light={{ bg: "#E5E5E5"}}
-                                style={[
-                                    styles.optionRightBox,
-                                    styles.optionRight,
-                                    { paddingHorizontal: 45 }
-                                ]}
+                                style={styles.optionSelectBox}
                             >
-                                <RNPickerSelect
-                                    placeholder={{}}
-                                    onValueChange={(value) => setSightType(value)}
-                                    items={[
-                                        { label: '景點', value: 'landmark' },
-                                        { label: '美食', value: 'food' },
-                                        { label: '購物', value: 'shopping' },
-                                        { label: '住宿', value: 'hotel' },
-                                    ]}
-                                    style={{
-                                        
-                                    }}
-                                />
+                                <Box>
+                                    <RNPickerSelect
+                                        placeholder={{}}
+                                        onValueChange={(value) => setSightType(value)}
+                                        items={[
+                                            { label: '景點', value: 'landmark' },
+                                            { label: '美食', value: 'food' },
+                                            { label: '購物', value: 'shopping' },
+                                            { label: '住宿', value: 'hotel' },
+                                        ]}
+                                    />
+                                </Box>
                             </Box>
                             
                         </Box>
@@ -152,7 +147,7 @@ const PlanDetailScreen = () => {
                             <Pressable
                                 _dark={{ bg: "#C4C4C4"}}
                                 _light={{ bg: "#E5E5E5"}}
-                                style={[styles.optionRightBox, styles.optionRight]}
+                                style={styles.optionSelectBox}
                                 onPress={null}
                             >
                                 <Text style={{color: '#969696'}}>Day 1</Text>
@@ -163,7 +158,7 @@ const PlanDetailScreen = () => {
                             <Pressable
                                 _dark={{ bg: "#C4C4C4"}}
                                 _light={{ bg: "#E5E5E5"}}
-                                style={[styles.optionRightBox, styles.optionRight]}
+                                style={styles.optionSelectBox}
                                 onPress={null}
                             >
                                 <Text>00時00分</Text>
@@ -389,7 +384,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         marginTop: 15,
     },
-    optionRightBox: {
+    optionSelectBox: {
         width: 120,
         height: 25,
         borderRadius: 5,
