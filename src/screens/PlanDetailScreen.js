@@ -3,12 +3,15 @@ import { StyleSheet, Image, View, Modal, TouchableOpacity } from 'react-native';
 import { useColorMode, Box, Text, Pressable, Input } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
+import { TimePicker } from 'react-native-simple-time-picker';
 
 const PlanDetailScreen = () => {
     const { colorMode } = useColorMode();
     const [ modalVisible, setModalVisible ] = useState(false);
+    const [ stayModalVisible, setStayModalVisible ] = useState(false);
     const [ sightName, setSightName ] = useState('');
     const [ sightType, setSightType ] = useState('');
+    const [ stayTime, setStayTime ] = useState({hours: 0, minutes: 0});
 
     const handleFinished = () => {
         setModalVisible(!modalVisible);
@@ -159,9 +162,9 @@ const PlanDetailScreen = () => {
                                 _dark={{ bg: "#C4C4C4"}}
                                 _light={{ bg: "#E5E5E5"}}
                                 style={styles.optionSelectBox}
-                                onPress={null}
+                                onPress={()=> setStayModalVisible(!stayModalVisible)}
                             >
-                                <Text>00時00分</Text>
+                                <Text>{stayTime.hours}時{stayTime.minutes}分</Text>
                             </Pressable>
                         </Box>
                     </Box>
@@ -174,8 +177,45 @@ const PlanDetailScreen = () => {
                         <Text>完成</Text>
                     </Pressable>
                 </View>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={stayModalVisible}
+                    onRequestClose={() => {
+                        setStayModalVisible(!stayModalVisible);
+                    }}
+                >
+                    <View style={styles.TimePickerModalView}>
+                        <Box
+                            _dark={{ bg: "#C4C4C4"}}
+                            _light={{ bg: "#E5E5E5"}}
+                            style={styles.timePickerBox}
+                        >
+                            <TimePicker
+                                hoursUnit='時'
+                                minutesUnit="分"
+                                value={stayTime} onChange={(value) => setStayTime(value)}
+                            />
+                        </Box>
+                        <Pressable
+                            _dark={{ bg: "#C4C4C4"}}
+                            _light={{ bg: "#fff"}}
+                            style={styles.timePickerConfirmBtn}
+                            onPress={()=> setStayModalVisible(!stayModalVisible)}
+                        >
+                            <Text>確定</Text>
+                        </Pressable>
+                        <Pressable
+                            _dark={{ bg: "#C4C4C4"}}
+                            _light={{ bg: "#fff"}}
+                            style={styles.timePickerCancelBtn}
+                            onPress={()=> setStayModalVisible(!stayModalVisible)}
+                        >
+                            <Text style={{ color: '#969696'}}>取消</Text>
+                        </Pressable>
+                    </View>
+                </Modal>
             </Modal>
-            
         </Box>
     );
 }
@@ -404,5 +444,40 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 100,
+    },
+    TimePickerModalView: {
+        marginTop: 'auto',
+        marginBottom: 50,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: -15,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+        elevation: 6,
+    },
+    timePickerBox: {
+        width: '100%',
+        height: '45%',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        marginTop: 'auto',
+    },
+    timePickerConfirmBtn: {
+        width: '100%',
+        height: 50,
+        fontSize: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#E5E5E5',
+    },
+    timePickerCancelBtn: {
+        width: '100%',
+        height: 50,
+        fontSize: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
