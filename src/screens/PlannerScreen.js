@@ -65,6 +65,7 @@ const PlannerScreen = ({ navigation }) => {
                     keyExtractor={(item, index) => index}
                     horizontal={false}
                     numColumns={2}
+                    columnWrapperStyle={{ justifyContent: 'space-between' }}
                     showsHorizontalScrollIndicator={false}
                 />
             </Box>
@@ -373,18 +374,17 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     planWrapper: {
-        width: 340,
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
+        paddingHorizontal: 16,
     },
     planBox: {
-        width: 165,
+        width: '48%',
         height: 200,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: '#E5E5E5',
-        marginRight: 10,
         marginBottom: 10,
         padding: 10,
     },
@@ -392,9 +392,11 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     planImage: {
-        width: 145,
+        width: '100%',
         height: 92,
         borderRadius: 5,
+        marginLeft: 'auto',
+        marginRight: 'auto',
     },
     planName: {
         fontSize: 14,

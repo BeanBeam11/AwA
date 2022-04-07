@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
         marginRight: 20,
     },
     labelSelectWrapper: {
+        fontSize: 14,
         marginRight: 'auto',
     },
     selectIcon: (colorMode) => ({
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
     }),
     optionSelectBox: {
         width: 120,
-        height: 25,
+        height: 30,
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',

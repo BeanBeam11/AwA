@@ -37,13 +37,13 @@ const PlanDetailScreen = () => {
                 style={styles.dayWrapper}
             >
                 <Box style={styles.dayBox}>
-                    <Text style={styles.dayText}>Day 1</Text>
+                    <Text style={styles.dayBoxText}>Day 1</Text>
                 </Box>
                 <Box style={styles.dayBox}>
-                    <Text style={styles.dayText}>Day 2</Text>
+                    <Text style={styles.dayBoxText}>Day 2</Text>
                 </Box>
                 <Box style={styles.dayBox}>
-                    <Text style={styles.dayText}>Day 3</Text>
+                    <Text style={styles.dayBoxText}>Day 3</Text>
                 </Box>
                 <Box 
                     _dark={{ bg: "#E5E5E5"}}
@@ -68,7 +68,7 @@ const PlanDetailScreen = () => {
                             <Box style={styles.planIndexBox}>
                                 <Text style={styles.planIndex}>1</Text>
                             </Box>
-                            <Text>阿妹茶樓</Text>
+                            <Text style={styles.planSightName}>阿妹茶樓</Text>
                             <Text>停留00時00分</Text>
                         </Box>
                     </Box>
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
         width: 45,
         marginHorizontal: 12,
     },
-    dayText: {
+    dayBoxText: {
         fontSize: 14,
         fontWeight: '500',
     },
@@ -300,6 +300,10 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         marginBottom: 10,
     },
+    dayText: {
+        fontSize: 16,
+        fontWeight: '500',
+    },
     dateText: {
         fontSize: 11,
         color: '#969696',
@@ -318,30 +322,34 @@ const styles = StyleSheet.create({
     },
     detailbox: {
         marginLeft: 25,
-        paddingLeft: 18,
+        paddingLeft: 24,
         paddingBottom: 20,
         borderLeftWidth: 1.5,
         borderLeftColor: '#C4C4C4',
     },
     planIndexBox: {
         position: 'absolute',
-        width: 16,
-        height: 16,
-        borderRadius: 8,
+        width: 20,
+        height: 20,
+        borderRadius: 10,
         backgroundColor: '#C4C4C4',
         alignItems: 'center',
         justifyContent: 'center',
-        left: -8.5,
+        left: -11,
     },
     planIndex: {
-        fontSize: 10,
+        fontSize: 14,
         fontWeight: '500',
         color: '#fff',
-        lineHeight: 16,
+        lineHeight: 20,
+    },
+    planSightName: {
+        fontSize: 16,
+        fontWeight: '500',
     },
     addPlanDetailBtn: {
-        width: 66,
-        height: 24,
+        width: 75,
+        height: 28,
         borderRadius: 5,
         display: 'flex',
         flexDirection: 'row',
@@ -350,7 +358,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     addPlanDetailBtnText: {
-        fontSize: 12,
+        fontSize: 14,
     },
     modalView: (colorMode) => ({
         width: '100%',
@@ -422,11 +430,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginTop: 15,
+        marginTop: 18,
     },
     optionSelectBox: {
         width: 120,
-        height: 25,
+        height: 30,
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',

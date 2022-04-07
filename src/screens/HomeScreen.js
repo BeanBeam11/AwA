@@ -39,7 +39,7 @@ const HomeScreen = ({ navigation }) => {
                 <Box style={styles.sectionHeader}>
                     <Text style={styles.sectionTitle}>景點推薦</Text>
                     <Pressable style={styles.sectionRightBox}>
-                        <Text style={styles.sectionTitleRight}>查看全部</Text>
+                        <Text style={styles.sectionTitleRight}>更多</Text>
                     </Pressable>
                 </Box>
                 <FlatList
@@ -55,7 +55,7 @@ const HomeScreen = ({ navigation }) => {
                 <Box style={styles.sectionHeader}>
                     <Text style={styles.sectionTitle}>推薦行程</Text>
                     <Pressable style={styles.sectionRightBox}>
-                        <Text style={styles.sectionTitleRight}>查看全部</Text>
+                        <Text style={styles.sectionTitleRight}>更多</Text>
                     </Pressable>
                 </Box>
                 <FlatList
