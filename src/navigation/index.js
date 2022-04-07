@@ -77,12 +77,7 @@ const SearchStackNavigator = () => {
             name="SearchScreen"
             component={SearchScreen}
             options={({ navigation }) => ({
-                headerTitle: '',
-                headerRight: () => (
-                    <TouchableOpacity onPress={null}>
-
-                    </TouchableOpacity>
-                ),
+                headerShown: false,
             })}
         />
       </Stack.Navigator>

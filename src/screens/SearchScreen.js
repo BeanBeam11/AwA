@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Dimensions, Platform } from 'react-native';
-import { useColorMode, Box, Text} from 'native-base';
+import { StyleSheet, View, Dimensions, TextInput } from 'react-native';
+import { useColorMode, Box, Text, Pressable} from 'native-base';
 import MapView, { Marker } from 'react-native-maps';
 import Constants from "expo-constants";
 import * as Location from "expo-location";
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
-const SearchScreen = () => {
+const SearchScreen = ({ navigation }) => {
+    const { colorMode } = useColorMode();
     const [ location, setLocation ] = useState(null);
     const [ errorMsg, setErrorMsg ] = useState(null);
     const [ region, setRegion ] = useState({
@@ -63,7 +65,7 @@ const SearchScreen = () => {
             <MapView
                 style={styles.map}
                 region={region}
-                onRegionChangeComplete={onRegionChangeComplete}
+                // onRegionChangeComplete={onRegionChangeComplete}
                 showsTraffic
                 provider='google'
             >
@@ -75,6 +77,23 @@ const SearchScreen = () => {
                     {/* <View></View> */}
                 </Marker>
             </MapView>
+            <Box style={styles.searchHeader}>
+                <Pressable style={styles.goBackBtn} onPress={null}>
+                    <MaterialIcon name="arrow-back-ios" size={24} color={ colorMode === "dark" ? '#fff' : '#484848' }/>
+                </Pressable>
+                <Box
+                    style={styles.searchBar}
+                    _dark={{ bg: "#969696"}}
+                    _light={{ bg: "#fff"}}
+                >
+                    <TextInput
+                        placeholder='搜尋景點'
+                        onChangeText={null}
+                        value={null}
+                        returnKeyType="search"
+                    />
+                </Box>
+            </Box>
         </Box>
     );
 }
@@ -91,5 +110,33 @@ const styles = StyleSheet.create({
         flex: 1,
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
+    },
+    searchHeader: {
+        position: 'absolute',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        top: 60,
+    },
+    goBackBtn: {
+        marginLeft: 20,
+    },
+    searchBar: {
+        width: '75%',
+        height: 40,
+        borderRadius: 20,
+        paddingHorizontal: 14,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 4,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 4,
     },
 });
