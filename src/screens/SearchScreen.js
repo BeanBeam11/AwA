@@ -62,7 +62,7 @@ const SearchScreen = ({ navigation }) => {
             _dark={{ bg: "#484848"}}
             _light={{ bg: "#fff"}}
         >
-            <MapView
+            {/* <MapView
                 style={styles.map}
                 region={region}
                 // onRegionChangeComplete={onRegionChangeComplete}
@@ -74,9 +74,9 @@ const SearchScreen = ({ navigation }) => {
                     title={marker.name}
                     description={marker.address}
                 >
-                    {/* <View></View> */}
+                    <View></View>
                 </Marker>
-            </MapView>
+            </MapView> */}
             <Box style={styles.searchHeader}>
                 <Pressable style={styles.goBackBtn} onPress={null}>
                     <MaterialIcon name="arrow-back-ios" size={24} color={ colorMode === "dark" ? '#fff' : '#484848' }/>
