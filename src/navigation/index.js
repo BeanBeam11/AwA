@@ -46,12 +46,12 @@ const HomeStackNavigator = () => {
             name="HomeScreen"
             component={HomeScreen}
             options={({ navigation }) => ({
-                headerTitle: '首頁',
-                headerRight: () => (
-                    <TouchableOpacity onPress={null}>
-                        <MaterialIcon name="notifications" size={24} color={ colorMode == 'dark' ? '#fff' : '#484848' } />
-                    </TouchableOpacity>
-                ),
+                headerShown: false,
+                // headerRight: () => (
+                //     <TouchableOpacity onPress={null}>
+                //         <MaterialIcon name="notifications" size={24} color={ colorMode == 'dark' ? '#fff' : '#484848' } />
+                //     </TouchableOpacity>
+                // ),
             })}
         />
       </Stack.Navigator>

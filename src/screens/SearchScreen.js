@@ -5,6 +5,7 @@ import MapView, { Marker } from 'react-native-maps';
 import Constants from "expo-constants";
 import * as Location from "expo-location";
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import { SearchBar } from '../components/SearchBar';
 
 const SearchScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
@@ -26,7 +27,7 @@ const SearchScreen = ({ navigation }) => {
     });
 
     useEffect(() => {
-        getLocation();
+        // getLocation();
     });
 
     const getLocation = async () => {
@@ -78,21 +79,7 @@ const SearchScreen = ({ navigation }) => {
                 </Marker>
             </MapView> */}
             <Box style={styles.searchHeader}>
-                <Pressable style={styles.goBackBtn} onPress={null}>
-                    <MaterialIcon name="arrow-back-ios" size={24} color={ colorMode === "dark" ? '#fff' : '#484848' }/>
-                </Pressable>
-                <Box
-                    style={styles.searchBar}
-                    _dark={{ bg: "#969696"}}
-                    _light={{ bg: "#fff"}}
-                >
-                    <TextInput
-                        placeholder='搜尋景點'
-                        onChangeText={null}
-                        value={null}
-                        returnKeyType="search"
-                    />
-                </Box>
+                <SearchBar placeholderText={'搜尋景點'}/>
             </Box>
         </Box>
     );
