@@ -196,12 +196,12 @@ const PlannerScreen = ({ navigation }) => {
                             <Text style={styles.modalLabel}>日期</Text>
                             <Box style={styles.dateWrapper}>
                                 <Pressable
-                                    _dark={{ bg: colors.secondary[50]}}
+                                    _dark={{ bg: colors.dark[200]}}
                                     _light={{ bg: colors.secondary[50]}}
                                     style={styles.dateBox}
                                     onPress={showStartDatePicker}
                                 >
-                                    <Text color={colors.dark[200]}>{formatDate(startDate)}</Text>
+                                    <Text color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}>{formatDate(startDate)}</Text>
                                 </Pressable>
                                 <Box
                                     _dark={{ bg: colors.dark[600]}}
@@ -209,12 +209,12 @@ const PlannerScreen = ({ navigation }) => {
                                     style={styles.dateDivider}
                                 ></Box>
                                 <Pressable
-                                    _dark={{ bg: colors.secondary[50]}}
+                                    _dark={{ bg: colors.dark[200]}}
                                     _light={{ bg: colors.secondary[50]}}
                                     style={styles.dateBox}
                                     onPress={showEndDatePicker}
                                 >
-                                    <Text color={colors.dark[200]}>{formatDate(endDate)}</Text>
+                                    <Text color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}>{formatDate(endDate)}</Text>
                                 </Pressable>
                             </Box>
                             <DateTimePickerModal

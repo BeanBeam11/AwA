@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Image, View, Modal, TouchableOpacity } from 'react-native';
-import { useColorMode, Box, Text, Pressable, Input } from 'native-base';
+import { useColorMode, useTheme, Box, Text, Pressable, Input } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
 import { TimePicker } from 'react-native-simple-time-picker';
@@ -8,6 +8,7 @@ import { PlanDetailHeader } from '../components/Header';
 
 const PlanDetailScreen = ({navigation}) => {
     const { colorMode } = useColorMode();
+    const { colors } = useTheme();
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ stayModalVisible, setStayModalVisible ] = useState(false);
     const [ sightName, setSightName ] = useState('');
@@ -21,68 +22,107 @@ const PlanDetailScreen = ({navigation}) => {
     return(
         <Box
             style={styles.container}
-            _dark={{ bg: "#484848"}}
+            _dark={{ bg: colors.dark[50]}}
             _light={{ bg: "#fff"}}
         >
-            <PlanDetailHeader navigation={navigation}/>
-            <Box style={styles.topWrapper}>
-                <Image source={{uri: null}} style={styles.introImage} resizeMode="cover" />
-                <Box style={styles.introWrapper}>
-                    <Text style={styles.introName}>九份一日遊</Text>
-                    <Text style={styles.introDate}>2022/04/02-2022/04/04</Text>
-                    <Image source={{uri: null}} style={styles.ownerAvatar} resizeMode="cover" />
-                </Box>
-            </Box>
-            <Box 
-                _dark={{ bg: "#484848"}}
+            <Box
+                style={styles.topWrapper}
+                _dark={{ bg: colors.dark[100]}}
                 _light={{ bg: "#fff"}}
-                style={styles.dayWrapper}
             >
-                <Box style={styles.dayBox}>
-                    <Text style={styles.dayBoxText}>Day 1</Text>
+                <PlanDetailHeader navigation={navigation}/>
+                <Box style={styles.infoWrapper}>
+                    <Image source={{uri: null}} style={styles.introImage} resizeMode="cover" />
+                    <Box style={styles.introBox}>
+                        <Text
+                            style={styles.introName}
+                            color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                        >九份一日遊</Text>
+                        <Text
+                            style={styles.introDate}
+                            color={colors.dark[300]}
+                        >2022/04/02-2022/04/04</Text>
+                        <Image source={{uri: null}} style={styles.ownerAvatar} resizeMode="cover" />
+                    </Box>
                 </Box>
-                <Box style={styles.dayBox}>
-                    <Text style={styles.dayBoxText}>Day 2</Text>
-                </Box>
-                <Box style={styles.dayBox}>
-                    <Text style={styles.dayBoxText}>Day 3</Text>
-                </Box>
-                <Box 
-                    _dark={{ bg: "#E5E5E5"}}
-                    _light={{ bg: "#969696"}}
-                    style={styles.addDayBtn}
-                >
-                    <MaterialIcon name="add" size={20} color={ colorMode === "dark" ? '#484848' : '#fff' } />
+                <Box style={styles.dayWrapper}>
+                    <Box style={styles.dayBox}>
+                        <Text
+                            style={styles.dayBoxText}
+                            color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                        >Day 1</Text>
+                    </Box>
+                    <Box style={styles.dayBox}>
+                        <Text
+                            style={styles.dayBoxText}
+                            color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                        >Day 2</Text>
+                    </Box>
+                    <Box style={styles.dayBox}>
+                        <Text
+                            style={styles.dayBoxText}
+                            color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                        >Day 3</Text>
+                    </Box>
+                    <Box 
+                        _dark={{ bg: colors.primary[100]}}
+                        _light={{ bg: colors.primary[100]}}
+                        style={styles.addDayBtn}
+                    >
+                        <MaterialIcon name="add" size={20} color={ colorMode === "dark" ? colors.dark[200] : '#fff' } />
+                    </Box>
                 </Box>
             </Box>
             <Box style={styles.detailWrapper}>
                 <Box style={styles.detailHeader}>
-                    <Text style={styles.dayText}>Day 1</Text>
-                    <Text style={styles.dateText}>04/02 (六)</Text>
+                    <Text
+                        style={styles.dayText}
+                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                    >Day 1</Text>
+                    <Text
+                        style={styles.dateText}
+                        color={colors.dark[400]}
+                    >04/02 (六)</Text>
                 </Box>
                 <Box style={styles.detailContent}>
                     <Box style={styles.detailTime}>
-                        <Text>11:00</Text>
-                        <MaterialIcon name="restaurant" size={14} color={ colorMode === "dark" ? '#fff' : '#484848' } style={styles.detailType}/>
+                        <Text color={colors.dark[300]}>11:00</Text>
+                        <MaterialIcon name="restaurant" size={20} color={colorMode === "dark" ? colors.secondary[100]: colors.secondary[200]} style={styles.detailType}/>
                     </Box>
                     <Box>
-                        <Box style={styles.detailbox}>
-                            <Box style={styles.planIndexBox}>
-                                <Text style={styles.planIndex}>1</Text>
+                        <Box style={[styles.detailbox,{borderLeftColor: colors.primary[100]}]}>
+                            <Box
+                                _dark={{ bg: colors.primary[100]}}
+                                _light={{ bg: colors.primary[100]}}
+                                style={styles.planIndexBox}
+                            >
+                                <Text
+                                    style={styles.planIndex}
+                                    color={colorMode === "dark" ? colors.dark[200] : '#fff'}
+                                >1</Text>
                             </Box>
-                            <Text style={styles.planSightName}>阿妹茶樓</Text>
-                            <Text>停留00時00分</Text>
+                            <Text
+                                style={styles.planSightName}
+                                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                            >阿妹茶樓</Text>
+                            <Text
+                                style={styles.planStayTime}
+                                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                            >停留00時00分</Text>
                         </Box>
                     </Box>
                 </Box>
                 <Pressable
-                    _dark={{ bg: "#E5E5E5"}}
-                    _light={{ bg: "#969696"}}
+                    _dark={{ bg: colors.primary[100]}}
+                    _light={{ bg: colors.primary[100]}}
                     style={styles.addPlanDetailBtn}
                     onPress={() => setModalVisible(!modalVisible)}
                 >
-                    <MaterialIcon name="add" size={16} color={ colorMode === "dark" ? '#fff' : '#484848' } />
-                    <Text style={styles.addPlanDetailBtnText}>新增</Text>
+                    <MaterialIcon name="add" size={16} color={colorMode === "dark" ? colors.dark[200] : '#fff'} />
+                    <Text
+                        style={styles.addPlanDetailBtnText}
+                        color={colorMode === "dark" ? colors.dark[200] : '#fff'}
+                    >新增</Text>
                 </Pressable>
             </Box>
             <Modal
@@ -93,8 +133,12 @@ const PlanDetailScreen = ({navigation}) => {
                     setModalVisible(!modalVisible);
                 }}
             >
-                <View style={styles.modalView(colorMode)}>
-                    <Box style={styles.modalHeader}>
+                <View style={[styles.modalView(colorMode),{
+                    backgroundColor: colorMode === "dark" ? colors.dark[100] : '#fff',
+                }]}>
+                    <Box style={[styles.modalHeader,{
+                        borderBottomColor: colorMode === "dark" ? colors.dark[200] : colors.dark[500],
+                    }]}>
                         <Text style={styles.modalHeaderText}>新增景點</Text>
                         <TouchableOpacity style={styles.modalClose} onPress={() => setModalVisible(!modalVisible)}>
                             <MaterialIcon name="close" size={24} color={ colorMode === "dark" ? '#fff' : '#484848' }/>
@@ -229,13 +273,23 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     topWrapper: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 8,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 4,
+    },
+    infoWrapper: {
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
         paddingVertical: 12,
         paddingHorizontal: 16,
     },
-    introWrapper: {
+    introBox: {
         marginLeft: 12,
     },
     introImage: {
@@ -245,7 +299,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#969696',
     },
     introName: {
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: '500',
     },
     introDate: {
@@ -266,14 +320,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingLeft: 10,
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 8,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 4,
     },
     dayBox: {
         width: 45,
@@ -327,14 +373,12 @@ const styles = StyleSheet.create({
         paddingLeft: 24,
         paddingBottom: 20,
         borderLeftWidth: 1.5,
-        borderLeftColor: '#C4C4C4',
     },
     planIndexBox: {
         position: 'absolute',
         width: 20,
         height: 20,
         borderRadius: 10,
-        backgroundColor: '#C4C4C4',
         alignItems: 'center',
         justifyContent: 'center',
         left: -11,
@@ -342,12 +386,14 @@ const styles = StyleSheet.create({
     planIndex: {
         fontSize: 14,
         fontWeight: '500',
-        color: '#fff',
         lineHeight: 20,
     },
     planSightName: {
         fontSize: 16,
         fontWeight: '500',
+    },
+    planStayTime: {
+        fontSize: 11,
     },
     addPlanDetailBtn: {
         width: 75,
@@ -361,6 +407,7 @@ const styles = StyleSheet.create({
     },
     addPlanDetailBtnText: {
         fontSize: 14,
+        marginLeft: 3,
     },
     modalView: (colorMode) => ({
         width: '100%',
