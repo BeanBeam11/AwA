@@ -4,8 +4,9 @@ import { useColorMode, Box, Text, Pressable, Input } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
 import { TimePicker } from 'react-native-simple-time-picker';
+import { PlanDetailHeader } from '../components/Header';
 
-const PlanDetailScreen = () => {
+const PlanDetailScreen = ({navigation}) => {
     const { colorMode } = useColorMode();
     const [ modalVisible, setModalVisible ] = useState(false);
     const [ stayModalVisible, setStayModalVisible ] = useState(false);
@@ -23,6 +24,7 @@ const PlanDetailScreen = () => {
             _dark={{ bg: "#484848"}}
             _light={{ bg: "#fff"}}
         >
+            <PlanDetailHeader navigation={navigation}/>
             <Box style={styles.topWrapper}>
                 <Image source={{uri: null}} style={styles.introImage} resizeMode="cover" />
                 <Box style={styles.introWrapper}>

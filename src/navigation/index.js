@@ -33,26 +33,12 @@ const HomeStackNavigator = () => {
     return (
       <Stack.Navigator
         screenOptions={{
-            headerStyle: {
-                backgroundColor: colorMode == 'dark' ? '#484848' : '#fff',
-            },
-            headerTitleStyle: {
-                color: colorMode == 'dark' ? '#fff' : '#484848',
-                fontWeight: '500',
-            },
+            headerShown: false,
         }}
       >
         <Stack.Screen
             name="HomeScreen"
             component={HomeScreen}
-            options={({ navigation }) => ({
-                headerShown: false,
-                // headerRight: () => (
-                //     <TouchableOpacity onPress={null}>
-                //         <MaterialIcon name="notifications" size={24} color={ colorMode == 'dark' ? '#fff' : '#484848' } />
-                //     </TouchableOpacity>
-                // ),
-            })}
         />
       </Stack.Navigator>
     );
@@ -90,40 +76,16 @@ const PlannerStackNavigator = () => {
     return (
       <Stack.Navigator
         screenOptions={{
-            headerStyle: {
-                backgroundColor: colorMode == 'dark' ? '#484848' : '#fff',
-            },
-            headerTitleStyle: {
-                color: colorMode == 'dark' ? '#fff' : '#484848',
-                fontWeight: '500',
-            },
+            headerShown: false,
         }}
       >
         <Stack.Screen
             name="PlannerScreen"
             component={PlannerScreen}
-            options={({ navigation }) => ({
-                headerTitle: '行程',
-                headerRight: () => (
-                    <TouchableOpacity onPress={null}>
-                        <Text style={{color: colorMode == 'dark' ? '#fff' : '#484848'}}>編輯</Text>
-                    </TouchableOpacity>
-                ),
-            })}
         />
         <Stack.Screen
             name="PlanDetailScreen"
             component={PlanDetailScreen}
-            options={({ navigation }) => ({
-                headerTitle: '行程細節',
-                headerTintColor: colorMode == 'dark' ? '#fff' : '#484848',
-                headerBackTitleVisible: false,
-                headerRight: () => (
-                    <TouchableOpacity onPress={null}>
-                        <MaterialIcon name="more-horiz" size={24} color={ colorMode == 'dark' ? '#fff' : '#484848' } />
-                    </TouchableOpacity>
-                ),
-            })}
         />
       </Stack.Navigator>
     );
