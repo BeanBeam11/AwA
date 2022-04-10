@@ -15,6 +15,7 @@ import PlanDetailScreen from '../screens/PlanDetailScreen';
 import ShareScreen from '../screens/ShareScreen';
 import AccountScreen from '../screens/AccountScreen';
 import SettingScreen from '../screens/SettingScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import ProfileEditScreen from '../screens/ProfileEditScreen';
 
 const Stack = createNativeStackNavigator();
@@ -126,52 +127,16 @@ const AccountStackNavigator = () => {
     return (
       <Stack.Navigator
         screenOptions={{
-            headerStyle: {
-                backgroundColor: colorMode == 'dark' ? '#484848' : '#fff',
-            },
-            headerTitleStyle: {
-                color: colorMode == 'dark' ? '#fff' : '#484848',
-                fontWeight: '500',
-            },
+            headerShown: false,
         }}
       >
+        <Stack.Screen name="AccountScreen" component={AccountScreen} />
+        <Stack.Screen name="SettingScreen" component={SettingScreen} />
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         <Stack.Screen
-            name="AccountScreen"
-            component={AccountScreen}
+            name="ProfileEditScreen" component={ProfileEditScreen}
             options={({ navigation }) => ({
-                headerTitle: '個人資訊',
-                headerRight: () => (
-                    <TouchableOpacity onPress={()=> navigation.navigate('SettingScreen')}>
-                        <MaterialIcon name="settings" size={24} color={ colorMode == 'dark' ? '#fff' : '#484848' } />
-                    </TouchableOpacity>
-                ),
-            })}
-        />
-        <Stack.Screen
-            name="SettingScreen"
-            component={SettingScreen}
-            options={({ navigation }) => ({
-                headerTitle: '設定',
-                headerTintColor: colorMode == 'dark' ? '#fff' : '#484848',
-                headerBackTitleVisible: false,
-            })}
-        />
-        <Stack.Screen
-            name="ProfileEditScreen"
-            component={ProfileEditScreen}
-            options={({ navigation }) => ({
-                headerTitle: '編輯個人資訊',
                 presentation: 'fullScreenModal',
-                headerLeft: () => (
-                    <TouchableOpacity onPress={()=> navigation.navigate('AccountScreen')}>
-                        <Text style={{ color: '#969696'}}>取消</Text>
-                    </TouchableOpacity>
-                ),
-                headerRight: () => (
-                    <TouchableOpacity onPress={()=> navigation.navigate('AccountScreen')}>
-                        <Text style={{color: colorMode == 'dark' ? '#fff' : '#484848'}}>完成</Text>
-                    </TouchableOpacity>
-                ),
             })}
         />
       </Stack.Navigator>
@@ -259,7 +224,12 @@ const TabNavigator = () => {
             <Tab.Screen name="Search" component={SearchStackNavigator} />
             <Tab.Screen name="Planner" component={PlannerStackNavigator} />
             <Tab.Screen name="Share" component={ShareStackNavigator} />
-            <Tab.Screen name="Account" component={AccountStackNavigator}/>
+            <Tab.Screen
+                name="Account" component={AccountStackNavigator}
+                options={({ navigation }) => ({
+                    tabBarStyle: { display: 'none' }
+                })}
+            />
       </Tab.Navigator>
     );
 }

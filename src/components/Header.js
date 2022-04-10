@@ -55,7 +55,7 @@ const PlanDetailHeader = ({navigation}) => {
     );
 }
 
-const goBackHeader = ({navigation, title}) => {
+const GoBackHeader = ({navigation, title}) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     
@@ -72,12 +72,48 @@ const goBackHeader = ({navigation, title}) => {
                     ccolor={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
                 >{title}</Text>
             </Box>
-            <Pressable style={styles.headerRight}></Pressable>
+            <Pressable style={{width: 24}}></Pressable>
         </Box>
     );
 }
 
-export { PlannerHeader, PlanDetailHeader, goBackHeader };
+const ProfileEditHeader = ({navigation}) => {
+    const { colorMode } = useColorMode();
+    const { colors } = useTheme();
+    
+    return (
+        <Box
+            style={[styles.headerWrapper,{
+                borderBottomWidth: 1,
+                borderBottomColor: colorMode === "dark" ? colors.dark[200] : colors.dark[500],
+            }]}
+        >
+            <Pressable onPress={()=> navigation.goBack()}>
+                <Text
+                    style={styles.headerRightText}
+                    color={colorMode === "dark" ? colors.dark[200] : colors.dark[400]}
+                >取消</Text>
+            </Pressable>
+            <Box style={styles.headerCenter}>
+                <Text
+                    style={styles.headerTitle}
+                    ccolor={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                >編輯個人檔案</Text>
+            </Box>
+            <Pressable
+                style={styles.headerRight}
+                onPress={()=> navigation.goBack()}
+            >
+                <Text
+                    style={styles.headerRightText}
+                    color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                >完成</Text>
+            </Pressable>
+        </Box>
+    );
+}
+
+export { PlannerHeader, PlanDetailHeader, GoBackHeader, ProfileEditHeader };
 
 const styles = StyleSheet.create({
     headerWrapper: {

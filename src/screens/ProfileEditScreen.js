@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { useColorMode, Box, Text, Input } from 'native-base';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import { useColorMode, useTheme, Box, Text, Input } from 'native-base';
 import RNPickerSelect from 'react-native-picker-select';
+import { ProfileEditHeader } from '../components/Header';
 
-const ProfileEditScreen = () => {
+const ProfileEditScreen = ({navigation}) => {
     const { colorMode } = useColorMode();
+    const { colors } = useTheme();
     const [ name, setName] =  useState('');
     const [ interest, setInterest] =  useState('');
     const [ type, setType] =  useState('');
@@ -15,32 +16,42 @@ const ProfileEditScreen = () => {
     return(
         <Box
             style={styles.container}
-            _dark={{ bg: "#484848"}}
+            _dark={{ bg: colors.dark[50]}}
             _light={{ bg: "#fff"}}
         >
+            <ProfileEditHeader navigation={navigation}/>
             <TouchableOpacity style={styles.avatarBox}>
                 <Image src={null} />
             </TouchableOpacity>
             <Box style={styles.profileWrapper}>
                 <Box style={styles.contentInputWrapper}>
-                    <Text style={styles.labelWrapper}>暱稱</Text>
+                    <Text
+                        style={styles.labelWrapper}
+                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                    >暱稱</Text>
                     <Input 
                         variant="underlined" placeholder="未設定暱稱" size="md" minWidth="85%"
                         value={name} onChangeText={text => setName(text)}
                     />
                 </Box>
                 <Box style={styles.contentInputWrapper}>
-                    <Text style={styles.labelWrapper}>興趣</Text>
+                    <Text
+                        style={styles.labelWrapper}
+                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                    >興趣</Text>
                     <Input
                         variant="underlined" placeholder="興趣" size="md" minWidth="85%"
                         value={interest} onChangeText={text => setInterest(text)}
                     />
                 </Box>
                 <Box style={[styles.contentWrapper,{ marginTop: 20}]}>
-                    <Text style={styles.labelSelectWrapper}>偏好旅遊類型</Text>
+                    <Text
+                        style={styles.labelSelectWrapper}
+                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                    >偏好旅遊類型</Text>
                     <Box
-                        _dark={{ bg: "#C4C4C4"}}
-                        _light={{ bg: "#E5E5E5"}}
+                        _dark={{ bg: colors.dark[200]}}
+                        _light={{ bg: colors.secondary[50]}}
                         style={styles.optionSelectBox}
                     >
                         <Box>
@@ -56,15 +67,23 @@ const ProfileEditScreen = () => {
                                     { label: '購物', value: 'shopping' },
                                     { label: '住宿', value: 'hotel' },
                                 ]}
+                                style={{
+                                    placeholder: {
+                                        color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
+                                    },
+                                }}
                             />
                         </Box>
                     </Box>
                 </Box>
                 <Box style={styles.contentWrapper}>
-                    <Text style={styles.labelSelectWrapper}>偏好交通方式</Text>
+                    <Text
+                        style={styles.labelSelectWrapper}
+                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                    >偏好交通方式</Text>
                     <Box
-                        _dark={{ bg: "#C4C4C4"}}
-                        _light={{ bg: "#E5E5E5"}}
+                        _dark={{ bg: colors.dark[200]}}
+                        _light={{ bg: colors.secondary[50]}}
                         style={styles.optionSelectBox}
                     >
                         <Box>
@@ -82,15 +101,23 @@ const ProfileEditScreen = () => {
                                     { label: '火車', value: 'train' },
                                     { label: '捷運', value: 'metro' },
                                 ]}
+                                style={{
+                                    placeholder: {
+                                        color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
+                                    },
+                                }}
                             />
                         </Box>
                     </Box>
                 </Box>
                 <Box style={styles.contentWrapper}>
-                    <Text style={styles.labelSelectWrapper}>性別</Text>
+                    <Text
+                        style={styles.labelSelectWrapper}
+                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                    >性別</Text>
                     <Box
-                        _dark={{ bg: "#C4C4C4"}}
-                        _light={{ bg: "#E5E5E5"}}
+                        _dark={{ bg: colors.dark[200]}}
+                        _light={{ bg: colors.secondary[50]}}
                         style={styles.optionSelectBox}
                     >
                         <Box>
@@ -104,15 +131,23 @@ const ProfileEditScreen = () => {
                                     { label: '男', value: 'male' },
                                     { label: '女', value: 'female' },
                                 ]}
+                                style={{
+                                    placeholder: {
+                                        color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
+                                    },
+                                }}
                             />
                         </Box>
                     </Box>
                 </Box>
                 <Box style={styles.contentWrapper}>
-                    <Text style={styles.labelSelectWrapper}>年齡</Text>
+                    <Text
+                        style={styles.labelSelectWrapper}
+                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                    >年齡</Text>
                     <Box
-                        _dark={{ bg: "#C4C4C4"}}
-                        _light={{ bg: "#E5E5E5"}}
+                        _dark={{ bg: colors.dark[200]}}
+                        _light={{ bg: colors.secondary[50]}}
                         style={styles.optionSelectBox}
                     >
                         <Box>
@@ -128,6 +163,11 @@ const ProfileEditScreen = () => {
                                     { label: '26-30歲', value: '26_30' },
                                     { label: '31歲以上', value: '31_99' },
                                 ]}
+                                style={{
+                                    placeholder: {
+                                        color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
+                                    },
+                                }}
                             />
                         </Box>
                     </Box>
