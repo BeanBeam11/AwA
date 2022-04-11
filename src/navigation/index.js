@@ -93,31 +93,13 @@ const PlannerStackNavigator = () => {
 }
 
 const ShareStackNavigator = () => {
-    const { colorMode } = useColorMode();
     return (
       <Stack.Navigator
         screenOptions={{
-            headerStyle: {
-                backgroundColor: colorMode == 'dark' ? '#484848' : '#fff',
-            },
-            headerTitleStyle: {
-                color: colorMode == 'dark' ? '#fff' : '#484848',
-                fontWeight: '500',
-            },
+            headerShown: false,
         }}
       >
-        <Stack.Screen
-            name="ShareScreen"
-            component={ShareScreen}
-            options={({ navigation }) => ({
-                headerTitle: '共享',
-                headerRight: () => (
-                    <TouchableOpacity onPress={null}>
-
-                    </TouchableOpacity>
-                ),
-            })}
-        />
+        <Stack.Screen name="ShareScreen" component={ShareScreen} />
       </Stack.Navigator>
     );
 }
