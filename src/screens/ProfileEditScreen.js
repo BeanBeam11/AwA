@@ -1,25 +1,38 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Input } from 'native-base';
 import RNPickerSelect from 'react-native-picker-select';
 import { ProfileEditHeader } from '../components/Header';
+import { setProfileInfo } from "../redux/actions/profileActions";
 
 const ProfileEditScreen = ({navigation}) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    const [ name, setName] =  useState('');
-    const [ interest, setInterest] =  useState('');
-    const [ type, setType] =  useState('');
-    const [ transportation, setTransportation] =  useState('');
-    const [ gender, setGender] =  useState('');
-    const [ age, setAge] =  useState('');
+    const { info } = useSelector((state) => state.profile);
+
+    const [ avatar, setAvatar] =  useState(info.avatar);
+    const [ name, setName] =  useState(info.name);
+    const [ interest, setInterest] =  useState(info.interest);
+    const [ type, setType] =  useState(info.type);
+    const [ transportation, setTransportation] =  useState(info.transportation);
+    const [ gender, setGender] =  useState(info.gender);
+    const [ age, setAge] =  useState(info.age);
+
+    const dispatch = useDispatch();
+
+    const handleDone = () => {
+        dispatch(setProfileInfo({ avatar, name, interest, type, transportation, gender, age }));
+        navigation.goBack();
+    }
+    
     return(
         <Box
             style={styles.container}
             _dark={{ bg: colors.dark[50]}}
             _light={{ bg: "#fff"}}
         >
-            <ProfileEditHeader navigation={navigation}/>
+            <ProfileEditHeader navigation={navigation} onPressDone={handleDone}/>
             <TouchableOpacity style={styles.avatarBox}>
                 <Image src={null} />
             </TouchableOpacity>
@@ -60,12 +73,13 @@ const ProfileEditScreen = ({navigation}) => {
                                     label: '未設定',
                                     value: null,
                                 }}
+                                value={type}
                                 onValueChange={(value) => setType(value)}
                                 items={[
-                                    { label: '景點', value: 'landmark' },
-                                    { label: '美食', value: 'food' },
-                                    { label: '購物', value: 'shopping' },
-                                    { label: '住宿', value: 'hotel' },
+                                    { label: '景點', value: '景點' },
+                                    { label: '美食', value: '美食' },
+                                    { label: '購物', value: '購物' },
+                                    { label: '住宿', value: '住宿' },
                                 ]}
                                 style={{
                                     placeholder: {
@@ -92,14 +106,15 @@ const ProfileEditScreen = ({navigation}) => {
                                     label: '未設定',
                                     value: null
                                 }}
+                                value={transportation}
                                 onValueChange={(value) => setTransportation(value)}
                                 items={[
-                                    { label: '步行', value: 'walk' },
-                                    { label: '機車', value: 'scooter' },
-                                    { label: '汽車', value: 'car' },
-                                    { label: '公車', value: 'bus' },
-                                    { label: '火車', value: 'train' },
-                                    { label: '捷運', value: 'metro' },
+                                    { label: '步行', value: '步行' },
+                                    { label: '機車', value: '機車' },
+                                    { label: '汽車', value: '汽車' },
+                                    { label: '公車', value: '公車' },
+                                    { label: '火車', value: '火車' },
+                                    { label: '捷運', value: '捷運' },
                                 ]}
                                 style={{
                                     placeholder: {
@@ -126,10 +141,11 @@ const ProfileEditScreen = ({navigation}) => {
                                     label: '未設定',
                                     value: null
                                 }}
+                                value={gender}
                                 onValueChange={(value) => setGender(value)}
                                 items={[
-                                    { label: '男', value: 'male' },
-                                    { label: '女', value: 'female' },
+                                    { label: '男', value: '男' },
+                                    { label: '女', value: '女' },
                                 ]}
                                 style={{
                                     placeholder: {
@@ -156,12 +172,13 @@ const ProfileEditScreen = ({navigation}) => {
                                     label: '未設定',
                                     value: null
                                 }}
+                                value={age}
                                 onValueChange={(value) => setAge(value)}
                                 items={[
-                                    { label: '18歲以下', value: '0_18' },
-                                    { label: '19-25歲', value: '19_25' },
-                                    { label: '26-30歲', value: '26_30' },
-                                    { label: '31歲以上', value: '31_99' },
+                                    { label: '18歲以下', value: '18歲以下' },
+                                    { label: '19-25歲', value: '19-25歲' },
+                                    { label: '26-30歲', value: '26-30歲' },
+                                    { label: '31歲以上', value: '31歲以上' },
                                 ]}
                                 style={{
                                     placeholder: {

@@ -77,7 +77,7 @@ const GoBackHeader = ({navigation, title}) => {
     );
 }
 
-const ProfileEditHeader = ({navigation}) => {
+const ProfileEditHeader = ({navigation, onPressDone}) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     
@@ -102,7 +102,7 @@ const ProfileEditHeader = ({navigation}) => {
             </Box>
             <Pressable
                 style={styles.headerRight}
-                onPress={()=> navigation.goBack()}
+                onPress={onPressDone}
             >
                 <Text
                     style={styles.headerRightText}

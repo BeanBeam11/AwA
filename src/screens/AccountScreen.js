@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector } from "react-redux";
 import { StyleSheet, Image } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Switch} from 'native-base';
 import { GoBackHeader } from '../components/Header';
@@ -6,6 +7,8 @@ import { GoBackHeader } from '../components/Header';
 const AccountScreen = ({ navigation }) => {
     const { colorMode, toggleColorMode } = useColorMode();
     const { colors } = useTheme();
+    const { info } = useSelector((state) => state.profile);
+    const { avatar, name } = info;
 
     return(
         <Box
@@ -15,7 +18,7 @@ const AccountScreen = ({ navigation }) => {
         >
             <GoBackHeader title={'個人'} navigation={navigation}/>
             <Image source={{uri: "https://pbs.twimg.com/media/Eon8PXAVgAA9QO9?format=jpg&name=large"}} style={styles.avatarBox}/>
-            <Text style={styles.name}>Sofia</Text>
+            <Text style={styles.name}>{name}</Text>
             <Box
                 style={styles.optionWrapper}
                 _dark={{ bg: colors.dark[100]}}
