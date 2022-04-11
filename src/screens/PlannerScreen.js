@@ -338,8 +338,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
     },
     planNullBox: {
-        flex: 1,
-        minHeight: 500,
+        height: 300,
         alignItems: 'center',
         justifyContent: 'center',
     },

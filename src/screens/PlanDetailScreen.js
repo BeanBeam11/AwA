@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, Image, View, Modal, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, View, Modal, TouchableOpacity, ScrollView } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Input } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
 import { TimePicker } from 'react-native-simple-time-picker';
 import { PlanDetailHeader } from '../components/Header';
+import planData from '../json/myPlan.json';
+import { ActionButton } from '../components/ActionButton';
 
 const PlanDetailScreen = ({navigation}) => {
     const { colorMode } = useColorMode();
@@ -17,6 +19,20 @@ const PlanDetailScreen = ({navigation}) => {
 
     const handleFinished = () => {
         setModalVisible(!modalVisible);
+    }
+
+    const formatDate = (date) => {
+        let d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+    
+        if (month.length < 2) 
+            month = '0' + month;
+        if (day.length < 2) 
+            day = '0' + day;
+    
+        return [year, month, day].join('/');
     }
     
     return(
@@ -32,17 +48,17 @@ const PlanDetailScreen = ({navigation}) => {
             >
                 <PlanDetailHeader navigation={navigation}/>
                 <Box style={styles.infoWrapper}>
-                    <Image source={{uri: null}} style={styles.introImage} resizeMode="cover" />
+                    <Image source={{uri: planData[0].cover_image}} style={styles.introImage} resizeMode="cover" />
                     <Box style={styles.introBox}>
                         <Text
                             style={styles.introName}
                             color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                        >九份一日遊</Text>
+                        >{planData[0].name}</Text>
                         <Text
                             style={styles.introDate}
                             color={colors.dark[300]}
-                        >2022/04/02-2022/04/04</Text>
-                        <Image source={{uri: null}} style={styles.ownerAvatar} resizeMode="cover" />
+                        >{formatDate(planData[0].start_date)}-{formatDate(planData[0].end_date)}</Text>
+                        <Image source={{uri: planData[0].owner_image}} style={styles.ownerAvatar} resizeMode="cover" />
                     </Box>
                 </Box>
                 <Box style={styles.dayWrapper}>
@@ -73,6 +89,7 @@ const PlanDetailScreen = ({navigation}) => {
                     </Box>
                 </Box>
             </Box>
+            <ScrollView>
             <Box style={styles.detailWrapper}>
                 <Box style={styles.detailHeader}>
                     <Text
@@ -82,7 +99,7 @@ const PlanDetailScreen = ({navigation}) => {
                     <Text
                         style={styles.dateText}
                         color={colors.dark[400]}
-                    >04/02 (六)</Text>
+                    >04/04 (六)</Text>
                 </Box>
                 <Box style={styles.detailContent}>
                     <Box style={styles.detailTime}>
@@ -108,7 +125,35 @@ const PlanDetailScreen = ({navigation}) => {
                             <Text
                                 style={styles.planStayTime}
                                 color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                            >停留00時00分</Text>
+                            >停留02時00分</Text>
+                        </Box>
+                    </Box>
+                </Box>
+                <Box style={styles.detailContent}>
+                    <Box style={styles.detailTime}>
+                        <Text color={colors.dark[300]}>13:00</Text>
+                        <MaterialIcon name="restaurant" size={20} color={colorMode === "dark" ? colors.secondary[100]: colors.secondary[200]} style={styles.detailType}/>
+                    </Box>
+                    <Box>
+                        <Box style={[styles.detailbox,{borderLeftColor: colors.primary[100]}]}>
+                            <Box
+                                _dark={{ bg: colors.primary[100]}}
+                                _light={{ bg: colors.primary[100]}}
+                                style={styles.planIndexBox}
+                            >
+                                <Text
+                                    style={styles.planIndex}
+                                    color={colorMode === "dark" ? colors.dark[200] : '#fff'}
+                                >2</Text>
+                            </Box>
+                            <Text
+                                style={styles.planSightName}
+                                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                            >草仔粿</Text>
+                            <Text
+                                style={styles.planStayTime}
+                                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                            >停留00時20分</Text>
                         </Box>
                     </Box>
                 </Box>
@@ -124,7 +169,80 @@ const PlanDetailScreen = ({navigation}) => {
                         color={colorMode === "dark" ? colors.dark[200] : '#fff'}
                     >新增</Text>
                 </Pressable>
+                <Box style={styles.detailHeader}>
+                    <Text
+                        style={styles.dayText}
+                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                    >Day 2</Text>
+                    <Text
+                        style={styles.dateText}
+                        color={colors.dark[400]}
+                    >04/05 (日)</Text>
+                </Box>
+                <Box style={styles.detailContent}>
+                    <Box style={styles.detailTime}>
+                        <Text color={colors.dark[300]}>12:00</Text>
+                        <MaterialIcon name="restaurant" size={20} color={colorMode === "dark" ? colors.secondary[100]: colors.secondary[200]} style={styles.detailType}/>
+                    </Box>
+                    <Box>
+                        <Box style={[styles.detailbox,{borderLeftColor: colors.primary[100]}]}>
+                            <Box
+                                _dark={{ bg: colors.primary[100]}}
+                                _light={{ bg: colors.primary[100]}}
+                                style={styles.planIndexBox}
+                            >
+                                <Text
+                                    style={styles.planIndex}
+                                    color={colorMode === "dark" ? colors.dark[200] : '#fff'}
+                                >1</Text>
+                            </Box>
+                            <Text
+                                style={styles.planSightName}
+                                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                            >阿妹茶樓</Text>
+                            <Text
+                                style={styles.planStayTime}
+                                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                            >停留01時30分</Text>
+                        </Box>
+                    </Box>
+                </Box>
+                <Pressable
+                    _dark={{ bg: colors.primary[100]}}
+                    _light={{ bg: colors.primary[100]}}
+                    style={styles.addPlanDetailBtn}
+                    onPress={() => setModalVisible(!modalVisible)}
+                >
+                    <MaterialIcon name="add" size={16} color={colorMode === "dark" ? colors.dark[200] : '#fff'} />
+                    <Text
+                        style={styles.addPlanDetailBtnText}
+                        color={colorMode === "dark" ? colors.dark[200] : '#fff'}
+                    >新增</Text>
+                </Pressable>
+                <Box style={styles.detailHeader}>
+                    <Text
+                        style={styles.dayText}
+                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                    >Day 3</Text>
+                    <Text
+                        style={styles.dateText}
+                        color={colors.dark[400]}
+                    >04/06 (六)</Text>
+                </Box>
+                <Pressable
+                    _dark={{ bg: colors.primary[100]}}
+                    _light={{ bg: colors.primary[100]}}
+                    style={styles.addPlanDetailBtn}
+                    onPress={() => setModalVisible(!modalVisible)}
+                >
+                    <MaterialIcon name="add" size={16} color={colorMode === "dark" ? colors.dark[200] : '#fff'} />
+                    <Text
+                        style={styles.addPlanDetailBtnText}
+                        color={colorMode === "dark" ? colors.dark[200] : '#fff'}
+                    >新增</Text>
+                </Pressable>
             </Box>
+            </ScrollView>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -149,10 +267,13 @@ const PlanDetailScreen = ({navigation}) => {
                     </Box>
                     <Box style={styles.modalContent}>
                         <Box style={styles.optionWrapper}>
-                            <Text style={styles.modalLabel}>行程名稱</Text>
+                            <Text
+                                style={styles.modalLabel}
+                                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                            >行程名稱</Text>
                             <Box>
                                 <Input 
-                                    variant="underlined" placeholder="九份一日遊" size="md" minWidth="75%" mt={1}
+                                    variant="underlined" placeholder={planData[0].name} size="md" minWidth="75%" mt={1}
                                     isDisabled={true}
                                     style={styles.optionRight}
                                 />
@@ -160,7 +281,10 @@ const PlanDetailScreen = ({navigation}) => {
                             
                         </Box>
                         <Box style={styles.optionWrapper}>
-                            <Text style={styles.modalLabel}>景點名稱</Text>
+                            <Text
+                                style={styles.modalLabel}
+                                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                            >景點名稱</Text>
                             <Box>
                                 <Input 
                                     variant="underlined" placeholder="輸入景點名稱" size="md" minWidth="75%" mt={1}
@@ -170,10 +294,26 @@ const PlanDetailScreen = ({navigation}) => {
                             </Box>
                         </Box>
                         <Box style={styles.optionWrapper}>
-                            <Text style={styles.modalLabel}>景點類別</Text>
+                            <Text
+                                style={styles.modalLabel}
+                                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                            >備註(選填)</Text>
+                            <Box>
+                                <Input 
+                                    variant="underlined" placeholder="輸入備註" size="md" minWidth="70%" mt={1}
+                                    value={sightName} onChangeText={text => setSightName(text)}
+                                    style={styles.optionRight}
+                                />
+                            </Box>
+                        </Box>
+                        <Box style={styles.optionWrapper}>
+                            <Text
+                                style={styles.modalLabel}
+                                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                            >景點類別</Text>
                             <Box
-                                _dark={{ bg: "#C4C4C4"}}
-                                _light={{ bg: "#E5E5E5"}}
+                                _dark={{ bg: colors.dark[200]}}
+                                _light={{ bg: colors.secondary[50]}}
                                 style={styles.optionSelectBox}
                             >
                                 <Box>
@@ -192,10 +332,13 @@ const PlanDetailScreen = ({navigation}) => {
                             
                         </Box>
                         <Box style={styles.optionWrapper}>
-                            <Text style={styles.modalLabel}>加入天數</Text>
+                            <Text
+                                style={styles.modalLabel}
+                                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                            >加入天數</Text>
                             <Pressable
-                                _dark={{ bg: "#C4C4C4"}}
-                                _light={{ bg: "#E5E5E5"}}
+                                _dark={{ bg: colors.dark[200]}}
+                                _light={{ bg: colors.secondary[50]}}
                                 style={styles.optionSelectBox}
                                 onPress={null}
                             >
@@ -203,10 +346,13 @@ const PlanDetailScreen = ({navigation}) => {
                             </Pressable>
                         </Box>
                         <Box style={styles.optionWrapper}>
-                            <Text style={styles.modalLabel}>停留時間</Text>
+                            <Text
+                                style={styles.modalLabel}
+                                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                            >停留時間</Text>
                             <Pressable
-                                _dark={{ bg: "#C4C4C4"}}
-                                _light={{ bg: "#E5E5E5"}}
+                                _dark={{ bg: colors.dark[200]}}
+                                _light={{ bg: colors.secondary[50]}}
                                 style={styles.optionSelectBox}
                                 onPress={()=> setStayModalVisible(!stayModalVisible)}
                             >
@@ -214,13 +360,8 @@ const PlanDetailScreen = ({navigation}) => {
                             </Pressable>
                         </Box>
                     </Box>
-                    <Pressable
-                        _dark={{ bg: "#C4C4C4"}}
-                        _light={{ bg: "#C4C4C4"}}
-                        style={styles.nextBtn}
-                        onPress={()=> handleFinished()}
-                    >
-                        <Text>完成</Text>
+                    <Pressable style={{marginTop: 80}} onPress={()=> handleFinished()} >
+                        <ActionButton text={"完成"}/>
                     </Pressable>
                 </View>
                 <Modal
@@ -310,8 +451,8 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         borderRadius: 10,
-        backgroundColor: '#969696',
         marginTop: 10,
+        backgroundColor: '#fff',
     },
     dayWrapper: {
         width: '100%',
@@ -493,14 +634,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '500',
         marginRight: 20,
-    },
-    nextBtn: {
-        width: 120,
-        height: 35,
-        borderRadius: 17.5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 100,
     },
     TimePickerModalView: {
         marginTop: 'auto',

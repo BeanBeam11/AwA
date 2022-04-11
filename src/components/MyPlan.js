@@ -40,7 +40,7 @@ const MyPlan = ({navigation, item}) => {
             >{formatDate(item.start_date)} - {formatDate(item.end_date)}</Text>
             <Pressable 
                 _dark={{ bg: "#fff"}}
-                _light={{ bg: "#C4C4C4"}}
+                _light={{ bg: "#fff"}}
                 style={styles.ownerAvatar}
                 onPress={null}
             >
