@@ -15,10 +15,8 @@ const ProfileScreen = ({ navigation }) => {
             _light={{ bg: colors.dark[600]}}
         >
             <GoBackHeader title={'個人檔案'} navigation={navigation}/>
-            <Box style={styles.avatarBox}>
-                <Image src={null} />
-            </Box>
-            <Text style={styles.name}>暱稱</Text>
+            <Image source={{uri: "https://pbs.twimg.com/media/Eon8PXAVgAA9QO9?format=jpg&name=large"}} style={styles.avatarBox}/>
+            <Text style={styles.name}>Sofia</Text>
             <Box
                 style={[styles.profileWrapper,{width: Dimensions.get('window').width - 48}]}
                 _dark={{ bg: colors.dark[100]}}
