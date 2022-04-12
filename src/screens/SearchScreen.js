@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Dimensions, TextInput } from 'react-native';
-import { useColorMode, Box, Text, Pressable} from 'native-base';
+import { useColorMode, useTheme, Box, Text, Pressable} from 'native-base';
 import MapView, { Marker } from 'react-native-maps';
 import Constants from "expo-constants";
 import * as Location from "expo-location";
@@ -9,6 +9,7 @@ import { SearchBar } from '../components/SearchBar';
 
 const SearchScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
+    const { colors } = useTheme();
     const [ location, setLocation ] = useState(null);
     const [ errorMsg, setErrorMsg ] = useState(null);
     const [ region, setRegion ] = useState({
@@ -60,9 +61,13 @@ const SearchScreen = ({ navigation }) => {
     return(
         <Box
             style={styles.container}
-            _dark={{ bg: "#484848"}}
-            _light={{ bg: "#fff"}}
+            _dark={{ bg: colors.dark[50]}}
+            _light={{ bg: colors.dark[600]}}
         >
+            <Text
+                style={{fontSize: 18}}
+                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+            >Coming soon</Text>
             {/* <MapView
                 style={styles.map}
                 region={region}

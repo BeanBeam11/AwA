@@ -17,7 +17,7 @@ const AccountScreen = ({ navigation }) => {
             _light={{ bg: colors.dark[600]}}
         >
             <GoBackHeader title={'個人'} navigation={navigation}/>
-            <Image source={{uri: "https://pbs.twimg.com/media/Eon8PXAVgAA9QO9?format=jpg&name=large"}} style={styles.avatarBox}/>
+            <Image source={{uri: avatar}} style={styles.avatarBox}/>
             <Text style={styles.name}>{name}</Text>
             <Box
                 style={styles.optionWrapper}

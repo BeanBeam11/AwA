@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { useColorMode, useTheme, Box, Text, Input } from 'native-base';
+import { StyleSheet, Image } from 'react-native';
+import { useColorMode, useTheme, Box, Text, Input, Pressable } from 'native-base';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
 import { ProfileEditHeader } from '../components/Header';
 import { setProfileInfo } from "../redux/actions/profileActions";
@@ -33,9 +34,12 @@ const ProfileEditScreen = ({navigation}) => {
             _light={{ bg: "#fff"}}
         >
             <ProfileEditHeader navigation={navigation} onPressDone={handleDone}/>
-            <TouchableOpacity style={styles.avatarBox}>
-                <Image src={null} />
-            </TouchableOpacity>
+            <Pressable style={styles.avatarBox} onPress={null}>
+                <Image style={styles.avatar} source={{uri: avatar}} />
+                <Box style={styles.avatarMask}>
+                    <MaterialIcon name="camera-alt" size={36} color="#fff" />
+                </Box>
+            </Pressable>
             <Box style={styles.profileWrapper}>
                 <Box style={styles.contentInputWrapper}>
                     <Text
@@ -208,6 +212,20 @@ const styles = StyleSheet.create({
         backgroundColor: '#E5E5E5',
         marginTop: 45,
     },
+    avatar: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+    },
+    avatarMask: {
+        position: 'absolute',
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: 'rgba(72, 72, 72, 0.5)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     profileWrapper: {
         width: '100%',
         marginTop: 50,
@@ -233,9 +251,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginRight: 'auto',
     },
-    selectIcon: (colorMode) => ({
-        color: colorMode === "dark" ? '#fff' : '#484848',
-    }),
     optionSelectBox: {
         width: 120,
         height: 30,

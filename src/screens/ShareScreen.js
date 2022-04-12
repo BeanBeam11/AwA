@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, FlatList, Image } from 'react-native';
+import { StyleSheet, FlatList, Image, ScrollView } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable} from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { SearchBar } from '../components/SearchBar';
@@ -34,6 +34,7 @@ const ShareScreen = () => {
             _dark={{ bg: colors.dark[50]}}
             _light={{ bg: colors.dark[600]}}
         >
+            <ScrollView>
             <SearchBar placeholderText={'搜尋景點、行程'} style={{marginTop: 56}}/>
             <Box style={styles.categoryWrapper}>
                 <FlatList
@@ -61,6 +62,7 @@ const ShareScreen = () => {
                     })
                 }
             </Box>
+        </ScrollView>
         </Box>
     );
 }

@@ -25,6 +25,7 @@ const SearchBar = (props) => {
                 onChangeText={(text) => setKeyword(text)}
                 value={keyword}
                 returnKeyType="search"
+                style={{width: '100%'}}
             />
         </Box>
     );

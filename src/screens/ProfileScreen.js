@@ -18,42 +18,74 @@ const ProfileScreen = ({ navigation }) => {
             _light={{ bg: colors.dark[600]}}
         >
             <GoBackHeader title={'個人檔案'} navigation={navigation}/>
-            <Image source={{uri: "https://pbs.twimg.com/media/Eon8PXAVgAA9QO9?format=jpg&name=large"}} style={styles.avatarBox}/>
-            <Text style={styles.name}>{name}</Text>
+            <Image source={{uri: avatar}} style={styles.avatarBox}/>
+            <Text style={[styles.name,{
+                color: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+            }]}>{name}</Text>
             <Box
                 style={[styles.profileWrapper,{width: Dimensions.get('window').width - 48}]}
                 _dark={{ bg: colors.dark[100]}}
                 _light={{ bg: '#fff'}}
             >
                 <Box style={styles.contentWrapper}>
-                    <Box style={styles.labelWrapper(colorMode)}>
-                        <Text style={styles.text}>旅遊類型</Text>
+                    <Box style={[styles.labelWrapper,{
+                        borderRightColor: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                    }]}>
+                        <Text style={[styles.text,{
+                            color: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                        }]}>旅遊類型</Text>
                     </Box>
-                    <Text style={styles.text}>{type}</Text>
+                    <Text style={[styles.text,{
+                        color: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                    }]}>{type}</Text>
                 </Box>
                 <Box style={styles.contentWrapper}>
-                    <Box style={styles.labelWrapper(colorMode)}>
-                        <Text style={styles.text}>交通方式</Text>
+                    <Box style={[styles.labelWrapper,{
+                        borderRightColor: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                    }]}>
+                        <Text style={[styles.text,{
+                            color: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                        }]}>交通方式</Text>
                     </Box>
-                    <Text style={styles.text}>{transportation}</Text>
+                    <Text style={[styles.text,{
+                        color: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                    }]}>{transportation}</Text>
                 </Box>
                 <Box style={styles.contentWrapper}>
-                    <Box style={styles.labelWrapper(colorMode)}>
-                        <Text style={styles.text}>性別</Text>
+                    <Box style={[styles.labelWrapper,{
+                        borderRightColor: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                    }]}>
+                        <Text style={[styles.text,{
+                            color: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                        }]}>性別</Text>
                     </Box>
-                    <Text style={styles.text}>{gender}</Text>
+                    <Text style={[styles.text,{
+                        color: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                    }]}>{gender}</Text>
                 </Box>
                 <Box style={styles.contentWrapper}>
-                    <Box style={styles.labelWrapper(colorMode)}>
-                        <Text style={styles.text}>年齡</Text>
+                    <Box style={[styles.labelWrapper,{
+                        borderRightColor: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                    }]}>
+                        <Text style={[styles.text,{
+                            color: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                        }]}>年齡</Text>
                     </Box>
-                    <Text style={styles.text}>{age}</Text>
+                    <Text style={[styles.text,{
+                        color: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                    }]}>{age}</Text>
                 </Box>
                 <Box style={styles.contentWrapper}>
-                    <Box style={styles.labelWrapper(colorMode)}>
-                        <Text style={styles.text}>興趣</Text>
+                    <Box style={[styles.labelWrapper,{
+                        borderRightColor: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                    }]}>
+                        <Text style={[styles.text,{
+                            color: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                        }]}>興趣</Text>
                     </Box>
-                    <Text style={styles.text}>{interest}</Text>
+                    <Text style={[styles.text,{
+                        color: colorMode === "dark" ? colors.dark[600] : colors.dark[200]
+                    }]}>{interest}</Text>
                 </Box>
             </Box>
             <Pressable style={{marginTop: 80}} onPress={()=> navigation.navigate('ProfileEditScreen')}>
@@ -92,14 +124,13 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
     },
-    labelWrapper: (colorMode) => ({
+    labelWrapper: {
         width: 80,
         paddingRight: 8,
         marginRight: 15,
         marginBottom: 15,
         borderRightWidth: 1,
-        borderRightColor: colorMode === "dark" ? '#fff' : '#484848',
-    }),
+    },
     text: {
         fontSize: 14,
         textAlign: 'right',

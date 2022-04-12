@@ -14,78 +14,78 @@ const HomeScreen = ({ navigation }) => {
     const { colors } = useTheme();
 
     return(
-        <ScrollView
-            showsVerticalScrollIndicator={false}
+        <Box
+            style={styles.container}
+            _dark={{ bg: colors.dark[50]}}
+            _light={{ bg: colors.dark[600]}}
         >
-            <Box
-                style={styles.container}
-                _dark={{ bg: colors.dark[50]}}
-                _light={{ bg: colors.dark[600]}}
+            <ScrollView
+                showsVerticalScrollIndicator={false}
             >
-                <Box style={styles.header}>
+            <Box style={styles.header}>
+                <Text
+                    style={styles.headerText}
+                    color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                >探索</Text>
+                <Pressable onPress={null}>
+                    <MaterialIcon name="notifications" size={24} color={colors.primary[100]} />
+                </Pressable>
+            </Box>
+            <SearchBar style={styles.searchBar} placeholderText={'搜尋景點、行程'}/>
+            <Box style={styles.sectionWrapper}>
+                <Box style={styles.sectionHeader}>
                     <Text
-                        style={styles.headerText}
+                        style={styles.sectionTitle}
                         color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                    >探索</Text>
-                    <Pressable onPress={null}>
-                        <MaterialIcon name="notifications" size={24} color={colors.primary[100]} />
+                    >地區</Text>
+                    <Pressable style={styles.sectionRightBox}>
+                        <Text
+                            style={styles.sectionTitleRight}
+                            color={colorMode === "dark" ? colors.dark[500] : colors.dark[300]}
+                        >更多</Text>
                     </Pressable>
                 </Box>
-                <SearchBar style={styles.searchBar} placeholderText={'搜尋景點、行程'}/>
-                <Box style={styles.sectionWrapper}>
-                    <Box style={styles.sectionHeader}>
-                        <Text
-                            style={styles.sectionTitle}
-                            color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                        >地區</Text>
-                        <Pressable style={styles.sectionRightBox}>
-                            <Text
-                                style={styles.sectionTitleRight}
-                                color={colorMode === "dark" ? colors.dark[500] : colors.dark[300]}
-                            >更多</Text>
-                        </Pressable>
-                    </Box>
-                    <CityList />
-                </Box>
-                <Box style={styles.sectionWrapper}>
-                    <Box style={styles.sectionHeader}>
-                        <Text
-                            style={styles.sectionTitle}
-                            color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                        >推薦景點</Text>
-                        <Pressable style={styles.sectionRightBox}>
-                            <Text
-                                style={styles.sectionTitleRight}
-                                color={colorMode === "dark" ? colors.dark[500] : colors.dark[300]}
-                            >更多</Text>
-                        </Pressable>
-                    </Box>
-                    <SightList />
-                </Box>
-                <Box style={styles.sectionWrapper}>
-                    <Box style={styles.sectionHeader}>
-                        <Text
-                            style={styles.sectionTitle}
-                            color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                        >熱門行程</Text>
-                        <Pressable style={styles.sectionRightBox}>
-                            <Text
-                                style={styles.sectionTitleRight}
-                                color={colorMode === "dark" ? colors.dark[500] : colors.dark[300]}
-                            >更多</Text>
-                        </Pressable>
-                    </Box>
-                    <PlanList />
-                </Box>
-                <Box style={styles.sectionWrapper}>
-                    <Box style={styles.sectionHeader}>
-                        <Text style={styles.sectionTitle}>最新消息</Text>
-                    </Box>
-                    <News style={{marginHorizontal: 24}}/>
-                </Box>
+                <CityList />
             </Box>
+            <Box style={styles.sectionWrapper}>
+                <Box style={styles.sectionHeader}>
+                    <Text
+                        style={styles.sectionTitle}
+                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                    >推薦景點</Text>
+                    <Pressable style={styles.sectionRightBox}>
+                        <Text
+                            style={styles.sectionTitleRight}
+                            color={colorMode === "dark" ? colors.dark[500] : colors.dark[300]}
+                        >更多</Text>
+                    </Pressable>
+                </Box>
+                <SightList />
+            </Box>
+            <Box style={styles.sectionWrapper}>
+                <Box style={styles.sectionHeader}>
+                    <Text
+                        style={styles.sectionTitle}
+                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
+                    >熱門行程</Text>
+                    <Pressable style={styles.sectionRightBox}>
+                        <Text
+                            style={styles.sectionTitleRight}
+                            color={colorMode === "dark" ? colors.dark[500] : colors.dark[300]}
+                        >更多</Text>
+                    </Pressable>
+                </Box>
+                <PlanList />
+            </Box>
+            <Box style={styles.sectionWrapper}>
+                <Box style={styles.sectionHeader}>
+                    <Text style={styles.sectionTitle}>最新消息</Text>
+                </Box>
+                <News style={{marginHorizontal: 24}}/>
+            </Box>
+            </ScrollView>
             <StatusBar style={colorMode === "dark" ? "light" : "dark"}/>
-        </ScrollView>
+        </Box>
     );
 }
 
