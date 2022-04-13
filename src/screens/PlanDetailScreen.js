@@ -323,20 +323,32 @@ const PlanDetailScreen = ({navigation}) => {
                             <Box
                                 _dark={{ bg: colors.dark[200]}}
                                 _light={{ bg: colors.secondary[50]}}
-                                style={styles.optionSelectBox}
+                                style={[styles.optionSelectBox, {paddingLeft: 10}]}
                             >
-                                <Box>
-                                    <RNPickerSelect
-                                        placeholder={{}}
-                                        onValueChange={(value) => setSightType(value)}
-                                        items={[
-                                            { label: '景點', value: 'landmark' },
-                                            { label: '美食', value: 'food' },
-                                            { label: '購物', value: 'shopping' },
-                                            { label: '住宿', value: 'hotel' },
-                                        ]}
-                                    />
-                                </Box>
+                                <RNPickerSelect
+                                    placeholder={{}}
+                                    onValueChange={(value) => setSightType(value)}
+                                    items={[
+                                        { label: '景點', value: 'landmark' },
+                                        { label: '美食', value: 'food' },
+                                        { label: '購物', value: 'shopping' },
+                                        { label: '住宿', value: 'hotel' },
+                                    ]}
+                                    style={{
+                                        placeholder: {
+                                            color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
+                                        },
+                                        color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
+                                        inputAndroid: {
+                                            color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                        },
+                                        inputIOS: {
+                                            color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                        },
+                                        viewContainer: { justifyContent: 'center' },
+                                        inputIOSContainer: { alignItems: 'center' },
+                                    }}
+                                />
                             </Box>
                             
                         </Box>
@@ -535,9 +547,9 @@ const styles = StyleSheet.create({
         left: -11,
     },
     planIndex: {
-        fontSize: 14,
+        fontSize: Platform.OS === 'ios' ? 14 : 12,
+        lineHeight: Platform.OS === 'ios' ? 16 : 14,
         fontWeight: '500',
-        lineHeight: 20,
     },
     planSightName: {
         fontSize: 16,
