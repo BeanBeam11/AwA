@@ -71,27 +71,34 @@ const ProfileEditScreen = ({navigation}) => {
                         _light={{ bg: colors.secondary[50]}}
                         style={styles.optionSelectBox}
                     >
-                        <Box>
-                            <RNPickerSelect
-                                placeholder={{
-                                    label: '未設定',
-                                    value: null,
-                                }}
-                                value={type}
-                                onValueChange={(value) => setType(value)}
-                                items={[
-                                    { label: '景點', value: '景點' },
-                                    { label: '美食', value: '美食' },
-                                    { label: '購物', value: '購物' },
-                                    { label: '住宿', value: '住宿' },
-                                ]}
-                                style={{
-                                    placeholder: {
-                                        color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
-                                    },
-                                }}
-                            />
-                        </Box>
+                        <RNPickerSelect
+                            placeholder={{
+                                label: '未設定',
+                                value: null,
+                            }}
+                            value={type}
+                            onValueChange={(value) => setType(value)}
+                            items={[
+                                { label: '景點', value: '景點' },
+                                { label: '美食', value: '美食' },
+                                { label: '購物', value: '購物' },
+                                { label: '住宿', value: '住宿' },
+                            ]}
+                            style={{
+                                placeholder: {
+                                    color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
+                                },
+                                color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
+                                inputAndroid: {
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                },
+                                inputIOS: {
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                },
+                                viewContainer: { justifyContent: 'center' },
+                                inputIOSContainer: { alignItems: 'center' },
+                            }}
+                        />
                     </Box>
                 </Box>
                 <Box style={styles.contentWrapper}>
@@ -104,29 +111,36 @@ const ProfileEditScreen = ({navigation}) => {
                         _light={{ bg: colors.secondary[50]}}
                         style={styles.optionSelectBox}
                     >
-                        <Box>
-                            <RNPickerSelect
-                                placeholder={{
-                                    label: '未設定',
-                                    value: null
-                                }}
-                                value={transportation}
-                                onValueChange={(value) => setTransportation(value)}
-                                items={[
-                                    { label: '步行', value: '步行' },
-                                    { label: '機車', value: '機車' },
-                                    { label: '汽車', value: '汽車' },
-                                    { label: '公車', value: '公車' },
-                                    { label: '火車', value: '火車' },
-                                    { label: '捷運', value: '捷運' },
-                                ]}
-                                style={{
-                                    placeholder: {
-                                        color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
-                                    },
-                                }}
-                            />
-                        </Box>
+                        <RNPickerSelect
+                            placeholder={{
+                                label: '未設定',
+                                value: null
+                            }}
+                            value={transportation}
+                            onValueChange={(value) => setTransportation(value)}
+                            items={[
+                                { label: '步行', value: '步行' },
+                                { label: '機車', value: '機車' },
+                                { label: '汽車', value: '汽車' },
+                                { label: '公車', value: '公車' },
+                                { label: '火車', value: '火車' },
+                                { label: '捷運', value: '捷運' },
+                            ]}
+                            style={{
+                                placeholder: {
+                                    color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
+                                },
+                                color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
+                                inputAndroid: {
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                },
+                                inputIOS: {
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                },
+                                viewContainer: { justifyContent: 'center' },
+                                inputIOSContainer: { alignItems: 'center' },
+                            }}
+                        />
                     </Box>
                 </Box>
                 <Box style={styles.contentWrapper}>
@@ -139,25 +153,32 @@ const ProfileEditScreen = ({navigation}) => {
                         _light={{ bg: colors.secondary[50]}}
                         style={styles.optionSelectBox}
                     >
-                        <Box>
-                            <RNPickerSelect
-                                placeholder={{
-                                    label: '未設定',
-                                    value: null
-                                }}
-                                value={gender}
-                                onValueChange={(value) => setGender(value)}
-                                items={[
-                                    { label: '男', value: '男' },
-                                    { label: '女', value: '女' },
-                                ]}
-                                style={{
-                                    placeholder: {
-                                        color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
-                                    },
-                                }}
-                            />
-                        </Box>
+                        <RNPickerSelect
+                            placeholder={{
+                                label: '未設定',
+                                value: null
+                            }}
+                            value={gender}
+                            onValueChange={(value) => setGender(value)}
+                            items={[
+                                { label: '男', value: '男' },
+                                { label: '女', value: '女' },
+                            ]}
+                            style={{
+                                placeholder: {
+                                    color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
+                                },
+                                color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
+                                inputAndroid: {
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                },
+                                inputIOS: {
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                },
+                                viewContainer: { justifyContent: 'center' },
+                                inputIOSContainer: { alignItems: 'center' },
+                            }}
+                        />
                     </Box>
                 </Box>
                 <Box style={styles.contentWrapper}>
@@ -170,27 +191,34 @@ const ProfileEditScreen = ({navigation}) => {
                         _light={{ bg: colors.secondary[50]}}
                         style={styles.optionSelectBox}
                     >
-                        <Box>
-                            <RNPickerSelect
-                                placeholder={{
-                                    label: '未設定',
-                                    value: null
-                                }}
-                                value={age}
-                                onValueChange={(value) => setAge(value)}
-                                items={[
-                                    { label: '18歲以下', value: '18歲以下' },
-                                    { label: '19-25歲', value: '19-25歲' },
-                                    { label: '26-30歲', value: '26-30歲' },
-                                    { label: '31歲以上', value: '31歲以上' },
-                                ]}
-                                style={{
-                                    placeholder: {
-                                        color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
-                                    },
-                                }}
-                            />
-                        </Box>
+                        <RNPickerSelect
+                            placeholder={{
+                                label: '未設定',
+                                value: null
+                            }}
+                            value={age}
+                            onValueChange={(value) => setAge(value)}
+                            items={[
+                                { label: '18歲以下', value: '18歲以下' },
+                                { label: '19-25歲', value: '19-25歲' },
+                                { label: '26-30歲', value: '26-30歲' },
+                                { label: '31歲以上', value: '31歲以上' },
+                            ]}
+                            style={{
+                                placeholder: {
+                                    color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
+                                },
+                                color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
+                                inputAndroid: {
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                },
+                                inputIOS: {
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                },
+                                viewContainer: { justifyContent: 'center' },
+                                inputIOSContainer: { alignItems: 'center' },
+                            }}
+                        />
                     </Box>
                 </Box>
             </Box>
@@ -252,8 +280,9 @@ const styles = StyleSheet.create({
         marginRight: 'auto',
     },
     optionSelectBox: {
-        width: 120,
-        height: 30,
+        width: Platform.OS === 'ios' ? 120 : 150,
+        height: Platform.OS === 'ios' ? 30 : 36,
+        paddingLeft: Platform.OS === 'ios' ? 0 : 10,
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
