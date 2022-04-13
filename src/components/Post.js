@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable} from 'native-base';
 
 const Post = ({navigation, item}) => {
@@ -61,11 +61,11 @@ const Post = ({navigation, item}) => {
                     color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                 >{item.title}</Text>
                 {
-                    item.content.length > 38
+                    item.content.length > 35
                     ? <Text 
                         style={styles.postContent}
                         color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                    >{item.content.slice(0,39)}...</Text>
+                    >{item.content.slice(0,36)}...</Text>
                     : <Text
                         style={styles.postContent}
                         color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
@@ -81,12 +81,13 @@ export { Post };
 const styles = StyleSheet.create({
     postBox: {
         width: '100%',
-        height: 140,
+        height: 150,
         borderRadius: 5,
         padding: 10,
         display: 'flex',
         flexDirection: 'row',
         marginBottom: 10,
+        alignItems: 'center',
     },
     postImage: {
         width: 140,
@@ -99,15 +100,16 @@ const styles = StyleSheet.create({
         marginTop: 8,
     },
     categoryBox: {
-        fontSize: 11,
+        fontSize: Platform.OS === 'ios' ? 11 : 9,
+        lineHeight: Platform.OS === 'ios' ? 18 : 15,
         lineHeight: 16,
         borderRadius: 5,
         borderWidth: 1,
-        paddingHorizontal: 8,
+        paddingHorizontal: Platform.OS === 'ios' ? 8 : 5,
         marginRight: 8,
     },
     region: {
-        fontSize: 12,
+        fontSize: Platform.OS === 'ios' ? 12 : 10,
     },
     postRightBox: {
         marginLeft: 10,
@@ -135,14 +137,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     postTitle: {
-        fontSize: 16,
+        fontSize: Platform.OS === 'ios' ? 16 : 14,
+        lineHeight: Platform.OS === 'ios' ? 20 : 16,
         fontWeight: '500',
         marginTop: 8,
         marginBottom: 3,
     },
     postContent: {
-        fontSize: 12,
-        lineHeight: 18,
-        width: 172,
+        fontSize: Platform.OS === 'ios' ? 12 : 11,
+        lineHeight: Platform.OS === 'ios' ? 18 : 15,
+        width: Platform.OS === 'ios' ? 172 : '36%',
     },
 });

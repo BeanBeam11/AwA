@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, FlatList, Image, ScrollView } from 'react-native';
+import { StyleSheet, FlatList, Image, ScrollView, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable} from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { SearchBar } from '../components/SearchBar';
@@ -107,5 +107,6 @@ const styles = StyleSheet.create({
     postWrapper: {
         marginTop: 15,
         paddingHorizontal: 24,
+        paddingBottom: 80,
     },
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from "react-redux";
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, Platform, Dimensions } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Switch} from 'native-base';
 import { GoBackHeader } from '../components/Header';
 
@@ -20,7 +20,9 @@ const AccountScreen = ({ navigation }) => {
             <Image source={{uri: avatar}} style={styles.avatarBox}/>
             <Text style={styles.name}>{name}</Text>
             <Box
-                style={styles.optionWrapper}
+                style={[styles.optionWrapper,{
+                    height: Dimensions.get('window').height > 780 ? 510 : 420
+                }]}
                 _dark={{ bg: colors.dark[100]}}
                 _light={{ bg: '#fff'}}
             >
@@ -94,38 +96,6 @@ const AccountScreen = ({ navigation }) => {
                     >登出</Text>
                 </Pressable>
             </Box>
-            {/* <Box style={styles.profileWrapper}>
-                <Box style={styles.contentWrapper}>
-                    <Box style={styles.labelWrapper(colorMode)}>
-                        <Text style={styles.text}>旅遊類型</Text>
-                    </Box>
-                    <Text style={styles.text}>美食</Text>
-                </Box>
-                <Box style={styles.contentWrapper}>
-                    <Box style={styles.labelWrapper(colorMode)}>
-                        <Text style={styles.text}>交通方式</Text>
-                    </Box>
-                    <Text style={styles.text}>公車</Text>
-                </Box>
-                <Box style={styles.contentWrapper}>
-                    <Box style={styles.labelWrapper(colorMode)}>
-                        <Text style={styles.text}>性別</Text>
-                    </Box>
-                    <Text style={styles.text}>女</Text>
-                </Box>
-                <Box style={styles.contentWrapper}>
-                    <Box style={styles.labelWrapper(colorMode)}>
-                        <Text style={styles.text}>年齡</Text>
-                    </Box>
-                    <Text style={styles.text}>19-25</Text>
-                </Box>
-                <Box style={styles.contentWrapper}>
-                    <Box style={styles.labelWrapper(colorMode)}>
-                        <Text style={styles.text}>興趣</Text>
-                    </Box>
-                    <Text style={styles.text}>吃飯、睡覺、打東東</Text>
-                </Box>
-            </Box> */}
         </Box>
     );
 }
@@ -142,16 +112,16 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 50,
         backgroundColor: '#E5E5E5',
-        marginTop: 45,
+        marginTop: Platform. OS === 'ios' ? 45 : 20,
     },
     name: {
         fontSize: 20,
+        lineHeight: 24,
         marginTop: 15,
     },
     optionWrapper: {
         position: 'absolute',
         width: '100%',
-        height: 520,
         bottom: 0,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
@@ -181,6 +151,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 25,
+        marginTop: 20,
     },
 });

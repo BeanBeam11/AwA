@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Image, View, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Image, View, Modal, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Input } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
@@ -15,6 +15,7 @@ const PlanDetailScreen = ({navigation}) => {
     const [ stayModalVisible, setStayModalVisible ] = useState(false);
     const [ sightName, setSightName ] = useState('');
     const [ sightType, setSightType ] = useState('');
+    const [ sightNote, setSightNote ] = useState('');
     const [ stayTime, setStayTime ] = useState({hours: 0, minutes: 0});
 
     const handleFinished = () => {
@@ -271,12 +272,12 @@ const PlanDetailScreen = ({navigation}) => {
                                 style={styles.modalLabel}
                                 color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
                             >行程名稱</Text>
-                            <Box>
-                                <Input 
-                                    variant="underlined" placeholder={planData[0].name} size="md" minWidth="75%" mt={1}
-                                    isDisabled={true}
-                                    style={styles.optionRight}
-                                />
+                            <Box style={[styles.optionRight,{
+                                borderBottomColor: colors.dark[500]
+                            }]}>
+                                <Text
+                                    color={colors.dark[300]}
+                                >{planData[0].name}</Text>
                             </Box>
                             
                         </Box>
@@ -285,11 +286,15 @@ const PlanDetailScreen = ({navigation}) => {
                                 style={styles.modalLabel}
                                 color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
                             >景點名稱</Text>
-                            <Box>
-                                <Input 
-                                    variant="underlined" placeholder="輸入景點名稱" size="md" minWidth="75%" mt={1}
-                                    value={sightName} onChangeText={text => setSightName(text)}
-                                    style={styles.optionRight}
+                            <Box style={[styles.optionRight,{
+                                borderBottomColor: colors.dark[500]
+                            }]}>
+                                <TextInput
+                                    placeholder="輸入景點名稱"
+                                    placeholderTextColor={colors.dark[400]}
+                                    value={sightName}
+                                    onChangeText={text => setSightName(text)}
+                                    returnKeyType="done"
                                 />
                             </Box>
                         </Box>
@@ -298,11 +303,15 @@ const PlanDetailScreen = ({navigation}) => {
                                 style={styles.modalLabel}
                                 color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
                             >備註(選填)</Text>
-                            <Box>
-                                <Input 
-                                    variant="underlined" placeholder="輸入備註" size="md" minWidth="70%" mt={1}
-                                    value={sightName} onChangeText={text => setSightName(text)}
-                                    style={styles.optionRight}
+                            <Box style={[styles.optionRight,{
+                                borderBottomColor: colors.dark[500]
+                            }]}>
+                                <TextInput
+                                    placeholder="輸入備註"
+                                    placeholderTextColor={colors.dark[400]}
+                                    value={sightNote}
+                                    onChangeText={text => setSightNote(text)}
+                                    returnKeyType="done"
                                 />
                             </Box>
                         </Box>
@@ -360,7 +369,7 @@ const PlanDetailScreen = ({navigation}) => {
                             </Pressable>
                         </Box>
                     </Box>
-                    <Pressable style={{marginTop: 80}} onPress={()=> handleFinished()} >
+                    <Pressable style={{marginTop: Platform.OS === 'ios' ? 80 : 40}} onPress={()=> handleFinished()} >
                         <ActionButton text={"完成"}/>
                     </Pressable>
                 </View>
@@ -444,7 +453,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     introDate: {
-        fontSize: 14,
+        fontSize: Platform.OS === 'ios' ? 14 : 12,
         color: '#969696',
     },
     ownerAvatar: {
@@ -467,7 +476,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 12,
     },
     dayBoxText: {
-        fontSize: 14,
+        fontSize: Platform.OS === 'ios' ? 14 : 12,
         fontWeight: '500',
     },
     addDayBtn: {
@@ -481,6 +490,7 @@ const styles = StyleSheet.create({
     detailWrapper: {
         paddingHorizontal: 16,
         alignItems: 'center',
+        paddingBottom: 80,
     },
     detailHeader: {
         width: '100%',
@@ -552,10 +562,11 @@ const styles = StyleSheet.create({
     },
     modalView: (colorMode) => ({
         width: '100%',
-        height: '95%',
+        height: Platform. OS === 'ios' ? '95%' : '99%',
         marginTop: 'auto',
         backgroundColor: 'white',
-        borderRadius: 20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
         paddingHorizontal: 16,
         paddingTop: 10,
         alignItems: 'center',
@@ -611,7 +622,11 @@ const styles = StyleSheet.create({
         height: 190,
         borderRadius: 5,
         backgroundColor: '#C4C4C4',
-        marginTop: 20,
+        marginTop: Platform.OS === 'ios' ? 20 : 10,
+    },
+    optionRight: {
+        width: 250,
+        borderBottomWidth: 1,
     },
     optionWrapper: {
         width: '100%',

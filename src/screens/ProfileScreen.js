@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from "react-redux";
-import { StyleSheet, Image, Dimensions } from 'react-native';
+import { StyleSheet, Image, Dimensions, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable} from 'native-base';
 import { GoBackHeader } from '../components/Header';
 import { ActionButton } from '../components/ActionButton';
@@ -88,7 +88,7 @@ const ProfileScreen = ({ navigation }) => {
                     }]}>{interest}</Text>
                 </Box>
             </Box>
-            <Pressable style={{marginTop: 80}} onPress={()=> navigation.navigate('ProfileEditScreen')}>
+            <Pressable style={{marginTop: 60}} onPress={()=> navigation.navigate('ProfileEditScreen')}>
                 <ActionButton text={'編輯'} />
             </Pressable>
         </Box>
@@ -107,10 +107,11 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 50,
         backgroundColor: '#E5E5E5',
-        marginTop: 45,
+        marginTop: Platform.OS === 'ios' ? 45 : 20,
     },
     name: {
         fontSize: 20,
+        lineHeight: 24,
         marginTop: 15,
     },
     profileWrapper: {

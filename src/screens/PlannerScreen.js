@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Modal, View, Image, FlatList, TextInput, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet, Modal, View, Image, FlatList, TextInput, Dimensions, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -139,15 +139,15 @@ const PlannerScreen = ({ navigation }) => {
                 style={styles.segmentedControlStyle}
                 fontStyle={{
                     fontSize: 14,
-                    color: colorMode === "dark" ? '#fff' : colors.dark[200],
+                    color: colorMode === "dark" ? colors.dark[300] : colors.dark[200],
                 }}
                 activeFontStyle={{
                     fontSize: 14,
-                    color: colors.dark[200],
+                    color: colorMode === "dark" ? colors.dark[600] : colors.dark[200],
                 }}
                 // tintColor={colorMode === "dark" ? colors.secondary[100] : '#fff'}
                 // backgroundColor={colorMode === "dark" ? colors.dark[200] : colors.secondary[50]}
-                appearance="light" // to fix if device use dark mode
+                appearance={colorMode === "dark" ? "dark" : "light"}
             />
             <SegmentedContent />
             <AddButton size={'large'} style={styles.fabWrapper} onPress={() => setModalVisible(true)}/>
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     },
     modalView: {
         width: '100%',
-        height: '95%',
+        height: Platform.OS === 'ios' ? '95%' : '100%',
         marginTop: 'auto',
         backgroundColor: 'white',
         borderRadius: 20,
@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     planWrapper: {
-        paddingHorizontal: 24,
+        alignItems: 'center',
     },
     planNullBox: {
         height: 300,

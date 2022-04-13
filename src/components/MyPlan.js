@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image, Platform } from 'react-native';
+import { StyleSheet, Image, Platform, Dimensions } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable} from 'native-base';
 
 const MyPlan = ({navigation, item}) => {
@@ -22,13 +22,20 @@ const MyPlan = ({navigation, item}) => {
     
     return (
         <Pressable
-            style={styles.planBox}
+            style={[styles.planBox,{
+                width: Dimensions.get('window').width * 0.45,
+            }]}
             _dark={{ bg: colors.dark[100]}}
             _light={{ bg: '#fff'}}
             onPress={()=> navigation.navigate('PlanDetailScreen')}
         >
             <Box style={styles.planImageBox}>
-                <Image source={{uri: item.cover_image}} style={styles.planImage} resizeMode="cover" />
+                <Image
+                    style={[styles.planImage,{
+                        width: Dimensions.get('window').width * 0.45 - 20,
+                    }]}
+                    source={{uri: item.cover_image}} resizeMode="cover"
+                />
             </Box>
             <Text
                 style={styles.planName}
@@ -54,7 +61,6 @@ export { MyPlan };
 
 const styles = StyleSheet.create({
     planBox: {
-        width: 165,
         height: 200,
         borderRadius: 5,
         marginHorizontal: 5,
@@ -65,7 +71,6 @@ const styles = StyleSheet.create({
         marginBottom: Platform.OS === 'ios' ? 8 : 5,
     },
     planImage: {
-        width: 145,
         height: 92,
         borderRadius: 5,
     },
@@ -74,7 +79,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     planDate: {
-        fontSize: Platform.OS === 'ios' ? 11 : 9,
+        fontSize: Platform.OS === 'ios' ? 11 : 10,
         lineHeight: Platform.OS === 'ios' ? 18 : 16,
     },
     ownerAvatar: {
