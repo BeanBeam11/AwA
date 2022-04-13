@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     },
     sectionTitle: {
         fontSize: 20,
+        lineHeight: 24,
     },
     sectionRightBox: {
         marginLeft: 'auto',

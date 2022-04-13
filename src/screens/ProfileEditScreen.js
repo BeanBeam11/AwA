@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
         marginRight: 'auto',
     },
     optionSelectBox: {
-        width: Platform.OS === 'ios' ? 120 : 150,
+        width: Platform.OS === 'ios' ? 120 : 140,
         height: Platform.OS === 'ios' ? 30 : 36,
         paddingLeft: Platform.OS === 'ios' ? 0 : 10,
         borderRadius: 5,
