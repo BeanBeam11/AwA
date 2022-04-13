@@ -304,6 +304,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: '#C4C4C4',
         marginTop: 20,
+        marginLeft: 'auto',
+        marginRight: 'auto',
     },
     modalLabel: {
         fontSize: 14,
