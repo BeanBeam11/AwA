@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Image, View, Modal, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { StyleSheet, Image, View, Modal, TouchableOpacity, ScrollView, TextInput, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Input } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
@@ -323,7 +323,7 @@ const PlanDetailScreen = ({navigation}) => {
                             <Box
                                 _dark={{ bg: colors.dark[200]}}
                                 _light={{ bg: colors.secondary[50]}}
-                                style={[styles.optionSelectBox, {paddingLeft: 10}]}
+                                style={[styles.optionSelectBox, {paddingLeft: Platform.OS ==='ios' ? 0 : 10}]}
                             >
                                 <RNPickerSelect
                                     placeholder={{}}
