@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, FlatList, Image, ScrollView } from 'react-native';
-import { useColorMode, useTheme, Box, Text, Pressable} from 'native-base';
+import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { CityList } from '../components/CityList';
 import { SightList } from '../components/SightList';
@@ -13,81 +13,86 @@ const HomeScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
-    return(
-        <Box
-            style={styles.container}
-            _dark={{ bg: colors.dark[50]}}
-            _light={{ bg: colors.dark[600]}}
-        >
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-            >
-            <Box style={styles.header}>
-                <Text
-                    style={styles.headerText}
-                    color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                >探索</Text>
-                <Pressable onPress={null}>
-                    <MaterialIcon name="notifications" size={24} color={colors.primary[100]} />
-                </Pressable>
-            </Box>
-            <SearchBar style={styles.searchBar} placeholderText={'搜尋景點、行程'}/>
-            <Box style={styles.sectionWrapper}>
-                <Box style={styles.sectionHeader}>
-                    <Text
-                        style={styles.sectionTitle}
-                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                    >地區</Text>
-                    <Pressable style={styles.sectionRightBox}>
-                        <Text
-                            style={styles.sectionTitleRight}
-                            color={colorMode === "dark" ? colors.dark[500] : colors.dark[300]}
-                        >更多</Text>
+    return (
+        <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <Box style={styles.header}>
+                    <Text style={styles.headerText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                        探索
+                    </Text>
+                    <Pressable onPress={null}>
+                        <MaterialIcon name="notifications" size={24} color={colors.primary[100]} />
                     </Pressable>
                 </Box>
-                <CityList />
-            </Box>
-            <Box style={styles.sectionWrapper}>
-                <Box style={styles.sectionHeader}>
-                    <Text
-                        style={styles.sectionTitle}
-                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                    >推薦景點</Text>
-                    <Pressable style={styles.sectionRightBox}>
+                <SearchBar style={styles.searchBar} placeholderText={'搜尋景點、行程'} />
+                <Box style={styles.sectionWrapper}>
+                    <Box style={styles.sectionHeader}>
                         <Text
-                            style={styles.sectionTitleRight}
-                            color={colorMode === "dark" ? colors.dark[500] : colors.dark[300]}
-                        >更多</Text>
-                    </Pressable>
+                            style={styles.sectionTitle}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            地區
+                        </Text>
+                        <Pressable style={styles.sectionRightBox}>
+                            <Text
+                                style={styles.sectionTitleRight}
+                                color={colorMode === 'dark' ? colors.dark[500] : colors.dark[300]}
+                            >
+                                更多
+                            </Text>
+                        </Pressable>
+                    </Box>
+                    <CityList />
                 </Box>
-                <SightList />
-            </Box>
-            <Box style={styles.sectionWrapper}>
-                <Box style={styles.sectionHeader}>
-                    <Text
-                        style={styles.sectionTitle}
-                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                    >熱門行程</Text>
-                    <Pressable style={styles.sectionRightBox}>
+                <Box style={styles.sectionWrapper}>
+                    <Box style={styles.sectionHeader}>
                         <Text
-                            style={styles.sectionTitleRight}
-                            color={colorMode === "dark" ? colors.dark[500] : colors.dark[300]}
-                        >更多</Text>
-                    </Pressable>
+                            style={styles.sectionTitle}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            推薦景點
+                        </Text>
+                        <Pressable style={styles.sectionRightBox}>
+                            <Text
+                                style={styles.sectionTitleRight}
+                                color={colorMode === 'dark' ? colors.dark[500] : colors.dark[300]}
+                            >
+                                更多
+                            </Text>
+                        </Pressable>
+                    </Box>
+                    <SightList />
                 </Box>
-                <PlanList />
-            </Box>
-            <Box style={styles.sectionWrapper}>
-                <Box style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>最新消息</Text>
+                <Box style={styles.sectionWrapper}>
+                    <Box style={styles.sectionHeader}>
+                        <Text
+                            style={styles.sectionTitle}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            熱門行程
+                        </Text>
+                        <Pressable style={styles.sectionRightBox}>
+                            <Text
+                                style={styles.sectionTitleRight}
+                                color={colorMode === 'dark' ? colors.dark[500] : colors.dark[300]}
+                            >
+                                更多
+                            </Text>
+                        </Pressable>
+                    </Box>
+                    <PlanList />
                 </Box>
-                <News style={{marginHorizontal: 24}}/>
-            </Box>
+                <Box style={styles.sectionWrapper}>
+                    <Box style={styles.sectionHeader}>
+                        <Text style={styles.sectionTitle}>最新消息</Text>
+                    </Box>
+                    <News style={{ marginHorizontal: 24 }} />
+                </Box>
             </ScrollView>
-            <StatusBar style={colorMode === "dark" ? "light" : "dark"}/>
+            <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />
         </Box>
     );
-}
+};
 
 export default HomeScreen;
 

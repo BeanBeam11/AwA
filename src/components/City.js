@@ -1,26 +1,20 @@
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { useColorMode, useTheme, Box, Text, Pressable} from 'native-base';
+import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 
-const City = ({navigation, item}) => {
+const City = ({ navigation, item }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    
+
     return (
-        <Pressable
-            _dark={{ bg: colors.dark[100] }}
-            _light={{ bg: "#fff" }}
-            style={styles.cityBox}
-            onPress={null}
-        >
+        <Pressable _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }} style={styles.cityBox} onPress={null}>
             <Image source={item.image} style={styles.cityImage} resizeMode="cover" />
-            <Text
-                style={styles.cityName}
-                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-            >{item.city}</Text>
+            <Text style={styles.cityName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                {item.city}
+            </Text>
         </Pressable>
     );
-}
+};
 
 export { City };
 

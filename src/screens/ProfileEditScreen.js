@@ -1,41 +1,37 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 import { StyleSheet, Image } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Input, Pressable } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
 import { ProfileEditHeader } from '../components/Header';
-import { setProfileInfo } from "../redux/actions/profileActions";
+import { setProfileInfo } from '../redux/actions/profileActions';
 
-const ProfileEditScreen = ({navigation}) => {
+const ProfileEditScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const { info } = useSelector((state) => state.profile);
 
-    const [ avatar, setAvatar] =  useState(info.avatar);
-    const [ name, setName] =  useState(info.name);
-    const [ interest, setInterest] =  useState(info.interest);
-    const [ type, setType] =  useState(info.type);
-    const [ transportation, setTransportation] =  useState(info.transportation);
-    const [ gender, setGender] =  useState(info.gender);
-    const [ age, setAge] =  useState(info.age);
+    const [avatar, setAvatar] = useState(info.avatar);
+    const [name, setName] = useState(info.name);
+    const [interest, setInterest] = useState(info.interest);
+    const [type, setType] = useState(info.type);
+    const [transportation, setTransportation] = useState(info.transportation);
+    const [gender, setGender] = useState(info.gender);
+    const [age, setAge] = useState(info.age);
 
     const dispatch = useDispatch();
 
     const handleDone = () => {
         dispatch(setProfileInfo({ avatar, name, interest, type, transportation, gender, age }));
         navigation.goBack();
-    }
-    
-    return(
-        <Box
-            style={styles.container}
-            _dark={{ bg: colors.dark[50]}}
-            _light={{ bg: "#fff"}}
-        >
-            <ProfileEditHeader navigation={navigation} onPressDone={handleDone}/>
+    };
+
+    return (
+        <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: '#fff' }}>
+            <ProfileEditHeader navigation={navigation} onPressDone={handleDone} />
             <Pressable style={styles.avatarBox} onPress={null}>
-                <Image style={styles.avatar} source={{uri: avatar}} />
+                <Image style={styles.avatar} source={{ uri: avatar }} />
                 <Box style={styles.avatarMask}>
                     <MaterialIcon name="camera-alt" size={36} color="#fff" />
                 </Box>
@@ -44,31 +40,45 @@ const ProfileEditScreen = ({navigation}) => {
                 <Box style={styles.contentInputWrapper}>
                     <Text
                         style={styles.labelWrapper}
-                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                    >暱稱</Text>
-                    <Input 
-                        variant="underlined" placeholder="未設定暱稱" size="md" minWidth="85%"
-                        value={name} onChangeText={text => setName(text)}
+                        color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                    >
+                        暱稱
+                    </Text>
+                    <Input
+                        variant="underlined"
+                        placeholder="未設定暱稱"
+                        size="md"
+                        minWidth="85%"
+                        value={name}
+                        onChangeText={(text) => setName(text)}
                     />
                 </Box>
                 <Box style={styles.contentInputWrapper}>
                     <Text
                         style={styles.labelWrapper}
-                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                    >興趣</Text>
+                        color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                    >
+                        興趣
+                    </Text>
                     <Input
-                        variant="underlined" placeholder="興趣" size="md" minWidth="85%"
-                        value={interest} onChangeText={text => setInterest(text)}
+                        variant="underlined"
+                        placeholder="興趣"
+                        size="md"
+                        minWidth="85%"
+                        value={interest}
+                        onChangeText={(text) => setInterest(text)}
                     />
                 </Box>
-                <Box style={[styles.contentWrapper,{ marginTop: 20}]}>
+                <Box style={[styles.contentWrapper, { marginTop: 20 }]}>
                     <Text
                         style={styles.labelSelectWrapper}
-                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                    >偏好旅遊類型</Text>
+                        color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                    >
+                        偏好旅遊類型
+                    </Text>
                     <Box
-                        _dark={{ bg: colors.dark[200]}}
-                        _light={{ bg: colors.secondary[50]}}
+                        _dark={{ bg: colors.dark[200] }}
+                        _light={{ bg: colors.secondary[50] }}
                         style={styles.optionSelectBox}
                     >
                         <RNPickerSelect
@@ -90,10 +100,10 @@ const ProfileEditScreen = ({navigation}) => {
                                 },
                                 color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
                                 inputAndroid: {
-                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
                                 },
                                 inputIOS: {
-                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
                                 },
                                 viewContainer: { justifyContent: 'center' },
                                 inputIOSContainer: { alignItems: 'center' },
@@ -104,17 +114,19 @@ const ProfileEditScreen = ({navigation}) => {
                 <Box style={styles.contentWrapper}>
                     <Text
                         style={styles.labelSelectWrapper}
-                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                    >偏好交通方式</Text>
+                        color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                    >
+                        偏好交通方式
+                    </Text>
                     <Box
-                        _dark={{ bg: colors.dark[200]}}
-                        _light={{ bg: colors.secondary[50]}}
+                        _dark={{ bg: colors.dark[200] }}
+                        _light={{ bg: colors.secondary[50] }}
                         style={styles.optionSelectBox}
                     >
                         <RNPickerSelect
                             placeholder={{
                                 label: '未設定',
-                                value: null
+                                value: null,
                             }}
                             value={transportation}
                             onValueChange={(value) => setTransportation(value)}
@@ -132,10 +144,10 @@ const ProfileEditScreen = ({navigation}) => {
                                 },
                                 color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
                                 inputAndroid: {
-                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
                                 },
                                 inputIOS: {
-                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
                                 },
                                 viewContainer: { justifyContent: 'center' },
                                 inputIOSContainer: { alignItems: 'center' },
@@ -146,17 +158,19 @@ const ProfileEditScreen = ({navigation}) => {
                 <Box style={styles.contentWrapper}>
                     <Text
                         style={styles.labelSelectWrapper}
-                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                    >性別</Text>
+                        color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                    >
+                        性別
+                    </Text>
                     <Box
-                        _dark={{ bg: colors.dark[200]}}
-                        _light={{ bg: colors.secondary[50]}}
+                        _dark={{ bg: colors.dark[200] }}
+                        _light={{ bg: colors.secondary[50] }}
                         style={styles.optionSelectBox}
                     >
                         <RNPickerSelect
                             placeholder={{
                                 label: '未設定',
-                                value: null
+                                value: null,
                             }}
                             value={gender}
                             onValueChange={(value) => setGender(value)}
@@ -170,10 +184,10 @@ const ProfileEditScreen = ({navigation}) => {
                                 },
                                 color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
                                 inputAndroid: {
-                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
                                 },
                                 inputIOS: {
-                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
                                 },
                                 viewContainer: { justifyContent: 'center' },
                                 inputIOSContainer: { alignItems: 'center' },
@@ -184,17 +198,19 @@ const ProfileEditScreen = ({navigation}) => {
                 <Box style={styles.contentWrapper}>
                     <Text
                         style={styles.labelSelectWrapper}
-                        color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                    >年齡</Text>
+                        color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                    >
+                        年齡
+                    </Text>
                     <Box
-                        _dark={{ bg: colors.dark[200]}}
-                        _light={{ bg: colors.secondary[50]}}
+                        _dark={{ bg: colors.dark[200] }}
+                        _light={{ bg: colors.secondary[50] }}
                         style={styles.optionSelectBox}
                     >
                         <RNPickerSelect
                             placeholder={{
                                 label: '未設定',
-                                value: null
+                                value: null,
                             }}
                             value={age}
                             onValueChange={(value) => setAge(value)}
@@ -210,10 +226,10 @@ const ProfileEditScreen = ({navigation}) => {
                                 },
                                 color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
                                 inputAndroid: {
-                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
                                 },
                                 inputIOS: {
-                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200]
+                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
                                 },
                                 viewContainer: { justifyContent: 'center' },
                                 inputIOSContainer: { alignItems: 'center' },
@@ -224,7 +240,7 @@ const ProfileEditScreen = ({navigation}) => {
             </Box>
         </Box>
     );
-}
+};
 
 export default ProfileEditScreen;
 
@@ -286,5 +302,5 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
 });

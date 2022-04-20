@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Image, Platform, Dimensions } from 'react-native';
-import { useColorMode, useTheme, Box, Text, Pressable} from 'native-base';
+import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 
-const MyPlan = ({navigation, item}) => {
+const MyPlan = ({ navigation, item }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
@@ -11,51 +11,49 @@ const MyPlan = ({navigation, item}) => {
             month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
             year = d.getFullYear();
-    
-        if (month.length < 2) 
-            month = '0' + month;
-        if (day.length < 2) 
-            day = '0' + day;
-    
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
         return [year, month, day].join('/');
-    }
-    
+    };
+
     return (
         <Pressable
-            style={[styles.planBox,{
-                width: Dimensions.get('window').width * 0.45,
-            }]}
-            _dark={{ bg: colors.dark[100]}}
-            _light={{ bg: '#fff'}}
-            onPress={()=> navigation.navigate('PlanDetailScreen')}
+            style={[
+                styles.planBox,
+                {
+                    width: Dimensions.get('window').width * 0.45,
+                },
+            ]}
+            _dark={{ bg: colors.dark[100] }}
+            _light={{ bg: '#fff' }}
+            onPress={() => navigation.navigate('PlanDetailScreen')}
         >
             <Box style={styles.planImageBox}>
                 <Image
-                    style={[styles.planImage,{
-                        width: Dimensions.get('window').width * 0.45 - 20,
-                    }]}
-                    source={{uri: item.cover_image}} resizeMode="cover"
+                    style={[
+                        styles.planImage,
+                        {
+                            width: Dimensions.get('window').width * 0.45 - 20,
+                        },
+                    ]}
+                    source={{ uri: item.cover_image }}
+                    resizeMode="cover"
                 />
             </Box>
-            <Text
-                style={styles.planName}
-                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-            >{item.name}</Text>
-            <Text
-                style={styles.planDate}
-                color={colors.dark[300]}
-            >{formatDate(item.start_date)} - {formatDate(item.end_date)}</Text>
-            <Pressable 
-                _dark={{ bg: "#fff"}}
-                _light={{ bg: "#fff"}}
-                style={styles.ownerAvatar}
-                onPress={null}
-            >
-                <Image source={{uri: item.owner_image}} style={styles.ownerImage} resizeMode="cover" />
+            <Text style={styles.planName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                {item.name}
+            </Text>
+            <Text style={styles.planDate} color={colors.dark[300]}>
+                {formatDate(item.start_date)} - {formatDate(item.end_date)}
+            </Text>
+            <Pressable _dark={{ bg: '#fff' }} _light={{ bg: '#fff' }} style={styles.ownerAvatar} onPress={null}>
+                <Image source={{ uri: item.owner_image }} style={styles.ownerImage} resizeMode="cover" />
             </Pressable>
         </Pressable>
     );
-}
+};
 
 export { MyPlan };
 

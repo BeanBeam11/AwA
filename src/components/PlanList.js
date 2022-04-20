@@ -3,14 +3,11 @@ import { FlatList } from 'react-native';
 import { Plan } from './Plan';
 import planData from '../json/myPlan';
 
-const PlanList = ({navigation}) => {
+const PlanList = ({ navigation }) => {
+    const renderItem = ({ item }) => {
+        return <Plan item={item} navigation={navigation} />;
+    };
 
-    const renderItem = ({ item }) =>{
-        return (
-            <Plan item={item} navigation={navigation} />
-        );
-    }
-    
     return (
         <FlatList
             data={planData}
@@ -21,6 +18,6 @@ const PlanList = ({navigation}) => {
             contentContainerStyle={{ paddingHorizontal: 24 }}
         />
     );
-}
+};
 
 export { PlanList };

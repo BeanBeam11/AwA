@@ -23,107 +23,99 @@ const Tab = createBottomTabNavigator();
 
 const Navigation = () => {
     return (
-      <NavigationContainer theme={MyTheme}>
-        <TabNavigator />
-      </NavigationContainer>
+        <NavigationContainer theme={MyTheme}>
+            <TabNavigator />
+        </NavigationContainer>
     );
-}
+};
 
 const HomeStackNavigator = () => {
     const { colorMode } = useColorMode();
     return (
-      <Stack.Navigator
-        screenOptions={{
-            headerShown: false,
-        }}
-      >
-        <Stack.Screen
-            name="HomeScreen"
-            component={HomeScreen}
-        />
-      </Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                headerShown: false,
+            }}
+        >
+            <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        </Stack.Navigator>
     );
-}
+};
 
 const SearchStackNavigator = () => {
     const { colorMode } = useColorMode();
     return (
-      <Stack.Navigator
-        screenOptions={{
-            headerShadowVisible: false,
-            title: '',
-            headerStyle: {
-                backgroundColor: colorMode == 'dark' ? '#484848' : '#fff',
-            },
-            headerTitleStyle: {
-                color: colorMode == 'dark' ? '#fff' : '#484848',
-                fontWeight: '500',
-            },
-        }}
-      >
-        <Stack.Screen
-            name="SearchScreen"
-            component={SearchScreen}
-            options={({ navigation }) => ({
-                headerShown: false,
-            })}
-        />
-      </Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                headerShadowVisible: false,
+                title: '',
+                headerStyle: {
+                    backgroundColor: colorMode == 'dark' ? '#484848' : '#fff',
+                },
+                headerTitleStyle: {
+                    color: colorMode == 'dark' ? '#fff' : '#484848',
+                    fontWeight: '500',
+                },
+            }}
+        >
+            <Stack.Screen
+                name="SearchScreen"
+                component={SearchScreen}
+                options={({ navigation }) => ({
+                    headerShown: false,
+                })}
+            />
+        </Stack.Navigator>
     );
-}
+};
 
 const PlannerStackNavigator = () => {
     const { colorMode } = useColorMode();
     return (
-      <Stack.Navigator
-        screenOptions={{
-            headerShown: false,
-        }}
-      >
-        <Stack.Screen
-            name="PlannerScreen"
-            component={PlannerScreen}
-        />
-        <Stack.Screen
-            name="PlanDetailScreen"
-            component={PlanDetailScreen}
-        />
-      </Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                headerShown: false,
+            }}
+        >
+            <Stack.Screen name="PlannerScreen" component={PlannerScreen} />
+            <Stack.Screen name="PlanDetailScreen" component={PlanDetailScreen} />
+        </Stack.Navigator>
     );
-}
+};
 
 const ShareStackNavigator = () => {
     return (
-      <Stack.Navigator
-        screenOptions={{
-            headerShown: false,
-        }}
-      >
-        <Stack.Screen name="ShareScreen" component={ShareScreen} />
-      </Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                headerShown: false,
+            }}
+        >
+            <Stack.Screen name="ShareScreen" component={ShareScreen} />
+        </Stack.Navigator>
     );
-}
+};
 
 const AccountStackNavigator = () => {
     const { colorMode } = useColorMode();
     return (
-      <Stack.Navigator
-        screenOptions={{
-            headerShown: false,
-        }}
-      >
-        <Stack.Screen name="AccountScreen" component={AccountScreen} />
-        <Stack.Screen name="SettingScreen" component={SettingScreen} />
-        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-        <Stack.Screen
-            name="ProfileEditScreen" component={ProfileEditScreen}
-            options={({ navigation }) => ({
-                presentation: 'fullScreenModal',
-            })}
-        />
-      </Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                headerShown: false,
+            }}
+        >
+            <Stack.Screen name="AccountScreen" component={AccountScreen} />
+            <Stack.Screen name="SettingScreen" component={SettingScreen} />
+            <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+            <Stack.Screen
+                name="ProfileEditScreen"
+                component={ProfileEditScreen}
+                options={({ navigation }) => ({
+                    presentation: 'fullScreenModal',
+                })}
+            />
+        </Stack.Navigator>
     );
-}
+};
 
 const TabNavigator = () => {
     const { colorMode } = useColorMode();
@@ -133,55 +125,89 @@ const TabNavigator = () => {
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
-        
+
                     if (route.name === 'Home') {
-                        if(iconName = focused){
-                            return <Image source={require('../../assets/icons/ic_home_actived.png')} style={styles.navIcon} />
-                        }else{
-                            return(
-                                colorMode === 'dark'
-                                ? <Image source={require('../../assets/icons/ic_home_dark.png')} style={styles.navIcon} />
-                                : <Image source={require('../../assets/icons/ic_home.png')} style={styles.navIcon} />
+                        if ((iconName = focused)) {
+                            return (
+                                <Image
+                                    source={require('../../assets/icons/ic_home_actived.png')}
+                                    style={styles.navIcon}
+                                />
+                            );
+                        } else {
+                            return colorMode === 'dark' ? (
+                                <Image source={require('../../assets/icons/ic_home_dark.png')} style={styles.navIcon} />
+                            ) : (
+                                <Image source={require('../../assets/icons/ic_home.png')} style={styles.navIcon} />
                             );
                         }
                     } else if (route.name === 'Search') {
-                        if(iconName = focused){
-                            return <Image source={require('../../assets/icons/ic_map_actived.png')} style={styles.navIcon} />
-                        }else{
-                            return(
-                                colorMode === 'dark'
-                                ? <Image source={require('../../assets/icons/ic_map_dark.png')} style={styles.navIcon} />
-                                : <Image source={require('../../assets/icons/ic_map.png')} style={styles.navIcon} />
+                        if ((iconName = focused)) {
+                            return (
+                                <Image
+                                    source={require('../../assets/icons/ic_map_actived.png')}
+                                    style={styles.navIcon}
+                                />
+                            );
+                        } else {
+                            return colorMode === 'dark' ? (
+                                <Image source={require('../../assets/icons/ic_map_dark.png')} style={styles.navIcon} />
+                            ) : (
+                                <Image source={require('../../assets/icons/ic_map.png')} style={styles.navIcon} />
                             );
                         }
                     } else if (route.name === 'Planner') {
-                        if(iconName = focused){
-                            return <Image source={require('../../assets/icons/ic_planner_actived.png')} style={styles.navIcon} />
-                        }else{
-                            return(
-                                colorMode === 'dark'
-                                ? <Image source={require('../../assets/icons/ic_planner_dark.png')} style={styles.navIcon} />
-                                : <Image source={require('../../assets/icons/ic_planner.png')} style={styles.navIcon} />
+                        if ((iconName = focused)) {
+                            return (
+                                <Image
+                                    source={require('../../assets/icons/ic_planner_actived.png')}
+                                    style={styles.navIcon}
+                                />
+                            );
+                        } else {
+                            return colorMode === 'dark' ? (
+                                <Image
+                                    source={require('../../assets/icons/ic_planner_dark.png')}
+                                    style={styles.navIcon}
+                                />
+                            ) : (
+                                <Image source={require('../../assets/icons/ic_planner.png')} style={styles.navIcon} />
                             );
                         }
                     } else if (route.name === 'Share') {
-                        if(iconName = focused){
-                            return <Image source={require('../../assets/icons/ic_share_actived.png')} style={styles.navIcon} />
-                        }else{
-                            return(
-                                colorMode === 'dark'
-                                ? <Image source={require('../../assets/icons/ic_share_dark.png')} style={styles.navIcon} />
-                                : <Image source={require('../../assets/icons/ic_share.png')} style={styles.navIcon} />
+                        if ((iconName = focused)) {
+                            return (
+                                <Image
+                                    source={require('../../assets/icons/ic_share_actived.png')}
+                                    style={styles.navIcon}
+                                />
+                            );
+                        } else {
+                            return colorMode === 'dark' ? (
+                                <Image
+                                    source={require('../../assets/icons/ic_share_dark.png')}
+                                    style={styles.navIcon}
+                                />
+                            ) : (
+                                <Image source={require('../../assets/icons/ic_share.png')} style={styles.navIcon} />
                             );
                         }
                     } else if (route.name === 'Account') {
-                        if(iconName = focused){
-                            return <Image source={require('../../assets/icons/ic_account_actived.png')} style={styles.navIcon} />
-                        }else{
-                            return(
-                                colorMode === 'dark'
-                                ? <Image source={require('../../assets/icons/ic_account_dark.png')} style={styles.navIcon} />
-                                : <Image source={require('../../assets/icons/ic_account.png')} style={styles.navIcon} />
+                        if ((iconName = focused)) {
+                            return (
+                                <Image
+                                    source={require('../../assets/icons/ic_account_actived.png')}
+                                    style={styles.navIcon}
+                                />
+                            );
+                        } else {
+                            return colorMode === 'dark' ? (
+                                <Image
+                                    source={require('../../assets/icons/ic_account_dark.png')}
+                                    style={styles.navIcon}
+                                />
+                            ) : (
+                                <Image source={require('../../assets/icons/ic_account.png')} style={styles.navIcon} />
                             );
                         }
                     }
@@ -207,14 +233,15 @@ const TabNavigator = () => {
             <Tab.Screen name="Planner" component={PlannerStackNavigator} />
             <Tab.Screen name="Share" component={ShareStackNavigator} />
             <Tab.Screen
-                name="Account" component={AccountStackNavigator}
+                name="Account"
+                component={AccountStackNavigator}
                 options={({ navigation }) => ({
-                    tabBarStyle: { display: 'none' }
+                    tabBarStyle: { display: 'none' },
                 })}
             />
-      </Tab.Navigator>
+        </Tab.Navigator>
     );
-}
+};
 
 export default Navigation;
 

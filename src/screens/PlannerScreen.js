@@ -3,7 +3,7 @@ import { StyleSheet, Modal, View, Image, FlatList, TextInput, Dimensions, Platfo
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import myPlanData from '../json/myPlan.json';
 import { AddButton } from '../components/AddButton';
 import { ActionButton } from '../components/ActionButton';
@@ -13,39 +13,30 @@ import { PlannerHeader } from '../components/Header';
 const PlannerScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    const [ selectedIndex, setSelectedIndex ] = useState(0);
-    const [ modalVisible, setModalVisible ] = useState(false);
-    const [ title, setTitle ] = useState('');
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [title, setTitle] = useState('');
     const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
-    const [ startDate, setStartDate ] = useState(new Date());
-    const [ endDate, setEndDate ] = useState(new Date());
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
 
     const SegmentedContent = () => {
-        if(selectedIndex == 0) {
-            return (
-                <MyPlanList />
-            )
-        }else if (selectedIndex == 1) {
-            return (
-                <SharedPlan />
-            )
-        }else if (selectedIndex == 2) {
-            return (
-                <SavedPlan />
-            )
-         }
-    }
+        if (selectedIndex == 0) {
+            return <MyPlanList />;
+        } else if (selectedIndex == 1) {
+            return <SharedPlan />;
+        } else if (selectedIndex == 2) {
+            return <SavedPlan />;
+        }
+    };
 
     const MyPlanList = () => {
+        const renderItem = ({ item }) => {
+            return <MyPlan item={item} navigation={navigation} />;
+        };
 
-        const renderItem = ({ item }) =>{
-            return (
-                <MyPlan item={item} navigation={navigation} />
-            );
-        }
-
-        return(
+        return (
             <Box style={styles.planWrapper}>
                 <FlatList
                     data={myPlanData}
@@ -55,31 +46,31 @@ const PlannerScreen = ({ navigation }) => {
                     numColumns={2}
                     columnWrapperStyle={{ justifyContent: 'space-between' }}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{paddingBottom: 280}}
+                    contentContainerStyle={{ paddingBottom: 280 }}
                 />
             </Box>
         );
-    }
+    };
 
     const SharedPlan = () => {
-        return(
+        return (
             <Box style={styles.planWrapper}>
                 <Box style={styles.planNullBox}>
                     <Text style={styles.planNullText}>目前無共用行程</Text>
                 </Box>
             </Box>
         );
-    }
+    };
 
     const SavedPlan = () => {
-        return(
+        return (
             <Box style={styles.planWrapper}>
                 <Box style={styles.planNullBox}>
                     <Text style={styles.planNullText}>目前無收藏行程</Text>
                 </Box>
             </Box>
         );
-    }
+    };
 
     const showStartDatePicker = () => {
         setStartDatePickerVisibility(true);
@@ -109,29 +100,23 @@ const PlannerScreen = ({ navigation }) => {
             month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
             year = d.getFullYear();
-    
-        if (month.length < 2) 
-            month = '0' + month;
-        if (day.length < 2) 
-            day = '0' + day;
-    
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
         return [year, month, day].join('/');
-    }
+    };
 
     const handleNextStep = () => {
         setModalVisible(!modalVisible);
         navigation.navigate('PlanDetailScreen');
-    }
+    };
 
-    return(
-        <Box
-            style={styles.container}
-            _dark={{ bg: colors.dark[50]}}
-            _light={{ bg: colors.dark[600]}}
-        >
-            <PlannerHeader navigation={navigation}/>
+    return (
+        <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
+            <PlannerHeader navigation={navigation} />
             <SegmentedControl
-                values={["我的行程", "共用行程", "收藏行程"]}
+                values={['我的行程', '共用行程', '收藏行程']}
                 selectedIndex={selectedIndex}
                 onChange={(event) => {
                     setSelectedIndex(event.nativeEvent.selectedSegmentIndex);
@@ -139,18 +124,18 @@ const PlannerScreen = ({ navigation }) => {
                 style={styles.segmentedControlStyle}
                 fontStyle={{
                     fontSize: 14,
-                    color: colorMode === "dark" ? colors.dark[300] : colors.dark[200],
+                    color: colorMode === 'dark' ? colors.dark[300] : colors.dark[200],
                 }}
                 activeFontStyle={{
                     fontSize: 14,
-                    color: colorMode === "dark" ? colors.dark[600] : colors.dark[200],
+                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
                 }}
                 // tintColor={colorMode === "dark" ? colors.secondary[100] : '#fff'}
                 // backgroundColor={colorMode === "dark" ? colors.dark[200] : colors.secondary[50]}
-                appearance={colorMode === "dark" ? "dark" : "light"}
+                appearance={colorMode === 'dark' ? 'dark' : 'light'}
             />
             <SegmentedContent />
-            <AddButton size={'large'} style={styles.fabWrapper} onPress={() => setModalVisible(true)}/>
+            <AddButton size={'large'} style={styles.fabWrapper} onPress={() => setModalVisible(true)} />
             <View>
                 <Modal
                     animationType="slide"
@@ -161,19 +146,29 @@ const PlannerScreen = ({ navigation }) => {
                     }}
                 >
                     <View
-                        style={[styles.modalView,{
-                            backgroundColor: colorMode === "dark" ? colors.dark[100] : '#fff',
-                        }]}
+                        style={[
+                            styles.modalView,
+                            {
+                                backgroundColor: colorMode === 'dark' ? colors.dark[100] : '#fff',
+                            },
+                        ]}
                     >
                         <Box
-                            style={[styles.modalHeader,{
-                                borderBottomWidth: 1,
-                                borderBottomColor: colorMode === "dark" ? colors.dark[200] : colors.dark[500],
-                            }]}
+                            style={[
+                                styles.modalHeader,
+                                {
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
+                                },
+                            ]}
                         >
                             <Text style={styles.modalHeaderText}>建立行程</Text>
                             <Pressable style={styles.modalClose} onPress={() => setModalVisible(!modalVisible)}>
-                                <MaterialIcon name="close" size={24} color={ colorMode === "dark" ? '#fff' : '#484848' }/>
+                                <MaterialIcon
+                                    name="close"
+                                    size={24}
+                                    color={colorMode === 'dark' ? '#fff' : '#484848'}
+                                />
                             </Pressable>
                         </Box>
                         <Box style={styles.modalContent}>
@@ -181,40 +176,49 @@ const PlannerScreen = ({ navigation }) => {
                                 <Image src={null} style={styles.image} />
                             </Box>
                             <Text style={styles.modalLabel}>行程名稱</Text>
-                            <Box style={[styles.inputWrapper,{
-                                width: Dimensions.get('window').width - 48,
-                                borderColor: colors.secondary[200],
-                            }]}>
+                            <Box
+                                style={[
+                                    styles.inputWrapper,
+                                    {
+                                        width: Dimensions.get('window').width - 48,
+                                        borderColor: colors.secondary[200],
+                                    },
+                                ]}
+                            >
                                 <TextInput
                                     placeholder="行程名稱"
                                     placeholderTextColor={colors.dark[400]}
                                     value={title}
-                                    onChangeText={text => setTitle(text)}
+                                    onChangeText={(text) => setTitle(text)}
                                     returnKeyType="done"
                                 />
                             </Box>
                             <Text style={styles.modalLabel}>日期</Text>
                             <Box style={styles.dateWrapper}>
                                 <Pressable
-                                    _dark={{ bg: colors.dark[200]}}
-                                    _light={{ bg: colors.secondary[50]}}
+                                    _dark={{ bg: colors.dark[200] }}
+                                    _light={{ bg: colors.secondary[50] }}
                                     style={styles.dateBox}
                                     onPress={showStartDatePicker}
                                 >
-                                    <Text color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}>{formatDate(startDate)}</Text>
+                                    <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                                        {formatDate(startDate)}
+                                    </Text>
                                 </Pressable>
                                 <Box
-                                    _dark={{ bg: colors.dark[600]}}
-                                    _light={{ bg: colors.dark[200]}}
+                                    _dark={{ bg: colors.dark[600] }}
+                                    _light={{ bg: colors.dark[200] }}
                                     style={styles.dateDivider}
                                 ></Box>
                                 <Pressable
-                                    _dark={{ bg: colors.dark[200]}}
-                                    _light={{ bg: colors.secondary[50]}}
+                                    _dark={{ bg: colors.dark[200] }}
+                                    _light={{ bg: colors.secondary[50] }}
                                     style={styles.dateBox}
                                     onPress={showEndDatePicker}
                                 >
-                                    <Text color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}>{formatDate(endDate)}</Text>
+                                    <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                                        {formatDate(endDate)}
+                                    </Text>
                                 </Pressable>
                             </Box>
                             <DateTimePickerModal
@@ -230,19 +234,15 @@ const PlannerScreen = ({ navigation }) => {
                                 onCancel={hideEndDatePicker}
                             />
                         </Box>
-                        <Pressable style={{marginTop: 100}} onPress={()=> handleNextStep()}>
-                            <ActionButton
-                                text={"下一步"}
-                                onPress={()=> handleNextStep()}
-                                navigation={navigation}
-                            />
+                        <Pressable style={{ marginTop: 100 }} onPress={() => handleNextStep()}>
+                            <ActionButton text={'下一步'} onPress={() => handleNextStep()} navigation={navigation} />
                         </Pressable>
                     </View>
                 </Modal>
             </View>
         </Box>
     );
-}
+};
 
 export default PlannerScreen;
 
@@ -273,8 +273,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: -10,
+            width: 0,
+            height: -10,
         },
         shadowOpacity: 0.25,
         shadowRadius: 10,

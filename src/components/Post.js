@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Image, Platform } from 'react-native';
-import { useColorMode, useTheme, Box, Text, Pressable} from 'native-base';
+import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 
-const Post = ({navigation, item}) => {
+const Post = ({ navigation, item }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
@@ -11,70 +11,65 @@ const Post = ({navigation, item}) => {
             month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
             year = d.getFullYear();
-    
-        if (month.length < 2) 
-            month = '0' + month;
-        if (day.length < 2) 
-            day = '0' + day;
-    
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
         return [year, month, day].join('/');
-    }
-    
+    };
+
     return (
-        <Pressable
-            _dark={{ bg: colors.dark[100] }}
-            _light={{ bg: "#fff" }}
-            style={styles.postBox}
-            onPress={null}
-        >
+        <Pressable _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }} style={styles.postBox} onPress={null}>
             <Box style={styles.postLeftBox}>
-                <Image source={{uri: item.image}} style={styles.postImage} resizeMode="cover"/>
+                <Image source={{ uri: item.image }} style={styles.postImage} resizeMode="cover" />
                 <Box style={styles.postInfoBox}>
                     <Text
-                        style={[styles.categoryBox,{
-                            borderColor: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
-                            color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400]
-                        }]}
-                    >{item.category}</Text>
-                    <Text
-                        style={styles.region}
-                        color={colors.dark[300]}
-                    >{item.region}・{item.town}</Text>
+                        style={[
+                            styles.categoryBox,
+                            {
+                                borderColor: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
+                                color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
+                            },
+                        ]}
+                    >
+                        {item.category}
+                    </Text>
+                    <Text style={styles.region} color={colors.dark[300]}>
+                        {item.region}・{item.town}
+                    </Text>
                 </Box>
             </Box>
             <Box style={styles.postRightBox}>
                 <Box style={styles.authorBox}>
-                    <Image source={{uri: item.image}} style={styles.authorAvatar} resizeMode="cover"/>
+                    <Image source={{ uri: item.image }} style={styles.authorAvatar} resizeMode="cover" />
                     <Box style={styles.postRightTopBox}>
                         <Text
                             style={styles.authorName}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                        >{item.author}</Text>
-                        <Text
-                            style={styles.createDate}
-                            color={colors.dark[400]}
-                        >{formatDate(item.create_at)}</Text>
+                        >
+                            {item.author}
+                        </Text>
+                        <Text style={styles.createDate} color={colors.dark[400]}>
+                            {formatDate(item.create_at)}
+                        </Text>
                     </Box>
                 </Box>
-                <Text
-                    style={styles.postTitle}
-                    color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                >{item.title}</Text>
-                {
-                    item.content.length > 35
-                    ? <Text 
-                        style={styles.postContent}
-                        color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                    >{item.content.slice(0,36)}...</Text>
-                    : <Text
-                        style={styles.postContent}
-                        color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                    >{item.content}</Text>
-                }
+                <Text style={styles.postTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                    {item.title}
+                </Text>
+                {item.content.length > 35 ? (
+                    <Text style={styles.postContent} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                        {item.content.slice(0, 36)}...
+                    </Text>
+                ) : (
+                    <Text style={styles.postContent} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                        {item.content}
+                    </Text>
+                )}
             </Box>
         </Pressable>
     );
-}
+};
 
 export { Post };
 
@@ -114,9 +109,7 @@ const styles = StyleSheet.create({
     postRightBox: {
         marginLeft: 10,
     },
-    authorBox: {
-
-    },
+    authorBox: {},
     authorName: {
         fontSize: 14,
         fontWeight: '500',

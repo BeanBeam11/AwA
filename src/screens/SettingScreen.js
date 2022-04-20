@@ -5,37 +5,33 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 const SettingScreen = () => {
     const { colorMode, toggleColorMode } = useColorMode();
-    
-    return(
-        <Box
-            style={styles.container}
-            _dark={{ bg: "#484848"}}
-            _light={{ bg: "#fff"}}
-        >
+
+    return (
+        <Box style={styles.container} _dark={{ bg: '#484848' }} _light={{ bg: '#fff' }}>
             <Box style={styles.optionBox}>
                 <Text style={styles.optionText}>深色模式</Text>
                 <Switch
                     size="sm"
-                    isChecked={colorMode === "dark"}
+                    isChecked={colorMode === 'dark'}
                     onToggle={toggleColorMode}
                     style={{ marginLeft: 'auto' }}
                 />
             </Box>
             <TouchableOpacity style={styles.optionBox}>
                 <Text>意見回饋</Text>
-                <MaterialIcon name="arrow-forward-ios" size={18} style={styles.optionIcon(colorMode)}/>
+                <MaterialIcon name="arrow-forward-ios" size={18} style={styles.optionIcon(colorMode)} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.optionBox}>
                 <Text>服務條款</Text>
-                <MaterialIcon name="arrow-forward-ios" size={18} style={styles.optionIcon(colorMode)}/>
+                <MaterialIcon name="arrow-forward-ios" size={18} style={styles.optionIcon(colorMode)} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.optionBox}>
                 <Text>隱私聲明</Text>
-                <MaterialIcon name="arrow-forward-ios" size={18} style={styles.optionIcon(colorMode)}/>
+                <MaterialIcon name="arrow-forward-ios" size={18} style={styles.optionIcon(colorMode)} />
             </TouchableOpacity>
         </Box>
     );
-}
+};
 
 export default SettingScreen;
 
@@ -60,6 +56,6 @@ const styles = StyleSheet.create({
     },
     optionIcon: (colorMode) => ({
         marginLeft: 'auto',
-        color: colorMode === "dark" ? '#fff' : '#484848',
+        color: colorMode === 'dark' ? '#fff' : '#484848',
     }),
 });

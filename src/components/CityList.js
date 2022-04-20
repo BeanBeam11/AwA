@@ -3,14 +3,11 @@ import { FlatList } from 'react-native';
 import { City } from './City';
 import { cities } from '../data/cities';
 
-const CityList = ({navigation}) => {
+const CityList = ({ navigation }) => {
+    const renderItem = ({ item }) => {
+        return <City item={item} navigation={navigation} />;
+    };
 
-    const renderItem = ({ item }) =>{
-        return (
-            <City item={item} navigation={navigation} />
-        );
-    }
-    
     return (
         <FlatList
             data={cities}
@@ -21,6 +18,6 @@ const CityList = ({navigation}) => {
             contentContainerStyle={{ paddingHorizontal: 24 }}
         />
     );
-}
+};
 
 export { CityList };

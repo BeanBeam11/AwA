@@ -1,4 +1,4 @@
-import { SET_PROFILE_INFO } from "../constants";
+import { SET_PROFILE_INFO } from '../constants';
 
 // Part2: Define Actions
 export const setProfileInfo = (info) => (dispatch) => {

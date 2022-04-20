@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Dimensions, TextInput } from 'react-native';
-import { useColorMode, useTheme, Box, Text, Pressable} from 'native-base';
+import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import MapView, { Marker } from 'react-native-maps';
-import Constants from "expo-constants";
-import * as Location from "expo-location";
+import Constants from 'expo-constants';
+import * as Location from 'expo-location';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { SearchBar } from '../components/SearchBar';
 
 const SearchScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    const [ location, setLocation ] = useState(null);
-    const [ errorMsg, setErrorMsg ] = useState(null);
-    const [ region, setRegion ] = useState({
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [region, setRegion] = useState({
         longitude: 121.544637,
         latitude: 25.024624,
         longitudeDelta: 0.01,
         latitudeDelta: 0.02,
     });
-    const [ marker, setMarker ] = useState({
+    const [marker, setMarker] = useState({
         coord: {
-          longitude: 121.544637,
-          latitude: 25.024624,
+            longitude: 121.544637,
+            latitude: 25.024624,
         },
-        name: "國立臺北教育大學",
-        address: "台北市和平東路二段134號",
+        name: '國立臺北教育大學',
+        address: '台北市和平東路二段134號',
     });
 
     useEffect(() => {
@@ -43,10 +43,7 @@ const SearchScreen = ({ navigation }) => {
     };
 
     const onRegionChangeComplete = (rgn) => {
-        if(
-            Math.abs(rgn.latitude - region.latitude) > 0.0002 ||
-            Math.abs(rgn.longitude - region.longitude) > 0.0002
-        ){
+        if (Math.abs(rgn.latitude - region.latitude) > 0.0002 || Math.abs(rgn.longitude - region.longitude) > 0.0002) {
             setRegion(rgn);
             setMarker({
                 ...marker,
@@ -58,16 +55,11 @@ const SearchScreen = ({ navigation }) => {
         }
     };
 
-    return(
-        <Box
-            style={styles.container}
-            _dark={{ bg: colors.dark[50]}}
-            _light={{ bg: colors.dark[600]}}
-        >
-            <Text
-                style={{fontSize: 18}}
-                color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-            >Coming soon</Text>
+    return (
+        <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
+            <Text style={{ fontSize: 18 }} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                Coming soon
+            </Text>
             {/* <MapView
                 style={styles.map}
                 region={region}
@@ -84,11 +76,11 @@ const SearchScreen = ({ navigation }) => {
                 </Marker>
             </MapView> */}
             <Box style={styles.searchHeader}>
-                <SearchBar placeholderText={'搜尋景點'}/>
+                <SearchBar placeholderText={'搜尋景點'} />
             </Box>
         </Box>
     );
-}
+};
 
 export default SearchScreen;
 
@@ -124,8 +116,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 4,
+            width: 0,
+            height: 4,
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,

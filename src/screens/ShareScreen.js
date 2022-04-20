@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, FlatList, Image, ScrollView, Platform } from 'react-native';
-import { useColorMode, useTheme, Box, Text, Pressable} from 'native-base';
+import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { SearchBar } from '../components/SearchBar';
 import { categories } from '../data/categories';
@@ -11,61 +11,57 @@ const ShareScreen = () => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
-    const renderItem = ({item}) => {
+    const renderItem = ({ item }) => {
         return (
             <Pressable
                 _dark={{ bg: colors.dark[100] }}
-                _light={{ bg: "#fff" }}
+                _light={{ bg: '#fff' }}
                 style={styles.categoryBox}
                 onPress={null}
             >
                 <Image source={item.image} style={styles.categoryImage} resizeMode="cover" />
-                <Text
-                    style={styles.categoryName}
-                    color={colorMode === "dark" ? colors.dark[600] : colors.dark[200]}
-                >{item.name}</Text>
+                <Text style={styles.categoryName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                    {item.name}
+                </Text>
             </Pressable>
         );
-    }
+    };
 
-    return(
-        <Box
-            style={styles.container}
-            _dark={{ bg: colors.dark[50]}}
-            _light={{ bg: colors.dark[600]}}
-        >
+    return (
+        <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
             <ScrollView>
-            <SearchBar placeholderText={'搜尋景點、行程'} style={{marginTop: 56}}/>
-            <Box style={styles.categoryWrapper}>
-                <FlatList
-                    data={categories}
-                    renderItem={renderItem}
-                    keyExtractor={(item, index) => index}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ paddingHorizontal: 24 }}
-                />
-            </Box>
-            <Box style={styles.titleWrapper}>
-                <Text
-                    style={styles.titleLabel}
-                    color={colorMode === "dark" ? colors.dark[600]: colors.dark[200]}
-                >最新動態</Text>
-                <Pressable>
-                    <MaterialIcon name="filter-list" size={24} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]} />
-                </Pressable>
-            </Box>
-            <Box style={styles.postWrapper}>
-                {
-                    postData.map((item, index)=> {
-                        return <Post item={item} key={index}/>
-                    })
-                }
-            </Box>
-        </ScrollView>
+                <SearchBar placeholderText={'搜尋景點、行程'} style={{ marginTop: 56 }} />
+                <Box style={styles.categoryWrapper}>
+                    <FlatList
+                        data={categories}
+                        renderItem={renderItem}
+                        keyExtractor={(item, index) => index}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ paddingHorizontal: 24 }}
+                    />
+                </Box>
+                <Box style={styles.titleWrapper}>
+                    <Text style={styles.titleLabel} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                        最新動態
+                    </Text>
+                    <Pressable>
+                        <MaterialIcon
+                            name="filter-list"
+                            size={24}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        />
+                    </Pressable>
+                </Box>
+                <Box style={styles.postWrapper}>
+                    {postData.map((item, index) => {
+                        return <Post item={item} key={index} />;
+                    })}
+                </Box>
+            </ScrollView>
         </Box>
     );
-}
+};
 
 export default ShareScreen;
 
