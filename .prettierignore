@@ -2,3 +2,4 @@ src/redux/store/
 src/theme/
 App.js
 app.json
+babel.config.js
