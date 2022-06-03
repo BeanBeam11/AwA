@@ -6,6 +6,7 @@ import SearchRegionScreen from '../screens/SearchRegionScreen';
 import RegionScreen from '../screens/RegionScreen';
 import RecommendSightScreen from '../screens/RecommendSightScreen';
 import SightScreen from '../screens/SightScreen';
+import PlanListScreen from '../screens/PlanListScreen';
 import SearchScreen from '../screens/SearchScreen';
 import PlannerScreen from '../screens/PlannerScreen';
 import PlanDetailScreen from '../screens/PlanDetailScreen';
@@ -29,6 +30,7 @@ export const HomeStack = () => {
             <Stack.Screen name="RegionScreen" component={RegionScreen} />
             <Stack.Screen name="RecommendSightScreen" component={RecommendSightScreen} />
             <Stack.Screen name="SightScreen" component={SightScreen} />
+            <Stack.Screen name="PlanListScreen" component={PlanListScreen} />
         </Stack.Navigator>
     );
 };

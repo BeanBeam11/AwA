@@ -19,7 +19,12 @@ const Plan = ({ navigation, item }) => {
     };
 
     return (
-        <Pressable style={styles.planBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }} onPress={null}>
+        <Pressable
+            style={styles.planBox}
+            _dark={{ bg: colors.dark[100] }}
+            _light={{ bg: '#fff' }}
+            onPress={() => navigation.navigate('Planner', { screen: 'PlanDetailScreen' })}
+        >
             <Box style={styles.planImageBox}>
                 <Image source={{ uri: item.cover_image }} style={styles.planImage} resizeMode="cover" />
             </Box>

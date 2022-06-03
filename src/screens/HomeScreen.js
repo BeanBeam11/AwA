@@ -77,7 +77,7 @@ const HomeScreen = ({ navigation }) => {
                         >
                             熱門行程
                         </Text>
-                        <Pressable style={styles.sectionRightBox}>
+                        <Pressable style={styles.sectionRightBox} onPress={() => navigation.navigate('PlanListScreen')}>
                             <Text
                                 style={styles.sectionTitleRight}
                                 color={colorMode === 'dark' ? colors.dark[500] : colors.dark[300]}
@@ -86,7 +86,7 @@ const HomeScreen = ({ navigation }) => {
                             </Text>
                         </Pressable>
                     </Box>
-                    <PlanList />
+                    <PlanList navigation={navigation} />
                 </Box>
                 <Box style={styles.sectionWrapper}>
                     <Box style={styles.sectionHeader}>
