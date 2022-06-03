@@ -3,7 +3,7 @@ import { SET_PROFILE_INFO } from "../constants";
 // Part3: Define Reducers
 const initialProfile = {
   info: {
-    avatar: "https://github.com/BeanBeam11/AwA/blob/main/assets/icon.png?raw=true",
+    avatar: "https://firebasestorage.googleapis.com/v0/b/awa---trip-planner.appspot.com/o/logo_tripcan.png?alt=media&token=eb5cdb11-31a5-4c95-93a9-37273fbb4c58",
     name: "未設定",
     interest: "未填寫",
     type: "未設定",

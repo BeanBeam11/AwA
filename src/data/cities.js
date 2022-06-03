@@ -5,7 +5,7 @@ export const cities = [
     },
     {
         city: '新北',
-        image: require('../../assets/cities/new_taipeipng.png'),
+        image: require('../../assets/cities/new_taipei.png'),
     },
     {
         city: '基隆',
