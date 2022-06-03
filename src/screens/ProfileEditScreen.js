@@ -5,12 +5,14 @@ import { useColorMode, useTheme, Box, Text, Input, Pressable } from 'native-base
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
 import { ProfileEditHeader } from '../components/Header';
-import { setProfileInfo } from '../redux/actions/profileActions';
+
+import { setProfileInfo } from '../redux/profileSlice';
+import { selectProfile } from '../redux/profileSlice';
 
 const ProfileEditScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    const { info } = useSelector((state) => state.profile);
+    const info = useSelector(selectProfile);
 
     const [avatar, setAvatar] = useState(info.avatar);
     const [name, setName] = useState(info.name);

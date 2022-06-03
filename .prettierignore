@@ -3,3 +3,4 @@ src/theme/
 App.js
 app.json
 babel.config.js
+package.json

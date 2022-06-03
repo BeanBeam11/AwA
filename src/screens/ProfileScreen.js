@@ -4,11 +4,12 @@ import { StyleSheet, Image, Dimensions, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import { GoBackHeader } from '../components/Header';
 import { ActionButton } from '../components/ActionButton';
+import { selectProfile } from '../redux/profileSlice';
 
 const ProfileScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    const { info } = useSelector((state) => state.profile);
+    const info = useSelector(selectProfile);
     const { avatar, name, interest, type, transportation, gender, age } = info;
 
     return (
