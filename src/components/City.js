@@ -7,7 +7,12 @@ const City = ({ navigation, item }) => {
     const { colors } = useTheme();
 
     return (
-        <Pressable _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }} style={styles.cityBox} onPress={null}>
+        <Pressable
+            _dark={{ bg: colors.dark[100] }}
+            _light={{ bg: '#fff' }}
+            style={styles.cityBox}
+            onPress={() => navigation.navigate('RegionScreen', { city: item.city })}
+        >
             <Image source={item.image} style={styles.cityImage} resizeMode="cover" />
             <Text style={styles.cityName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                 {item.city}

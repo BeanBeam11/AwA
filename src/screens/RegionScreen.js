@@ -2,50 +2,38 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, FlatList, Image, ScrollView } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { CityListHorizontal } from '../components/CityList';
+import { GoBackHeader } from '../components/Header';
+import { cities } from '../data/cities';
 import { SightList } from '../components/SightList';
 import { PlanList } from '../components/PlanList';
-import { SearchBar } from '../components/SearchBar';
-import { News } from '../components/News';
 
-const HomeScreen = ({ navigation }) => {
+const RegionScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
+    const { city } = route.params;
+
+    const region = cities.find((el) => el.city === city);
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <Box style={styles.header}>
-                    <Text style={styles.headerText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        探索
-                    </Text>
-                    <Pressable onPress={null}>
-                        <MaterialIcon name="notifications" size={24} color={colors.primary[100]} />
-                    </Pressable>
-                </Box>
-                <SearchBar style={styles.searchBar} placeholderText={'搜尋景點、行程'} />
-                <Box style={styles.sectionWrapper}>
-                    <Box style={styles.sectionHeader}>
+                <GoBackHeader title={''} navigation={navigation} />
+                <Box style={styles.regionHeader}>
+                    <Image source={region.map} style={styles.mapImage} resizeMode="cover" />
+                    <Box style={styles.regionTitle}>
                         <Text
-                            style={styles.sectionTitle}
+                            style={styles.regionCity}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         >
-                            地區
+                            {region.city}
                         </Text>
-                        <Pressable
-                            style={styles.sectionRightBox}
-                            onPress={() => navigation.navigate('SearchRegionScreen')}
+                        <Text
+                            style={styles.regionName}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         >
-                            <Text
-                                style={styles.sectionTitleRight}
-                                color={colorMode === 'dark' ? colors.dark[500] : colors.dark[300]}
-                            >
-                                更多
-                            </Text>
-                        </Pressable>
+                            {region.name}
+                        </Text>
                     </Box>
-                    <CityListHorizontal navigation={navigation} />
                 </Box>
                 <Box style={styles.sectionWrapper}>
                     <Box style={styles.sectionHeader}>
@@ -53,7 +41,7 @@ const HomeScreen = ({ navigation }) => {
                             style={styles.sectionTitle}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         >
-                            推薦景點
+                            {region.city}景點
                         </Text>
                         <Pressable style={styles.sectionRightBox}>
                             <Text
@@ -72,7 +60,7 @@ const HomeScreen = ({ navigation }) => {
                             style={styles.sectionTitle}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         >
-                            熱門行程
+                            推薦行程
                         </Text>
                         <Pressable style={styles.sectionRightBox}>
                             <Text
@@ -85,44 +73,42 @@ const HomeScreen = ({ navigation }) => {
                     </Box>
                     <PlanList />
                 </Box>
-                <Box style={styles.sectionWrapper}>
-                    <Box style={styles.sectionHeader}>
-                        <Text style={styles.sectionTitle}>最新消息</Text>
-                    </Box>
-                    <News style={{ marginHorizontal: 24 }} />
-                </Box>
             </ScrollView>
             <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />
         </Box>
     );
 };
 
-export default HomeScreen;
+export default RegionScreen;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingBottom: 60,
     },
-    header: {
-        width: '100%',
-        height: 65,
+    regionHeader: {
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'flex-end',
         paddingHorizontal: 24,
-        paddingBottom: 12,
-        marginTop: 44,
+        alignItems: 'center',
         marginBottom: 10,
     },
-    headerText: {
-        fontSize: 24,
-        lineHeight: 30,
-        fontWeight: '500',
-        marginRight: 'auto',
+    mapImage: {
+        width: 100,
+        height: 120,
     },
-    searchBar: {
-        marginBottom: 20,
+    regionTitle: {
+        alignItems: 'center',
+        marginLeft: 40,
+        minWidth: 140,
+    },
+    regionCity: {
+        fontSize: 40,
+        lineHeight: 46,
+    },
+    regionName: {
+        fontSize: 32,
+        lineHeight: 42,
     },
     sectionWrapper: {
         marginBottom: 30,

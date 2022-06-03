@@ -3,7 +3,7 @@ import { FlatList } from 'react-native';
 import { City } from './City';
 import { cities } from '../data/cities';
 
-const CityList = ({ navigation }) => {
+const CityListHorizontal = ({ navigation }) => {
     const renderItem = ({ item }) => {
         return <City item={item} navigation={navigation} />;
     };
@@ -20,4 +20,23 @@ const CityList = ({ navigation }) => {
     );
 };
 
-export { CityList };
+const CityListVertical = ({ navigation }) => {
+    const renderItem = ({ item }) => {
+        return <City item={item} navigation={navigation} />;
+    };
+
+    return (
+        <FlatList
+            data={cities}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index}
+            horizontal={false}
+            numColumns={3}
+            columnWrapperStyle={{ paddingBottom: 10 }}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 200 }}
+        />
+    );
+};
+
+export { CityListHorizontal, CityListVertical };
