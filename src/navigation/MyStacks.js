@@ -4,6 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
 import SearchRegionScreen from '../screens/SearchRegionScreen';
 import RegionScreen from '../screens/RegionScreen';
+import RecommendSightScreen from '../screens/RecommendSightScreen';
+import SightScreen from '../screens/SightScreen';
 import SearchScreen from '../screens/SearchScreen';
 import PlannerScreen from '../screens/PlannerScreen';
 import PlanDetailScreen from '../screens/PlanDetailScreen';
@@ -25,6 +27,8 @@ export const HomeStack = () => {
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
             <Stack.Screen name="SearchRegionScreen" component={SearchRegionScreen} />
             <Stack.Screen name="RegionScreen" component={RegionScreen} />
+            <Stack.Screen name="RecommendSightScreen" component={RecommendSightScreen} />
+            <Stack.Screen name="SightScreen" component={SightScreen} />
         </Stack.Navigator>
     );
 };

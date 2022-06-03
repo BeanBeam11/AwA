@@ -9,7 +9,12 @@ const Sight = ({ navigation, item }) => {
     const { colors } = useTheme();
 
     return (
-        <Pressable style={styles.sightBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
+        <Pressable
+            style={styles.sightBox}
+            _dark={{ bg: colors.dark[100] }}
+            _light={{ bg: '#fff' }}
+            onPress={() => navigation.navigate('SightScreen', { sightName: item.Name })}
+        >
             <Box style={styles.sightImageBox}>
                 <Image source={{ uri: item.Picture1 }} style={styles.sightImage} resizeMode="cover" />
             </Box>

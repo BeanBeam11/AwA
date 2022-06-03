@@ -55,7 +55,10 @@ const HomeScreen = ({ navigation }) => {
                         >
                             推薦景點
                         </Text>
-                        <Pressable style={styles.sectionRightBox}>
+                        <Pressable
+                            style={styles.sectionRightBox}
+                            onPress={() => navigation.navigate('RecommendSightScreen')}
+                        >
                             <Text
                                 style={styles.sectionTitleRight}
                                 color={colorMode === 'dark' ? colors.dark[500] : colors.dark[300]}
@@ -64,7 +67,7 @@ const HomeScreen = ({ navigation }) => {
                             </Text>
                         </Pressable>
                     </Box>
-                    <SightList />
+                    <SightList navigation={navigation} />
                 </Box>
                 <Box style={styles.sectionWrapper}>
                     <Box style={styles.sectionHeader}>
