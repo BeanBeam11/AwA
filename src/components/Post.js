@@ -19,7 +19,12 @@ const Post = ({ navigation, item }) => {
     };
 
     return (
-        <Pressable _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }} style={styles.postBox} onPress={null}>
+        <Pressable
+            _dark={{ bg: colors.dark[100] }}
+            _light={{ bg: '#fff' }}
+            style={styles.postBox}
+            onPress={() => navigation.navigate('PostDetailScreen', { postId: item.title })}
+        >
             <Box style={styles.postLeftBox}>
                 <Image source={{ uri: item.image }} style={styles.postImage} resizeMode="cover" />
                 <Box style={styles.postInfoBox}>

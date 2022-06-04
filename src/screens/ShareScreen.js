@@ -7,7 +7,7 @@ import { categories } from '../data/categories';
 import { Post } from '../components/Post';
 import postData from '../json/post.json';
 
-const ShareScreen = () => {
+const ShareScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
@@ -30,7 +30,7 @@ const ShareScreen = () => {
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
             <ScrollView>
-                <SearchBar placeholderText={'搜尋景點、行程'} style={{ marginTop: 56 }} />
+                <SearchBar placeholderText={'搜尋文章、評論'} style={{ marginTop: 56 }} />
                 <Box style={styles.categoryWrapper}>
                     <FlatList
                         data={categories}
@@ -55,7 +55,7 @@ const ShareScreen = () => {
                 </Box>
                 <Box style={styles.postWrapper}>
                     {postData.map((item, index) => {
-                        return <Post item={item} key={index} />;
+                        return <Post item={item} key={index} navigation={navigation} />;
                     })}
                 </Box>
             </ScrollView>
@@ -74,8 +74,8 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
     categoryBox: {
-        width: 90,
-        height: 110,
+        width: 70,
+        height: 90,
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
