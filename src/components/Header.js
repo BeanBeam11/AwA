@@ -28,7 +28,7 @@ const PlannerHeader = ({ onPress }) => {
     );
 };
 
-const PlanDetailHeader = ({ navigation }) => {
+const PlanDetailHeader = ({ navigation, onPress }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
@@ -54,12 +54,8 @@ const PlanDetailHeader = ({ navigation }) => {
                     行程細節
                 </Text>
             </Box>
-            <Pressable style={styles.headerRight}>
-                <MaterialIcon
-                    name="more-horiz"
-                    size={24}
-                    color={colorMode == 'dark' ? colors.dark[600] : colors.dark[200]}
-                />
+            <Pressable style={styles.headerRight} onPress={onPress}>
+                <MaterialIcon name="edit" size={24} color={colorMode == 'dark' ? colors.dark[600] : colors.dark[400]} />
             </Pressable>
         </Box>
     );
@@ -88,7 +84,7 @@ const GoBackHeader = ({ navigation, title }) => {
     );
 };
 
-const ProfileEditHeader = ({ navigation, onPressDone }) => {
+const EditHeader = ({ navigation, title, onPressDone }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
@@ -109,7 +105,7 @@ const ProfileEditHeader = ({ navigation, onPressDone }) => {
             </Pressable>
             <Box style={styles.headerCenter}>
                 <Text style={styles.headerTitle} ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                    編輯個人檔案
+                    {title}
                 </Text>
             </Box>
             <Pressable style={styles.headerRight} onPress={onPressDone}>
@@ -146,7 +142,7 @@ const SearchGoBackHeader = (props) => {
     );
 };
 
-export { PlannerHeader, PlanDetailHeader, GoBackHeader, ProfileEditHeader, SearchGoBackHeader };
+export { PlannerHeader, PlanDetailHeader, GoBackHeader, EditHeader, SearchGoBackHeader };
 
 const styles = StyleSheet.create({
     headerWrapper: {

@@ -4,7 +4,7 @@ import { StyleSheet, Image } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Input, Pressable } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
-import { ProfileEditHeader } from '../components/Header';
+import { EditHeader } from '../components/Header';
 
 import { setProfileInfo } from '../redux/profileSlice';
 import { selectProfile } from '../redux/profileSlice';
@@ -31,7 +31,7 @@ const ProfileEditScreen = ({ navigation }) => {
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: '#fff' }}>
-            <ProfileEditHeader navigation={navigation} onPressDone={handleDone} />
+            <EditHeader navigation={navigation} title={'編輯個人檔案'} onPressDone={handleDone} />
             <Pressable style={styles.avatarBox} onPress={null}>
                 <Image style={styles.avatar} source={{ uri: avatar }} />
                 <Box style={styles.avatarMask}>

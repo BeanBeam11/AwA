@@ -10,6 +10,7 @@ import PlanListScreen from '../screens/PlanListScreen';
 import SearchScreen from '../screens/SearchScreen';
 import PlannerScreen from '../screens/PlannerScreen';
 import PlanDetailScreen from '../screens/PlanDetailScreen';
+import PlanDetailEditScreen from '../screens/PlanDetailEditScreen';
 import ShareScreen from '../screens/ShareScreen';
 import ShareSearchScreen from '../screens/ShareSearchScreen';
 import PostDetailScreen from '../screens/PostDetailScreen';
@@ -58,6 +59,7 @@ export const PlannerStack = () => {
         >
             <Stack.Screen name="PlannerScreen" component={PlannerScreen} />
             <Stack.Screen name="PlanDetailScreen" component={PlanDetailScreen} />
+            <Stack.Screen name="PlanDetailEditScreen" component={PlanDetailEditScreen} />
         </Stack.Navigator>
     );
 };

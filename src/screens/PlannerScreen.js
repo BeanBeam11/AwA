@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, Modal, View, Image, FlatList, TextInput, Dimensions, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import myPlanData from '../json/myPlan.json';
 import { AddButton } from '../components/AddButton';
 import { ActionButton } from '../components/ActionButton';
@@ -114,7 +114,7 @@ const PlannerScreen = ({ navigation }) => {
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
-            <PlannerHeader navigation={navigation} />
+            <PlannerHeader navigation={navigation} onPress={null} />
             <SegmentedControl
                 values={['我的行程', '共用行程', '收藏行程']}
                 selectedIndex={selectedIndex}
