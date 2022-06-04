@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
+import { SearchBar } from './SearchBar';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 const PlannerHeader = ({ onPress }) => {
@@ -120,7 +121,32 @@ const ProfileEditHeader = ({ navigation, onPressDone }) => {
     );
 };
 
-export { PlannerHeader, PlanDetailHeader, GoBackHeader, ProfileEditHeader };
+const SearchGoBackHeader = (props) => {
+    const { navigation, placeholder, onChangeText, value, onPressIn } = props;
+    const { colorMode } = useColorMode();
+    const { colors } = useTheme();
+
+    return (
+        <Box style={[styles.headerWrapper, { marginTop: 56 }]}>
+            <Pressable style={styles.headerLeft} onPress={() => navigation.goBack()}>
+                {colorMode === 'dark' ? (
+                    <Image source={require('../../assets/icons/ic_goback_dark.png')} style={styles.headerLeft} />
+                ) : (
+                    <Image source={require('../../assets/icons/ic_goback.png')} style={styles.headerLeft} />
+                )}
+            </Pressable>
+            <SearchBar
+                style={{ width: '80%' }}
+                placeholder={placeholder}
+                onChangeText={onChangeText}
+                value={value}
+                onPressIn={onPressIn}
+            />
+        </Box>
+    );
+};
+
+export { PlannerHeader, PlanDetailHeader, GoBackHeader, ProfileEditHeader, SearchGoBackHeader };
 
 const styles = StyleSheet.create({
     headerWrapper: {

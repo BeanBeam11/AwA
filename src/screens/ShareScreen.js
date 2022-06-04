@@ -17,7 +17,7 @@ const ShareScreen = ({ navigation }) => {
                 _dark={{ bg: colors.dark[100] }}
                 _light={{ bg: '#fff' }}
                 style={styles.categoryBox}
-                onPress={null}
+                onPress={() => navigation.navigate('ShareSearchScreen', { category: item.name })}
             >
                 <Image source={item.image} style={styles.categoryImage} resizeMode="cover" />
                 <Text style={styles.categoryName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
@@ -29,8 +29,12 @@ const ShareScreen = ({ navigation }) => {
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
-            <ScrollView>
-                <SearchBar placeholderText={'搜尋文章、評論'} style={{ marginTop: 56 }} />
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <SearchBar
+                    placeholder={'搜尋文章、評論'}
+                    style={{ marginTop: 56 }}
+                    onPressIn={() => navigation.navigate('ShareSearchScreen', { category: null })}
+                />
                 <Box style={styles.categoryWrapper}>
                     <FlatList
                         data={categories}
@@ -103,6 +107,6 @@ const styles = StyleSheet.create({
     postWrapper: {
         marginTop: 15,
         paddingHorizontal: 24,
-        paddingBottom: 80,
+        paddingBottom: 100,
     },
 });

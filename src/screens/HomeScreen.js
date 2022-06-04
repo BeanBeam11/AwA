@@ -24,7 +24,7 @@ const HomeScreen = ({ navigation }) => {
                         <MaterialIcon name="notifications" size={24} color={colors.primary[100]} />
                     </Pressable>
                 </Box>
-                <SearchBar style={styles.searchBar} placeholderText={'搜尋景點、行程'} />
+                <SearchBar style={styles.searchBar} placeholder={'搜尋景點、行程'} />
                 <Box style={styles.sectionWrapper}>
                     <Box style={styles.sectionHeader}>
                         <Text

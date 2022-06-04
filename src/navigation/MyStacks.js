@@ -11,6 +11,7 @@ import SearchScreen from '../screens/SearchScreen';
 import PlannerScreen from '../screens/PlannerScreen';
 import PlanDetailScreen from '../screens/PlanDetailScreen';
 import ShareScreen from '../screens/ShareScreen';
+import ShareSearchScreen from '../screens/ShareSearchScreen';
 import PostDetailScreen from '../screens/PostDetailScreen';
 import AccountScreen from '../screens/AccountScreen';
 import SettingScreen from '../screens/SettingScreen';
@@ -69,6 +70,7 @@ export const ShareStack = () => {
             }}
         >
             <Stack.Screen name="ShareScreen" component={ShareScreen} />
+            <Stack.Screen name="ShareSearchScreen" component={ShareSearchScreen} />
             <Stack.Screen name="PostDetailScreen" component={PostDetailScreen} />
         </Stack.Navigator>
     );

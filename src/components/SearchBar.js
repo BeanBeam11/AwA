@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Image, TextInput, Dimensions } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 
 const SearchBar = (props) => {
-    const { navigation, style, placeholderText } = props;
+    const { navigation, style, placeholder, onChangeText, value, onPressIn } = props;
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    const [keyword, setKeyword] = useState('');
 
     return (
         <Box
-            style={[styles.searchBar, style, { width: Dimensions.get('window').width - 48 }]}
+            style={[styles.searchBar, { width: Dimensions.get('window').width - 48 }, style]}
             _dark={{ bg: colors.dark[200] }}
             _light={{ bg: '#fff' }}
         >
             <Image source={require('../../assets/icons/ic_search.png')} style={styles.searchIcon} resizeMode="cover" />
             <TextInput
-                placeholder={placeholderText}
+                placeholder={placeholder}
                 placeholderTextColor={colors.dark[400]}
-                onChangeText={(text) => setKeyword(text)}
-                value={keyword}
+                onChangeText={onChangeText}
+                value={value}
                 returnKeyType="search"
                 style={{ width: '100%' }}
+                onPressIn={onPressIn}
             />
         </Box>
     );
