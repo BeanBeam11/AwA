@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Modal, View, Image, FlatList, TextInput, Dimensions, Platform } from 'react-native';
-import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
+import { useColorMode, useTheme, Box, Text, Pressable, Radio } from 'native-base';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import RNPickerSelect from 'react-native-picker-select';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import myPlanData from '../json/myPlan.json';
 import { AddButton } from '../components/AddButton';
@@ -16,10 +17,12 @@ const PlannerScreen = ({ navigation }) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
     const [title, setTitle] = useState('');
+    const [isAsigned, setIsAssigned] = useState(true);
     const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
+    const [day, setDay] = useState(1);
 
     const SegmentedContent = () => {
         if (selectedIndex == 0) {
@@ -193,34 +196,103 @@ const PlannerScreen = ({ navigation }) => {
                                     returnKeyType="done"
                                 />
                             </Box>
-                            <Text style={styles.modalLabel}>日期</Text>
-                            <Box style={styles.dateWrapper}>
-                                <Pressable
-                                    _dark={{ bg: colors.dark[200] }}
-                                    _light={{ bg: colors.secondary[50] }}
-                                    style={styles.dateBox}
-                                    onPress={showStartDatePicker}
-                                >
-                                    <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                                        {formatDate(startDate)}
-                                    </Text>
-                                </Pressable>
-                                <Box
-                                    _dark={{ bg: colors.dark[600] }}
-                                    _light={{ bg: colors.dark[200] }}
-                                    style={styles.dateDivider}
-                                ></Box>
-                                <Pressable
-                                    _dark={{ bg: colors.dark[200] }}
-                                    _light={{ bg: colors.secondary[50] }}
-                                    style={styles.dateBox}
-                                    onPress={showEndDatePicker}
-                                >
-                                    <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                                        {formatDate(endDate)}
-                                    </Text>
-                                </Pressable>
-                            </Box>
+                            <Radio.Group
+                                style={{ marginVertical: 20 }}
+                                colorScheme="gray"
+                                name="AsignDate"
+                                value={isAsigned}
+                                onChange={(nextValue) => {
+                                    setIsAssigned(nextValue);
+                                }}
+                            >
+                                <Radio value={true} size="sm" style={styles.radioOption}>
+                                    <Text style={styles.radioText}>指定日期</Text>
+                                </Radio>
+                                <Radio value={false} size="sm" style={styles.radioOption}>
+                                    <Text style={styles.radioText}>不指定日期</Text>
+                                </Radio>
+                            </Radio.Group>
+                            {isAsigned === true ? (
+                                <Box>
+                                    <Text style={styles.modalLabel}>日期</Text>
+                                    <Box style={styles.dateWrapper}>
+                                        <Pressable
+                                            _dark={{ bg: colors.dark[200] }}
+                                            _light={{ bg: colors.secondary[50] }}
+                                            style={styles.dateBox}
+                                            onPress={showStartDatePicker}
+                                        >
+                                            <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                                                {formatDate(startDate)}
+                                            </Text>
+                                        </Pressable>
+                                        <Box
+                                            _dark={{ bg: colors.dark[600] }}
+                                            _light={{ bg: colors.dark[200] }}
+                                            style={styles.dateDivider}
+                                        ></Box>
+                                        <Pressable
+                                            _dark={{ bg: colors.dark[200] }}
+                                            _light={{ bg: colors.secondary[50] }}
+                                            style={styles.dateBox}
+                                            onPress={showEndDatePicker}
+                                        >
+                                            <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                                                {formatDate(endDate)}
+                                            </Text>
+                                        </Pressable>
+                                    </Box>
+                                </Box>
+                            ) : (
+                                <Box>
+                                    <Text style={styles.modalLabel}>天數</Text>
+                                    <Box style={styles.daysWrapper}>
+                                        <Text>預計共</Text>
+                                        <Pressable
+                                            style={styles.dayBox}
+                                            _dark={{ bg: colors.dark[200] }}
+                                            _light={{ bg: colors.secondary[50] }}
+                                            onPress={null}
+                                        >
+                                            <RNPickerSelect
+                                                placeholder={{}}
+                                                onValueChange={(value) => setDay(value)}
+                                                items={[
+                                                    { label: '1', value: 1 },
+                                                    { label: '2', value: 2 },
+                                                    { label: '3', value: 3 },
+                                                    { label: '4', value: 4 },
+                                                    { label: '5', value: 5 },
+                                                    { label: '6', value: 6 },
+                                                    { label: '7', value: 7 },
+                                                    { label: '8', value: 8 },
+                                                    { label: '9', value: 9 },
+                                                    { label: '10', value: 10 },
+                                                ]}
+                                                style={{
+                                                    placeholder: {
+                                                        color:
+                                                            colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
+                                                    },
+                                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
+                                                    inputAndroid: {
+                                                        color:
+                                                            colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
+                                                    },
+                                                    inputIOS: {
+                                                        color:
+                                                            colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
+                                                    },
+                                                    viewContainer: { justifyContent: 'center' },
+                                                    inputIOSContainer: { alignItems: 'center' },
+                                                }}
+                                            />
+                                        </Pressable>
+                                        <Text>天</Text>
+                                    </Box>
+                                </Box>
+                            )}
+
                             <DateTimePickerModal
                                 isVisible={isStartDatePickerVisible}
                                 mode="date"
@@ -234,7 +306,7 @@ const PlannerScreen = ({ navigation }) => {
                                 onCancel={hideEndDatePicker}
                             />
                         </Box>
-                        <Pressable style={{ marginTop: 100 }} onPress={() => handleNextStep()}>
+                        <Pressable style={{ marginTop: 60 }} onPress={() => handleNextStep()}>
                             <ActionButton text={'下一步'} onPress={() => handleNextStep()} navigation={navigation} />
                         </Pressable>
                     </View>
@@ -307,6 +379,14 @@ const styles = StyleSheet.create({
         marginLeft: 'auto',
         marginRight: 'auto',
     },
+    radioOption: {
+        marginTop: 5,
+    },
+    radioText: {
+        fontSize: 14,
+        marginTop: 5,
+        marginLeft: 10,
+    },
     modalLabel: {
         fontSize: 14,
         fontWeight: '500',
@@ -334,6 +414,17 @@ const styles = StyleSheet.create({
     dateDivider: {
         width: 16,
         height: 2,
+        marginHorizontal: 10,
+    },
+    daysWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    dayBox: {
+        paddingVertical: 6,
+        paddingHorizontal: 18,
+        borderRadius: 5,
         marginHorizontal: 10,
     },
     planWrapper: {
