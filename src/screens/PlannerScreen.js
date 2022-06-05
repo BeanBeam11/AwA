@@ -10,6 +10,7 @@ import { AddButton } from '../components/AddButton';
 import { ActionButton } from '../components/ActionButton';
 import { MyPlan } from '../components/MyPlan';
 import { PlannerHeader } from '../components/Header';
+import { formatDate } from '../utils/formatter';
 
 const PlannerScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
@@ -96,18 +97,6 @@ const PlannerScreen = ({ navigation }) => {
     const handleEndConfirm = (date) => {
         setEndDate(date);
         hideEndDatePicker();
-    };
-
-    const formatDate = (date) => {
-        let d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-
-        return [year, month, day].join('/');
     };
 
     const handleNextStep = () => {

@@ -12,6 +12,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { ActionButton } from '../components/ActionButton';
 import { AddButton } from '../components/AddButton';
 import { EditHeader } from '../components/Header';
+import { formatDate, formatTime } from '../utils/formatter';
 import planData from '../json/myPlan.json';
 
 const PlanDetailEditScreen = ({ navigation }) => {
@@ -110,26 +111,6 @@ const PlanDetailEditScreen = ({ navigation }) => {
 
     const handleFinished = () => {
         setModalVisible(!modalVisible);
-    };
-
-    const formatDate = (date) => {
-        let d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-
-        return [year, month, day].join('/');
-    };
-
-    const formatTime = (time) => {
-        let t = new Date(time),
-            hour = '' + t.getHours(),
-            minute = '' + t.getMinutes();
-
-        return [hour, minute].join(':');
     };
 
     return (

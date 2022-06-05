@@ -4,6 +4,7 @@ import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { PlanDetailHeader } from '../components/Header';
+import { formatDate, formatTime } from '../utils/formatter';
 import planData from '../json/myPlan.json';
 
 const PlanDetailScreen = ({ navigation }) => {
@@ -13,18 +14,6 @@ const PlanDetailScreen = ({ navigation }) => {
     const handleGoToEdit = async () => {
         await SheetManager.hide('edit_sheet');
         navigation.navigate('PlanDetailEditScreen');
-    };
-
-    const formatDate = (date) => {
-        let d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-
-        return [year, month, day].join('/');
     };
 
     return (

@@ -1,22 +1,11 @@
 import React from 'react';
 import { StyleSheet, Image, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
+import { formatDate } from '../utils/formatter';
 
 const Plan = ({ navigation, item }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-
-    const formatDate = (date) => {
-        let d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-
-        return [year, month, day].join('/');
-    };
 
     return (
         <Pressable

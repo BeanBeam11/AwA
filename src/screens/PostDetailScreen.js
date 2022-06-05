@@ -3,11 +3,12 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Image, ScrollView, TextInput, Keyboard } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { GoBackHeader } from '../components/Header';
+import { Sight_H } from '../components/Sight_H';
+import { formatDate } from '../utils/formatter';
 import postData from '../json/post';
 import sightData from '../json/recommendSight';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Sight_H } from '../components/Sight_H';
 
 const PostDetailScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
@@ -19,18 +20,6 @@ const PostDetailScreen = ({ navigation, route }) => {
 
     const post = postData.find((el) => el.title === postId);
     const sight = sightData.find((el) => el.Name === postId);
-
-    const formatDate = (date) => {
-        let d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-
-        return [year, month, day].join('/');
-    };
 
     return (
         <KeyboardAwareScrollView style={{ flex: 1 }}>
