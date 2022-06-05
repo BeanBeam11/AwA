@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, Image, View, Modal, TouchableOpacity, ScrollView, TextInput, Platform } from 'react-native';
-import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
-import PagerView from 'react-native-pager-view';
+import { StyleSheet, Image, View, Modal, TouchableOpacity, TextInput, Platform, Dimensions } from 'react-native';
+import { useColorMode, useTheme, Box, Text, Pressable, Checkbox } from 'native-base';
+import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
+import DraggableFlatList from 'react-native-draggable-flatlist';
 import RNPickerSelect from 'react-native-picker-select';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { TimePicker } from 'react-native-simple-time-picker';
-import { ActionButton } from '../components/ActionButton';
+import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ActionButton } from '../components/ActionButton';
+import { AddButton } from '../components/AddButton';
 import { EditHeader } from '../components/Header';
 import planData from '../json/myPlan.json';
 
@@ -13,13 +18,95 @@ const PlanDetailEditScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const [modalVisible, setModalVisible] = useState(false);
-    const [stayModalVisible, setStayModalVisible] = useState(false);
+    const [stayTimeModalVisible, setStayTimeModalVisible] = useState(false);
     const [sightName, setSightName] = useState('');
-    const [sightType, setSightType] = useState('');
     const [sightNote, setSightNote] = useState('');
+    const [startTimeRequired, setStartTimeRequired] = useState(false);
+    const [isStartTimePickerVisible, setStartTimePickerVisibility] = useState(false);
+    const [startTime, setStartTime] = useState(new Date());
+    const [sightType, setSightType] = useState('');
     const [stayTime, setStayTime] = useState({ hours: 0, minutes: 0 });
 
-    const handleDone = () => {};
+    const handleDone = () => {
+        navigation.goBack();
+    };
+
+    const renderTabBar = (props) => (
+        <ScrollableTabBar
+            {...props}
+            style={{
+                borderBottomWidth: 0,
+                height: 45,
+                backgroundColor: colorMode === 'dark' ? colors.dark[100] : '#fff',
+            }}
+        />
+    );
+
+    const initialData = [
+        {
+            order: 1,
+            label: '阿妹茶樓',
+        },
+        {
+            order: 2,
+            label: '草仔粿',
+        },
+        {
+            order: 3,
+            label: '九份樓梯',
+        },
+    ];
+    const [data, setData] = useState(initialData);
+
+    const renderItem = ({ item, index, drag, isActive }) => (
+        <Pressable
+            style={[styles.planBox, { width: Dimensions.get('window').width - 48 }]}
+            _dark={{ bg: colors.dark[100] }}
+            _light={{ bg: '#fff' }}
+            onLongPress={drag}
+        >
+            <MaterialCommunityIcons
+                name="drag-vertical"
+                size={24}
+                color={colorMode === 'dark' ? [200] : colors.dark[500]}
+            />
+            <Box style={[styles.planBoxDivider, { backgroundColor: colors.secondary[200] }]}></Box>
+            <Image source={{ uri: planData[0].cover_image }} style={styles.planBoxImage} resizeMode="cover" />
+            <Box style={styles.planBoxInfo}>
+                <Text style={styles.planSightName}>{item?.label}</Text>
+                <Box style={styles.planBoxNote}>
+                    <Box style={styles.planStayTime}>
+                        <MaterialCommunityIcons
+                            name="clock-time-four"
+                            size={14}
+                            color={colors.dark[400]}
+                            style={{ marginRight: 4 }}
+                        />
+                        <Text color={colors.dark[300]}>01:20</Text>
+                    </Box>
+                    <Text color={colors.dark[300]}>註：記得拍合照</Text>
+                </Box>
+            </Box>
+            <Pressable style={{ marginLeft: 'auto' }} onPress={() => setModalVisible(!modalVisible)}>
+                <MaterialIcon name="edit" size={24} color={colors.dark[400]} />
+            </Pressable>
+        </Pressable>
+    );
+
+    const renderListFooter = () => (
+        <AddButton size={'medium'} style={styles.addPlanBox} onPress={() => setModalVisible(!modalVisible)} />
+    );
+
+    const showStartTimePicker = () => {
+        setStartTimePickerVisibility(true);
+    };
+    const hideStartTimePicker = () => {
+        setStartTimePickerVisibility(false);
+    };
+    const handleStartTimeConfirm = (time) => {
+        setStartTime(time);
+        hideStartTimePicker();
+    };
 
     const handleFinished = () => {
         setModalVisible(!modalVisible);
@@ -37,8 +124,16 @@ const PlanDetailEditScreen = ({ navigation }) => {
         return [year, month, day].join('/');
     };
 
+    const formatTime = (time) => {
+        let t = new Date(time),
+            hour = '' + t.getHours(),
+            minute = '' + t.getMinutes();
+
+        return [hour, minute].join(':');
+    };
+
     return (
-        <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: '#fff' }}>
+        <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
             <Box style={styles.topWrapper} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
                 <EditHeader navigation={navigation} title={'編輯行程'} onPressDone={handleDone} />
                 <Box style={styles.infoWrapper}>
@@ -60,42 +155,22 @@ const PlanDetailEditScreen = ({ navigation }) => {
                         />
                     </Box>
                 </Box>
-                <Box style={styles.dayWrapper}>
-                    <Box style={styles.dayBox}>
-                        <Text
-                            style={styles.dayBoxText}
-                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                        >
-                            Day 1
-                        </Text>
-                    </Box>
-                    <Box style={styles.dayBox}>
-                        <Text
-                            style={styles.dayBoxText}
-                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                        >
-                            Day 2
-                        </Text>
-                    </Box>
-                    <Box style={styles.dayBox}>
-                        <Text
-                            style={styles.dayBoxText}
-                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                        >
-                            Day 3
-                        </Text>
-                    </Box>
-                    <Box
-                        _dark={{ bg: colors.primary[100] }}
-                        _light={{ bg: colors.primary[100] }}
-                        style={styles.addDayBtn}
-                    >
-                        <MaterialIcon name="add" size={20} color={colorMode === 'dark' ? colors.dark[200] : '#fff'} />
-                    </Box>
-                </Box>
             </Box>
-            <ScrollView>
-                <Box style={styles.detailWrapper}>
+            <ScrollableTabView
+                style={styles.scrollableStyle}
+                initialPage={0}
+                renderTabBar={renderTabBar}
+                tabBarUnderlineStyle={{
+                    backgroundColor: colors.secondary[200],
+                    position: 'absolute',
+                    bottom: 0,
+                    height: 3,
+                }}
+                tabBarTextStyle={{ fontSize: 14 }}
+                tabBarActiveTextColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                tabBarInactiveTextColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+            >
+                <Box style={styles.detailWrapper} tabLabel="Day 1">
                     <Box style={styles.detailHeader}>
                         <Text style={styles.dayText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                             Day 1
@@ -104,16 +179,41 @@ const PlanDetailEditScreen = ({ navigation }) => {
                             04/04 (六)
                         </Text>
                     </Box>
-                    <PagerView style={styles.pagerView} initialPage={0}>
-                        <View key="1">
-                            <Text>First page</Text>
-                        </View>
-                        <View key="2">
-                            <Text>Second page</Text>
-                        </View>
-                    </PagerView>
+                    <DraggableFlatList
+                        data={data}
+                        renderItem={renderItem}
+                        keyExtractor={(item, index) => index.toString()}
+                        showsVerticalScrollIndicator={false}
+                        onDragEnd={({ data }) => setData(data)}
+                        ListFooterComponent={renderListFooter}
+                    />
                 </Box>
-            </ScrollView>
+                <Box style={styles.detailWrapper} tabLabel="Day 2">
+                    <Box style={styles.detailHeader}>
+                        <Text style={styles.dayText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                            Day 2
+                        </Text>
+                        <Text style={styles.dateText} color={colors.dark[400]}>
+                            04/05 (日)
+                        </Text>
+                    </Box>
+                </Box>
+                <Box style={styles.detailWrapper} tabLabel="Day 3">
+                    <Box style={styles.detailHeader}>
+                        <Text style={styles.dayText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                            Day 3
+                        </Text>
+                        <Text style={styles.dateText} color={colors.dark[400]}>
+                            04/06 (一)
+                        </Text>
+                    </Box>
+                </Box>
+                <Pressable
+                    style={styles.detailWrapper}
+                    tabLabel="+ new"
+                    onPress={() => alert('再加一天！')}
+                ></Pressable>
+            </ScrollableTabView>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -124,7 +224,7 @@ const PlanDetailEditScreen = ({ navigation }) => {
             >
                 <View
                     style={[
-                        styles.modalView(colorMode),
+                        styles.modalView,
                         {
                             backgroundColor: colorMode === 'dark' ? colors.dark[100] : '#fff',
                         },
@@ -214,6 +314,37 @@ const PlanDetailEditScreen = ({ navigation }) => {
                             </Box>
                         </Box>
                         <Box style={styles.optionWrapper}>
+                            <Checkbox
+                                value={startTimeRequired}
+                                onChange={(value) => setStartTimeRequired(value)}
+                                accessibilityLabel="enable time"
+                                colorScheme="gray"
+                                size="sm"
+                                mr={3}
+                            />
+                            <Box>
+                                <Text
+                                    style={styles.modalLabel}
+                                    color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                                >
+                                    第一個行程開始時間
+                                </Text>
+                                <Text style={{ fontSize: 11 }} color={colors.dark[300]}>
+                                    （顯示各項行程時間點）
+                                </Text>
+                            </Box>
+                            <Pressable
+                                _dark={{ bg: colors.dark[200] }}
+                                _light={{ bg: colors.secondary[50] }}
+                                style={styles.optionSelectBox}
+                                onPress={() => showStartTimePicker()}
+                            >
+                                <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                                    {formatTime(startTime)}
+                                </Text>
+                            </Pressable>
+                        </Box>
+                        <Box style={styles.optionWrapper}>
                             <Text
                                 style={styles.modalLabel}
                                 color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
@@ -278,53 +409,47 @@ const PlanDetailEditScreen = ({ navigation }) => {
                                 _dark={{ bg: colors.dark[200] }}
                                 _light={{ bg: colors.secondary[50] }}
                                 style={styles.optionSelectBox}
-                                onPress={() => setStayModalVisible(!stayModalVisible)}
+                                onPress={() => SheetManager.show('stayTime_sheet')}
                             >
-                                <Text>
+                                <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                                     {stayTime.hours}時{stayTime.minutes}分
                                 </Text>
                             </Pressable>
                         </Box>
                     </Box>
-                    <Pressable style={{ marginTop: Platform.OS === 'ios' ? 80 : 40 }} onPress={() => handleFinished()}>
-                        <ActionButton text={'完成'} />
+                    <Pressable style={{ marginTop: Platform.OS === 'ios' ? 60 : 40 }} onPress={() => handleFinished()}>
+                        <ActionButton text={'新增'} />
                     </Pressable>
                 </View>
+                <DateTimePickerModal
+                    date={startTime}
+                    isVisible={isStartTimePickerVisible}
+                    mode="time"
+                    onConfirm={handleStartTimeConfirm}
+                    onCancel={hideStartTimePicker}
+                />
                 <Modal
                     animationType="slide"
                     transparent={true}
-                    visible={stayModalVisible}
+                    visible={stayTimeModalVisible}
                     onRequestClose={() => {
-                        setStayModalVisible(!stayModalVisible);
+                        setStayTimeModalVisible(!stayTimeModalVisible);
                     }}
-                >
-                    <View style={styles.TimePickerModalView}>
-                        <Box _dark={{ bg: '#C4C4C4' }} _light={{ bg: '#E5E5E5' }} style={styles.timePickerBox}>
-                            <TimePicker
-                                hoursUnit="時"
-                                minutesUnit="分"
-                                value={stayTime}
-                                onChange={(value) => setStayTime(value)}
-                            />
-                        </Box>
-                        <Pressable
-                            _dark={{ bg: '#C4C4C4' }}
-                            _light={{ bg: '#fff' }}
-                            style={styles.timePickerConfirmBtn}
-                            onPress={() => setStayModalVisible(!stayModalVisible)}
-                        >
-                            <Text>確定</Text>
-                        </Pressable>
-                        <Pressable
-                            _dark={{ bg: '#C4C4C4' }}
-                            _light={{ bg: '#fff' }}
-                            style={styles.timePickerCancelBtn}
-                            onPress={() => setStayModalVisible(!stayModalVisible)}
-                        >
-                            <Text style={{ color: '#969696' }}>取消</Text>
-                        </Pressable>
-                    </View>
-                </Modal>
+                ></Modal>
+                <ActionSheet id="stayTime_sheet">
+                    <Box
+                        style={styles.stayTimeSheet}
+                        _dark={{ bg: colors.dark[100] }}
+                        _light={{ bg: colors.dark[600] }}
+                    >
+                        <TimePicker
+                            hoursUnit="時"
+                            minutesUnit="分"
+                            value={stayTime}
+                            onChange={(value) => setStayTime(value)}
+                        />
+                    </Box>
+                </ActionSheet>
             </Modal>
         </Box>
     );
@@ -336,21 +461,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    topWrapper: {
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 8,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 4,
-    },
     infoWrapper: {
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
-        paddingVertical: 12,
+        paddingTop: 12,
         paddingHorizontal: 16,
     },
     introBox: {
@@ -377,22 +492,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         backgroundColor: '#fff',
     },
-    dayWrapper: {
-        width: '100%',
-        height: 36,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingLeft: 10,
-    },
-    dayBox: {
-        width: 45,
-        marginHorizontal: 12,
-    },
-    dayBoxText: {
-        fontSize: Platform.OS === 'ios' ? 14 : 12,
-        fontWeight: '500',
-    },
     addDayBtn: {
         width: 36,
         height: 20,
@@ -411,7 +510,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         paddingTop: 20,
-        marginBottom: 10,
+        marginBottom: 20,
     },
     dayText: {
         fontSize: 16,
@@ -422,59 +521,52 @@ const styles = StyleSheet.create({
         color: '#969696',
         marginLeft: 10,
     },
-    detailContent: {
-        width: '100%',
+    planBox: {
+        paddingVertical: 12,
+        paddingLeft: 6,
+        paddingRight: 16,
+        borderRadius: 5,
+        marginBottom: 10,
         display: 'flex',
         flexDirection: 'row',
-    },
-    detailTime: {
         alignItems: 'center',
     },
-    detailType: {
-        marginTop: 5,
+    planBoxDivider: {
+        width: 3,
+        height: 44,
+        marginRight: 10,
     },
-    detailbox: {
-        marginLeft: 25,
-        paddingLeft: 24,
-        paddingBottom: 20,
-        borderLeftWidth: 1.5,
+    planBoxImage: {
+        width: 36,
+        height: 36,
+        borderRadius: 5,
     },
-    planIndexBox: {
-        position: 'absolute',
-        width: 20,
-        height: 20,
-        borderRadius: 10,
+    planBoxInfo: {
+        marginLeft: 10,
+    },
+    planBoxNote: {
+        display: 'flex',
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        left: -11,
     },
-    planIndex: {
-        fontSize: Platform.OS === 'ios' ? 14 : 12,
-        lineHeight: Platform.OS === 'ios' ? 16 : 14,
-        fontWeight: '500',
+    addPlanBox: {
+        marginTop: 20,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginBottom: 200,
     },
     planSightName: {
         fontSize: 16,
         fontWeight: '500',
     },
     planStayTime: {
-        fontSize: 11,
-    },
-    addPlanDetailBtn: {
-        width: 75,
-        height: 28,
-        borderRadius: 5,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 15,
+        fontSize: 11,
+        marginRight: 8,
     },
-    addPlanDetailBtnText: {
-        fontSize: 14,
-        marginLeft: 3,
-    },
-    modalView: (colorMode) => ({
+    modalView: {
         width: '100%',
         height: Platform.OS === 'ios' ? '95%' : '99%',
         marginTop: 'auto',
@@ -484,7 +576,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingTop: 10,
         alignItems: 'center',
-        backgroundColor: colorMode === 'dark' ? '#484848' : '#fff',
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -493,22 +584,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 10,
         elevation: 10,
-    }),
-    button: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2,
-    },
-    buttonOpen: {
-        backgroundColor: '#F194FF',
-    },
-    buttonClose: {
-        backgroundColor: '#2196F3',
-    },
-    textStyle: {
-        color: 'white',
-        fontWeight: 'bold',
-        textAlign: 'center',
     },
     modalHeader: {
         width: '100%',
@@ -536,7 +611,7 @@ const styles = StyleSheet.create({
         height: 190,
         borderRadius: 5,
         backgroundColor: '#C4C4C4',
-        marginTop: Platform.OS === 'ios' ? 20 : 10,
+        marginTop: 10,
     },
     optionRight: {
         width: 250,
@@ -564,17 +639,13 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         marginRight: 20,
     },
-    TimePickerModalView: {
-        marginTop: 'auto',
-        marginBottom: 50,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: -15,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 6,
+    stayTimeSheet: {
+        width: '100%',
+        alignItems: 'center',
+        paddingTop: 10,
+        paddingBottom: 40,
+        borderTopLeftRadius: 14,
+        borderTopRightRadius: 14,
     },
     timePickerBox: {
         width: '100%',

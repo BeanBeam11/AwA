@@ -59,7 +59,13 @@ export const PlannerStack = () => {
         >
             <Stack.Screen name="PlannerScreen" component={PlannerScreen} />
             <Stack.Screen name="PlanDetailScreen" component={PlanDetailScreen} />
-            <Stack.Screen name="PlanDetailEditScreen" component={PlanDetailEditScreen} />
+            <Stack.Screen
+                name="PlanDetailEditScreen"
+                component={PlanDetailEditScreen}
+                options={({ navigation }) => ({
+                    presentation: 'fullScreenModal',
+                })}
+            />
         </Stack.Navigator>
     );
 };
