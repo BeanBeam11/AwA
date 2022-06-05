@@ -49,7 +49,10 @@ const PlanDetailScreen = ({ navigation }) => {
                                 style={styles.ownerAvatar}
                                 resizeMode="cover"
                             />
-                            <Pressable style={[styles.shareBtn, { borderColor: colors.primary[200] }]} onPress={null}>
+                            <Pressable
+                                style={[styles.shareBtn, { borderColor: colors.primary[200] }]}
+                                onPress={() => alert('正在開發中...༼ ༎ຶ ෴ ༎ຶ༽')}
+                            >
                                 <MaterialIcon name="add" size={14} color={colors.primary[200]} />
                                 <Text style={styles.shareText} color={colors.primary[200]}>
                                     共用

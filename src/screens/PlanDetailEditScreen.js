@@ -447,6 +447,7 @@ const PlanDetailEditScreen = ({ navigation }) => {
                             minutesUnit="分"
                             value={stayTime}
                             onChange={(value) => setStayTime(value)}
+                            textColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         />
                     </Box>
                 </ActionSheet>

@@ -61,6 +61,21 @@ const PlanDetailHeader = ({ navigation, onPress }) => {
     );
 };
 
+const SimpleHeader = ({ navigation, title }) => {
+    const { colorMode } = useColorMode();
+    const { colors } = useTheme();
+
+    return (
+        <Box style={styles.headerWrapper}>
+            <Box style={styles.headerCenter}>
+                <Text style={styles.headerTitle} ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                    {title}
+                </Text>
+            </Box>
+        </Box>
+    );
+};
+
 const GoBackHeader = ({ navigation, title }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
@@ -142,7 +157,7 @@ const SearchGoBackHeader = (props) => {
     );
 };
 
-export { PlannerHeader, PlanDetailHeader, GoBackHeader, EditHeader, SearchGoBackHeader };
+export { PlannerHeader, PlanDetailHeader, SimpleHeader, GoBackHeader, EditHeader, SearchGoBackHeader };
 
 const styles = StyleSheet.create({
     headerWrapper: {

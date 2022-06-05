@@ -92,7 +92,7 @@ const PostDetailScreen = ({ navigation, route }) => {
                             ]}
                         >
                             <Box style={styles.reactionGroup}>
-                                <Pressable onPress={() => setIsLike(true)}>
+                                <Pressable onPress={() => setIsLike(!isLike)}>
                                     {isLike ? (
                                         <MaterialCommunityIcons name="thumb-up" size={24} color={colors.primary[200]} />
                                     ) : (
@@ -108,7 +108,7 @@ const PostDetailScreen = ({ navigation, route }) => {
                                 </Text>
                             </Box>
                             <Box style={styles.reactionGroup}>
-                                <Pressable onPress={() => setIsDislike(true)}>
+                                <Pressable onPress={() => setIsDislike(!isDislike)}>
                                     {isDislike ? (
                                         <MaterialCommunityIcons
                                             name="thumb-down"
@@ -140,7 +140,7 @@ const PostDetailScreen = ({ navigation, route }) => {
                                 </Text>
                             </Box>
                             <Box style={styles.reactionGroup}>
-                                <Pressable onPress={() => setIsSaved(true)}>
+                                <Pressable onPress={() => setIsSaved(!isSaved)}>
                                     {isSaved ? (
                                         <MaterialCommunityIcons name="bookmark" size={24} color={colors.primary[200]} />
                                     ) : (
@@ -195,7 +195,7 @@ const PostDetailScreen = ({ navigation, route }) => {
                                 );
                             })}
                             <Text style={styles.commentNote} color={colors.dark[400]}>
-                                沒有更多留言囉 ㅍ_ㅍ
+                                沒有更多留言囉 ㅇㅅㅇ
                             </Text>
                         </Box>
                         <Box

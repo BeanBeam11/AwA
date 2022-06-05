@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { StyleSheet, Image, Platform, Dimensions } from 'react-native';
+import { StyleSheet, Image, Platform, Dimensions, ScrollView } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Switch } from 'native-base';
-import { GoBackHeader } from '../components/Header';
+import { SimpleHeader } from '../components/Header';
 
 const AccountScreen = ({ navigation }) => {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -12,7 +12,7 @@ const AccountScreen = ({ navigation }) => {
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
-            <GoBackHeader title={'個人'} navigation={navigation} />
+            <SimpleHeader title={'個人'} navigation={navigation} />
             <Image source={{ uri: avatar }} style={styles.avatarBox} />
             <Text style={styles.name}>{name}</Text>
             <Box
@@ -25,97 +25,120 @@ const AccountScreen = ({ navigation }) => {
                 _dark={{ bg: colors.dark[100] }}
                 _light={{ bg: '#fff' }}
             >
-                <Pressable
-                    style={[
-                        styles.optionBox,
-                        {
-                            borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
-                        },
-                    ]}
-                >
-                    <Image source={require('../../assets/icons/ic_dark_mode.png')} style={styles.optionIcon} />
-                    <Text style={styles.optionText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        深色模式
-                    </Text>
-                    <Switch
-                        size="sm"
-                        isChecked={colorMode === 'dark'}
-                        onToggle={toggleColorMode}
-                        onTrackColor={colors.primary[100]}
-                    />
-                </Pressable>
-                <Pressable
-                    style={[
-                        styles.optionBox,
-                        {
-                            borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
-                        },
-                    ]}
-                    onPress={() => navigation.navigate('ProfileScreen')}
-                >
-                    <Image source={require('../../assets/icons/ic_edit_profile.png')} style={styles.optionIcon} />
-                    <Text style={styles.optionText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        編輯個人檔案
-                    </Text>
-                </Pressable>
-                <Pressable
-                    style={[
-                        styles.optionBox,
-                        {
-                            borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
-                        },
-                    ]}
-                >
-                    <Image source={require('../../assets/icons/ic_setting.png')} style={styles.optionIcon} />
-                    <Text style={styles.optionText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        帳號設定
-                    </Text>
-                </Pressable>
-                <Pressable
-                    style={[
-                        styles.optionBox,
-                        {
-                            borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
-                        },
-                    ]}
-                >
-                    <Image source={require('../../assets/icons/ic_review.png')} style={styles.optionIcon} />
-                    <Text style={styles.optionText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        意見回饋
-                    </Text>
-                </Pressable>
-                <Pressable
-                    style={[
-                        styles.optionBox,
-                        {
-                            borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
-                        },
-                    ]}
-                >
-                    <Image source={require('../../assets/icons/ic_about.png')} style={styles.optionIcon} />
-                    <Text style={styles.optionText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        關於 AwA
-                    </Text>
-                </Pressable>
-                <Pressable
-                    style={[
-                        styles.optionBox,
-                        {
-                            borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
-                        },
-                    ]}
-                >
-                    <Image source={require('../../assets/icons/ic_rate_us.png')} style={styles.optionIcon} />
-                    <Text style={styles.optionText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        評論我們
-                    </Text>
-                </Pressable>
-                <Pressable style={styles.logOutBox}>
-                    <Image source={require('../../assets/icons/ic_log_out.png')} style={styles.optionIcon} />
-                    <Text style={styles.optionText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        登出
-                    </Text>
-                </Pressable>
+                <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
+                    <Pressable
+                        style={[
+                            styles.optionBox,
+                            {
+                                borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
+                            },
+                        ]}
+                    >
+                        <Image source={require('../../assets/icons/ic_dark_mode.png')} style={styles.optionIcon} />
+                        <Text
+                            style={styles.optionText}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            深色模式
+                        </Text>
+                        <Switch
+                            size="sm"
+                            isChecked={colorMode === 'dark'}
+                            onToggle={toggleColorMode}
+                            onTrackColor={colors.primary[100]}
+                        />
+                    </Pressable>
+                    <Pressable
+                        style={[
+                            styles.optionBox,
+                            {
+                                borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
+                            },
+                        ]}
+                        onPress={() => navigation.navigate('ProfileScreen')}
+                    >
+                        <Image source={require('../../assets/icons/ic_edit_profile.png')} style={styles.optionIcon} />
+                        <Text
+                            style={styles.optionText}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            編輯個人檔案
+                        </Text>
+                    </Pressable>
+                    <Pressable
+                        style={[
+                            styles.optionBox,
+                            {
+                                borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
+                            },
+                        ]}
+                    >
+                        <Image source={require('../../assets/icons/ic_setting.png')} style={styles.optionIcon} />
+                        <Text
+                            style={styles.optionText}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            帳號設定
+                        </Text>
+                    </Pressable>
+                    <Pressable
+                        style={[
+                            styles.optionBox,
+                            {
+                                borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
+                            },
+                        ]}
+                    >
+                        <Image source={require('../../assets/icons/ic_review.png')} style={styles.optionIcon} />
+                        <Text
+                            style={styles.optionText}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            意見回饋
+                        </Text>
+                    </Pressable>
+                    <Pressable
+                        style={[
+                            styles.optionBox,
+                            {
+                                borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
+                            },
+                        ]}
+                    >
+                        <Image source={require('../../assets/icons/ic_about.png')} style={styles.optionIcon} />
+                        <Text
+                            style={styles.optionText}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            關於 AwA
+                        </Text>
+                    </Pressable>
+                    <Pressable
+                        style={[
+                            styles.optionBox,
+                            {
+                                borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
+                            },
+                        ]}
+                    >
+                        <Image source={require('../../assets/icons/ic_rate_us.png')} style={styles.optionIcon} />
+                        <Text
+                            style={styles.optionText}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            評論我們
+                        </Text>
+                    </Pressable>
+                    <Pressable style={styles.logOutBox}>
+                        <Image source={require('../../assets/icons/ic_log_out.png')} style={styles.optionIcon} />
+                        <Text
+                            style={styles.optionText}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            登出
+                        </Text>
+                    </Pressable>
+                </ScrollView>
             </Box>
         </Box>
     );

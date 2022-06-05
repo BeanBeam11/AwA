@@ -20,7 +20,7 @@ const HomeScreen = ({ navigation }) => {
                     <Text style={styles.headerText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                         探索
                     </Text>
-                    <Pressable onPress={null}>
+                    <Pressable onPress={() => alert('怎麼還沒有通知 (눈‸눈)')}>
                         <MaterialIcon name="notifications" size={24} color={colors.primary[100]} />
                     </Pressable>
                 </Box>
@@ -105,7 +105,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingBottom: 60,
+        paddingBottom: 80,
     },
     header: {
         width: '100%',

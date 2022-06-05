@@ -58,7 +58,13 @@ const SearchScreen = ({ navigation }) => {
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
             <Text style={{ fontSize: 18 }} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                Coming soon
+                ...開發中...
+            </Text>
+            <Text
+                style={{ fontSize: 18, marginTop: 10 }}
+                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+            >
+                ヾ(⌒(ﾉｼ'ω')ﾉｼ
             </Text>
             {/* <MapView
                 style={styles.map}
@@ -76,7 +82,7 @@ const SearchScreen = ({ navigation }) => {
                 </Marker>
             </MapView> */}
             <Box style={styles.searchHeader}>
-                <SearchBar placeholderText={'搜尋景點'} />
+                <SearchBar placeholder={'搜尋景點'} />
             </Box>
         </Box>
     );

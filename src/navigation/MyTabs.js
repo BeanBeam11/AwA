@@ -123,13 +123,7 @@ export const MyTabs = () => {
             <Tab.Screen name="Search" component={SearchStack} />
             <Tab.Screen name="Planner" component={PlannerStack} />
             <Tab.Screen name="Share" component={ShareStack} />
-            <Tab.Screen
-                name="Account"
-                component={AccountStack}
-                options={({ navigation }) => ({
-                    tabBarStyle: { display: 'none' },
-                })}
-            />
+            <Tab.Screen name="Account" component={AccountStack} />
         </Tab.Navigator>
     );
 };
