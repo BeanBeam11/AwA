@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { StyleSheet, Image } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Input, Pressable } from 'native-base';
+import * as ImagePicker from 'expo-image-picker';
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
 import { EditHeader } from '../components/Header';
@@ -29,10 +32,86 @@ const ProfileEditScreen = ({ navigation }) => {
         navigation.goBack();
     };
 
+    const changeProfilePic = async () => {
+        const file = await choosePhoto();
+        if (file) {
+            const resize = await manipulateAsync(file.uri, [{ resize: { width: 300, height: 300 } }], {
+                compress: 1,
+                format: SaveFormat.PNG,
+            });
+            uploadImage(resize);
+        }
+    };
+
+    const choosePhoto = async () => {
+        if (Platform.OS !== 'web') {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+                alert('Sorry, we need camera roll permissions to make this work!');
+            }
+        }
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+        }).then();
+        if (!result.cancelled) {
+            const name = result.uri.substring(result.uri.lastIndexOf('/') + 1);
+            const { uri } = result;
+            const file = {
+                uri: uri,
+                name,
+                type: 'image/jpeg',
+            };
+            return file;
+        }
+    };
+
+    const uploadImage = async (file) => {
+        const blob = await getPictureBlob(file.uri);
+        const storage = getStorage();
+        const storageRef = ref(storage, 'profileImage/' + Date.now());
+        const metadata = {
+            contentType: 'image/jpeg',
+        };
+        const uploadTask = uploadBytesResumable(storageRef, blob, metadata);
+        uploadTask.on(
+            'state_changed',
+            (snapshot) => {},
+            (error) => {
+                alert(error);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                    // const userRef = doc(db, "users", userDoc.docId);
+                    // await updateDoc(userRef, {
+                    //     'profileImage': downloadURL
+                    // });
+                    setAvatar(downloadURL);
+                });
+            }
+        );
+    };
+
+    const getPictureBlob = (uri) => {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                resolve(xhr.response);
+            };
+            xhr.onerror = (e) => {
+                reject(new TypeError('Network request failed'));
+            };
+            xhr.responseType = 'blob';
+            xhr.open('GET', uri, true);
+            xhr.send(null);
+        });
+    };
+
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: '#fff' }}>
             <EditHeader navigation={navigation} title={'編輯個人檔案'} onPressDone={handleDone} />
-            <Pressable style={styles.avatarBox} onPress={null}>
+            <Pressable style={styles.avatarBox} onPress={() => changeProfilePic()}>
                 <Image style={styles.avatar} source={{ uri: avatar }} />
                 <Box style={styles.avatarMask}>
                     <MaterialIcon name="camera-alt" size={36} color="#fff" />
