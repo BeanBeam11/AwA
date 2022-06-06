@@ -3,13 +3,13 @@ import { useSelector } from 'react-redux';
 import { StyleSheet, Image, Platform, Dimensions, ScrollView } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Switch } from 'native-base';
 import { SimpleHeader } from '../components/Header';
+import { selectProfile } from '../redux/profileSlice';
 
 const AccountScreen = ({ navigation }) => {
     const { colorMode, toggleColorMode } = useColorMode();
     const { colors } = useTheme();
-    const { info } = useSelector((state) => state.profile);
+    const info = useSelector(selectProfile);
     const { avatar, name } = info;
-
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
             <SimpleHeader title={'個人'} navigation={navigation} />

@@ -4,13 +4,13 @@ import { StyleSheet, Image } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Input, Pressable } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
+import { uploadImage } from '../api/firebase';
 import { EditHeader } from '../components/Header';
+import Loading from '../components/Loading';
 
-import { setProfileInfo } from '../redux/profileSlice';
-import { selectProfile } from '../redux/profileSlice';
+import { setProfileInfo, selectProfile } from '../redux/profileSlice';
 
 const ProfileEditScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
@@ -24,6 +24,7 @@ const ProfileEditScreen = ({ navigation }) => {
     const [transportation, setTransportation] = useState(info.transportation);
     const [gender, setGender] = useState(info.gender);
     const [age, setAge] = useState(info.age);
+    const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -33,14 +34,18 @@ const ProfileEditScreen = ({ navigation }) => {
     };
 
     const changeProfilePic = async () => {
+        setLoading(true);
         const file = await choosePhoto();
+        let result;
         if (file) {
             const resize = await manipulateAsync(file.uri, [{ resize: { width: 300, height: 300 } }], {
                 compress: 1,
                 format: SaveFormat.PNG,
             });
-            uploadImage(resize);
+            result = await uploadImage(resize);
         }
+        setAvatar(result);
+        setLoading(false);
     };
 
     const choosePhoto = async () => {
@@ -65,47 +70,6 @@ const ProfileEditScreen = ({ navigation }) => {
             };
             return file;
         }
-    };
-
-    const uploadImage = async (file) => {
-        const blob = await getPictureBlob(file.uri);
-        const storage = getStorage();
-        const storageRef = ref(storage, 'profileImage/' + Date.now());
-        const metadata = {
-            contentType: 'image/jpeg',
-        };
-        const uploadTask = uploadBytesResumable(storageRef, blob, metadata);
-        uploadTask.on(
-            'state_changed',
-            (snapshot) => {},
-            (error) => {
-                alert(error);
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                    // const userRef = doc(db, "users", userDoc.docId);
-                    // await updateDoc(userRef, {
-                    //     'profileImage': downloadURL
-                    // });
-                    setAvatar(downloadURL);
-                });
-            }
-        );
-    };
-
-    const getPictureBlob = (uri) => {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.onload = () => {
-                resolve(xhr.response);
-            };
-            xhr.onerror = (e) => {
-                reject(new TypeError('Network request failed'));
-            };
-            xhr.responseType = 'blob';
-            xhr.open('GET', uri, true);
-            xhr.send(null);
-        });
     };
 
     return (
@@ -319,6 +283,7 @@ const ProfileEditScreen = ({ navigation }) => {
                     </Box>
                 </Box>
             </Box>
+            {loading && <Loading />}
         </Box>
     );
 };
