@@ -187,9 +187,11 @@ const ProfileScreen = ({ navigation }) => {
                     </Text>
                 </Box>
             </Box>
-            <Pressable style={{ marginTop: 60 }} onPress={() => navigation.navigate('ProfileEditScreen')}>
-                <ActionButton text={'編輯'} />
-            </Pressable>
+            <ActionButton
+                text={'編輯'}
+                style={{ marginTop: 60 }}
+                onPress={() => navigation.navigate('ProfileEditScreen')}
+            />
         </Box>
     );
 };

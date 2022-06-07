@@ -398,9 +398,11 @@ const PlanDetailEditScreen = ({ navigation }) => {
                             </Pressable>
                         </Box>
                     </Box>
-                    <Pressable style={{ marginTop: Platform.OS === 'ios' ? 60 : 40 }} onPress={() => handleFinished()}>
-                        <ActionButton text={'新增'} />
-                    </Pressable>
+                    <ActionButton
+                        text={'新增'}
+                        style={{ marginTop: Platform.OS === 'ios' ? 60 : 40 }}
+                        onPress={() => handleFinished()}
+                    />
                 </View>
                 <DateTimePickerModal
                     date={startTime}

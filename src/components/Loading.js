@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { useColorMode, useTheme, Box } from 'native-base';
 import LottieView from 'lottie-react-native';
 
@@ -9,7 +9,12 @@ const Loading = () => {
     const animation = useRef(null);
 
     return (
-        <Box style={styles.container}>
+        <Box
+            style={[
+                styles.container,
+                { width: Dimensions.get('window').width, height: Dimensions.get('window').height },
+            ]}
+        >
             <Box style={styles.containerMask} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}></Box>
             <LottieView
                 autoPlay
@@ -29,8 +34,6 @@ export default Loading;
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        width: '100%',
-        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
     },

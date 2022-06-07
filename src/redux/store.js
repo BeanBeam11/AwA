@@ -3,6 +3,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import thunk from 'redux-thunk';
 
+import accountReducer from './accountSlice';
 import profileReducer from './profileSlice';
 
 const persistConfig = {
@@ -12,6 +13,7 @@ const persistConfig = {
 
 export const store = configureStore({
     reducer: {
+        account: accountReducer,
         profile: persistReducer(persistConfig, profileReducer),
     },
     devTools: process.env.NODE_ENV !== 'production',

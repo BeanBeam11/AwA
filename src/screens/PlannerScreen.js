@@ -295,9 +295,12 @@ const PlannerScreen = ({ navigation }) => {
                                 onCancel={hideEndDatePicker}
                             />
                         </Box>
-                        <Pressable style={{ marginTop: 60 }} onPress={() => handleNextStep()}>
-                            <ActionButton text={'下一步'} onPress={() => handleNextStep()} navigation={navigation} />
-                        </Pressable>
+                        <ActionButton
+                            text={'下一步'}
+                            style={{ marginTop: 60 }}
+                            onPress={() => handleNextStep()}
+                            navigation={navigation}
+                        />
                     </View>
                 </Modal>
             </View>
