@@ -17,7 +17,7 @@ const MyPlan = ({ navigation, item }) => {
             ]}
             _dark={{ bg: colors.dark[100] }}
             _light={{ bg: '#fff' }}
-            onPress={() => navigation.navigate('PlanDetailScreen')}
+            onPress={() => navigation.navigate('PlanDetailScreen', { planName: item.name })}
         >
             <Box style={styles.planImageBox}>
                 <Image

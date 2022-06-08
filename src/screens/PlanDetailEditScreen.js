@@ -40,6 +40,9 @@ const PlanDetailEditScreen = ({ navigation }) => {
                 height: 45,
                 backgroundColor: colorMode === 'dark' ? colors.dark[100] : '#fff',
             }}
+            tabsContainerStyle={{
+                justifyContent: 'flex-start',
+            }}
         />
     );
 
@@ -138,7 +141,6 @@ const PlanDetailEditScreen = ({ navigation }) => {
                 </Box>
             </Box>
             <ScrollableTabView
-                style={styles.scrollableStyle}
                 initialPage={0}
                 renderTabBar={renderTabBar}
                 tabBarUnderlineStyle={{
