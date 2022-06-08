@@ -22,11 +22,17 @@ const SightScreen = ({ navigation, route }) => {
                 contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 60 }}
                 showsVerticalScrollIndicator={false}
             >
-                <Image
-                    source={{ uri: sight.Picture1 ? sight.Picture1 : null }}
-                    style={styles.image}
-                    resizeMode="cover"
-                />
+                <Box style={styles.imageBox} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}>
+                    {sight.Picture1 ? (
+                        <Image source={{ uri: sight.Picture1 }} style={styles.image} resizeMode="cover" />
+                    ) : (
+                        <MaterialCommunityIcons
+                            name="image-remove"
+                            size={50}
+                            color={colorMode === 'dark' ? colors.dark[100] : colors.dark[400]}
+                        />
+                    )}
+                </Box>
                 <Text style={styles.name} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                     {sight.Name}
                 </Text>
@@ -70,9 +76,9 @@ const SightScreen = ({ navigation, route }) => {
                         onPress={() => setSaved(!saved)}
                     >
                         {saved ? (
-                            <MaterialCommunityIcons name="bookmark-outline" size={20} color={colors.primary[200]} />
-                        ) : (
                             <MaterialCommunityIcons name="bookmark" size={20} color={colors.primary[200]} />
+                        ) : (
+                            <MaterialCommunityIcons name="bookmark-outline" size={20} color={colors.primary[200]} />
                         )}
                         <Text style={styles.info} color={colors.primary[200]}>
                             收藏
@@ -104,12 +110,19 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingBottom: 60,
     },
-    image: {
+    imageBox: {
         width: '100%',
         height: 215,
         borderRadius: 5,
         marginTop: 10,
         marginBottom: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    image: {
+        width: '100%',
+        height: 215,
+        borderRadius: 5,
     },
     name: {
         fontSize: 20,

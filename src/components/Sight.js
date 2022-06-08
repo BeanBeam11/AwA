@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Image, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import { Rating, AirbnbRating } from 'react-native-ratings';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AddButton } from './AddButton';
 
 const Sight = ({ navigation, item }) => {
@@ -15,16 +16,20 @@ const Sight = ({ navigation, item }) => {
             _light={{ bg: '#fff' }}
             onPress={() => navigation.navigate('SightScreen', { sightName: item.Name })}
         >
-            <Box style={styles.sightImageBox}>
-                <Image
-                    source={{ uri: item.Picture1 ? item.Picture1 : null }}
-                    style={styles.sightImage}
-                    resizeMode="cover"
-                />
+            <Box style={styles.sightImageBox} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}>
+                {item.Picture1 ? (
+                    <Image source={{ uri: item.Picture1 }} style={styles.sightImage} resizeMode="cover" />
+                ) : (
+                    <MaterialCommunityIcons
+                        name="image-remove"
+                        size={45}
+                        color={colorMode === 'dark' ? colors.dark[100] : colors.dark[400]}
+                    />
+                )}
             </Box>
             <Box style={styles.sightInfo}>
                 <Text style={styles.sightName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                    {item.Name}
+                    {item.Name.length > 9 ? `${item.Name.slice(0, 9)}...` : item.Name}
                 </Text>
                 <Text style={styles.sightLocation} color={colors.dark[300]}>
                     {item.Region}・{item.Town}
@@ -53,6 +58,14 @@ const styles = StyleSheet.create({
         height: Platform.OS === 'ios' ? 210 : 220,
         borderRadius: 5,
         marginRight: 10,
+    },
+    sightImageBox: {
+        width: 188,
+        height: 125,
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     sightImage: {
         width: 188,

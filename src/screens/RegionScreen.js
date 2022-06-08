@@ -6,6 +6,7 @@ import { GoBackHeader } from '../components/Header';
 import { cities } from '../data/cities';
 import { SightList } from '../components/SightList';
 import { PlanList } from '../components/PlanList';
+import sightData from '../json/recommendSight.json';
 
 const RegionScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
@@ -13,6 +14,11 @@ const RegionScreen = ({ navigation, route }) => {
     const { city } = route.params;
 
     const region = cities.find((el) => el.city === city);
+    const sightDatafilter = sightData.filter((el) => {
+        if (el.Region.startsWith('臺')) el.Region = el.Region.replace('臺', '台');
+        const cityName = el.Region.slice(0, 2);
+        return cityName === city;
+    });
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
@@ -52,7 +58,16 @@ const RegionScreen = ({ navigation, route }) => {
                             </Text>
                         </Pressable>
                     </Box>
-                    <SightList navigation={navigation} />
+                    {sightDatafilter.length !== 0 ? (
+                        <SightList navigation={navigation} data={sightDatafilter} />
+                    ) : (
+                        <Text
+                            style={{ fontSize: 16, textAlign: 'center' }}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            (；´ﾟωﾟ｀人) 資料整理中...
+                        </Text>
+                    )}
                 </Box>
                 <Box style={styles.sectionWrapper}>
                     <Box style={styles.sectionHeader}>

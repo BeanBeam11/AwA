@@ -2,16 +2,15 @@ import React from 'react';
 import { FlatList } from 'react-native';
 import { Sight } from './Sight';
 import { Sight_H } from './Sight_H';
-import sightData from '../json/recommendSight';
 
-const SightList = ({ navigation }) => {
+const SightList = ({ navigation, data }) => {
     const renderItem = ({ item }) => {
         return <Sight item={item} navigation={navigation} />;
     };
 
     return (
         <FlatList
-            data={sightData.slice(0, 5)}
+            data={data}
             renderItem={renderItem}
             keyExtractor={(item, index) => index}
             horizontal={true}
@@ -22,14 +21,14 @@ const SightList = ({ navigation }) => {
     );
 };
 
-const SightList_V = ({ navigation }) => {
+const SightList_V = ({ navigation, data }) => {
     const renderItem = ({ item }) => {
         return <Sight_H item={item} navigation={navigation} style={{ marginBottom: 10 }} />;
     };
 
     return (
         <FlatList
-            data={sightData}
+            data={data}
             renderItem={renderItem}
             keyExtractor={(item, index) => index}
             horizontal={false}

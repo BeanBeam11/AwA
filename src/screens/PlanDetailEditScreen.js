@@ -69,7 +69,7 @@ const PlanDetailEditScreen = ({ navigation }) => {
             <MaterialCommunityIcons
                 name="drag-vertical"
                 size={24}
-                color={colorMode === 'dark' ? [200] : colors.dark[500]}
+                color={colorMode === 'dark' ? colors.dark[200] : colors.dark[500]}
             />
             <Box style={[styles.planBoxDivider, { backgroundColor: colors.secondary[200] }]}></Box>
             <Image source={{ uri: planData[0].cover_image }} style={styles.planBoxImage} resizeMode="cover" />

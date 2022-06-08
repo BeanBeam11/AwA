@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Image, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import { Rating, AirbnbRating } from 'react-native-ratings';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AddButton } from './AddButton';
 
 const Sight_H = ({ navigation, item, style }) => {
@@ -16,12 +17,16 @@ const Sight_H = ({ navigation, item, style }) => {
             onPress={() => navigation.navigate('SightScreen', { sightName: item.Name })}
         >
             <Box style={styles.infoWrapper}>
-                <Box style={styles.sightImageBox}>
-                    <Image
-                        source={{ uri: item.Picture1 ? item.Picture1 : null }}
-                        style={styles.sightImage}
-                        resizeMode="cover"
-                    />
+                <Box style={styles.sightImageBox} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}>
+                    {item.Picture1 ? (
+                        <Image source={{ uri: item.Picture1 }} style={styles.sightImage} resizeMode="cover" />
+                    ) : (
+                        <MaterialCommunityIcons
+                            name="image-remove"
+                            size={30}
+                            color={colorMode === 'dark' ? colors.dark[100] : colors.dark[400]}
+                        />
+                    )}
                 </Box>
                 <Box style={styles.sightInfo}>
                     <Text style={styles.sightName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
@@ -64,6 +69,13 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    sightImageBox: {
+        width: 100,
+        height: 66,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     sightImage: {
         width: 100,

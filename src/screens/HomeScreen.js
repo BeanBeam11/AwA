@@ -8,6 +8,7 @@ import { SightList } from '../components/SightList';
 import { PlanList } from '../components/PlanList';
 import { SearchBar } from '../components/SearchBar';
 import { News } from '../components/News';
+import sightData from '../json/recommendSight.json';
 
 const HomeScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
@@ -67,7 +68,7 @@ const HomeScreen = ({ navigation }) => {
                             </Text>
                         </Pressable>
                     </Box>
-                    <SightList navigation={navigation} />
+                    <SightList navigation={navigation} data={sightData.slice(0, 5)} />
                 </Box>
                 <Box style={styles.sectionWrapper}>
                     <Box style={styles.sectionHeader}>
