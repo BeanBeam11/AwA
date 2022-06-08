@@ -10,26 +10,37 @@ import { uploadImage } from '../api/firebase';
 import { EditHeader } from '../components/Header';
 import Loading from '../components/Loading';
 
-import { setProfileInfo, selectProfile } from '../redux/profileSlice';
+import {
+    setUserInfo,
+    setUserProfile,
+    selectToken,
+    selectUser,
+    selectProfile,
+    updateUserAsync,
+} from '../redux/accountSlice';
 
 const ProfileEditScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    const info = useSelector(selectProfile);
+    const user = useSelector(selectUser);
+    const profile = useSelector(selectProfile);
+    const token = useSelector(selectToken);
 
-    const [avatar, setAvatar] = useState(info.avatar);
-    const [name, setName] = useState(info.name);
-    const [interest, setInterest] = useState(info.interest);
-    const [type, setType] = useState(info.type);
-    const [transportation, setTransportation] = useState(info.transportation);
-    const [gender, setGender] = useState(info.gender);
-    const [age, setAge] = useState(info.age);
+    const [photo, setPhoto] = useState(user.photo);
+    const [name, setName] = useState(user.name);
+    const [interest, setInterest] = useState(profile.interest);
+    const [type, setType] = useState(profile.type);
+    const [transportation, setTransportation] = useState(profile.transportation);
+    const [gender, setGender] = useState(profile.gender);
+    const [age, setAge] = useState(profile.age);
     const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
 
     const handleDone = () => {
-        dispatch(setProfileInfo({ avatar, name, interest, type, transportation, gender, age }));
+        dispatch(setUserInfo({ photo, name }));
+        dispatch(setUserProfile({ interest, type, transportation, gender, age }));
+        dispatch(updateUserAsync({ token, photo, name }));
         navigation.goBack();
     };
 
@@ -44,7 +55,7 @@ const ProfileEditScreen = ({ navigation }) => {
             });
             result = await uploadImage(resize);
         }
-        setAvatar(result);
+        setPhoto(result);
         setLoading(false);
     };
 
@@ -76,7 +87,7 @@ const ProfileEditScreen = ({ navigation }) => {
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: '#fff' }}>
             <EditHeader navigation={navigation} title={'編輯個人檔案'} onPressDone={handleDone} />
             <Pressable style={styles.avatarBox} onPress={() => changeProfilePic()}>
-                <Image style={styles.avatar} source={{ uri: avatar }} />
+                <Image style={styles.avatar} source={{ uri: photo }} />
                 <Box style={styles.avatarMask}>
                     <MaterialIcon name="camera-alt" size={36} color="#fff" />
                 </Box>

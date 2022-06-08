@@ -1,19 +1,27 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
 import { StyleSheet, Image, Platform, Dimensions, ScrollView } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Switch } from 'native-base';
+import { useDispatch, useSelector } from 'react-redux';
 import { SimpleHeader } from '../components/Header';
-import { selectProfile } from '../redux/profileSlice';
+import { readUserAsync, selectToken, selectUser, signOut } from '../redux/accountSlice';
 
 const AccountScreen = ({ navigation }) => {
     const { colorMode, toggleColorMode } = useColorMode();
     const { colors } = useTheme();
-    const info = useSelector(selectProfile);
-    const { avatar, name } = info;
+
+    const dispatch = useDispatch();
+    const user = useSelector(selectUser);
+    const { photo, name } = user;
+    const token = useSelector(selectToken);
+
+    useEffect(() => {
+        dispatch(readUserAsync({ token }));
+    }, []);
+
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
             <SimpleHeader title={'個人'} navigation={navigation} />
-            <Image source={{ uri: avatar }} style={styles.avatarBox} />
+            <Image source={{ uri: photo }} style={styles.avatarBox} />
             <Text style={styles.name}>{name}</Text>
             <Box
                 style={[
@@ -129,7 +137,7 @@ const AccountScreen = ({ navigation }) => {
                             評論我們
                         </Text>
                     </Pressable>
-                    <Pressable style={styles.logOutBox}>
+                    <Pressable style={styles.logOutBox} onPress={() => dispatch(signOut())}>
                         <Image source={require('../../assets/icons/ic_log_out.png')} style={styles.optionIcon} />
                         <Text
                             style={styles.optionText}

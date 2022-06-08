@@ -4,18 +4,20 @@ import { StyleSheet, Image, Dimensions, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import { GoBackHeader } from '../components/Header';
 import { ActionButton } from '../components/ActionButton';
-import { selectProfile } from '../redux/profileSlice';
+import { selectUser, selectProfile } from '../redux/accountSlice';
 
 const ProfileScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    const info = useSelector(selectProfile);
-    const { avatar, name, interest, type, transportation, gender, age } = info;
+    const user = useSelector(selectUser);
+    const profile = useSelector(selectProfile);
+    const { photo, name } = user;
+    const { interest, type, transportation, gender, age } = profile;
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
             <GoBackHeader title={'個人檔案'} navigation={navigation} />
-            <Image source={{ uri: avatar }} style={styles.avatarBox} />
+            <Image source={{ uri: photo }} style={styles.avatarBox} />
             <Text
                 style={[
                     styles.name,

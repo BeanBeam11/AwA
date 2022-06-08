@@ -22,3 +22,25 @@ export const signup = async ({ name, email, password, passwordConfirm }) => {
         alert('註冊失敗 Σ(°Д°;（錯誤訊息： ' + message + '）');
     }
 };
+
+export const getCurrentUser = async ({ token }) => {
+    try {
+        const res = await axios.get(`${baseUrl}api/v1/users/me`, { headers: { Authorization: `Bearer ${token}` } });
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
+export const updateCurrentUser = async ({ token, photo, name }) => {
+    try {
+        const res = await axios.patch(
+            `${baseUrl}api/v1/users/updateMe`,
+            { photo, name },
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
