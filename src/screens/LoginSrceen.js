@@ -19,7 +19,11 @@ const LoginScreen = ({ navigation }) => {
     const loginStatus = useSelector(selectStatus);
 
     const handleLogin = () => {
-        dispatch(loginAsync({ email, password }));
+        if (email !== '' && password !== '') {
+            dispatch(loginAsync({ email, password }));
+        } else {
+            alert('-`д´- 請輸入帳號密碼！');
+        }
     };
 
     const handleGoToSignup = () => {
@@ -83,7 +87,7 @@ const LoginScreen = ({ navigation }) => {
                     style={styles.input}
                 />
             </Box>
-            <Pressable style={styles.forgotPassword} onPress={() => alert('快想起來！')}>
+            <Pressable style={styles.forgotPassword} onPress={() => alert('(´-ι_-｀) 現在還幫不了你')}>
                 <Text style={styles.text} color={colors.dark[300]}>
                     忘記密碼
                 </Text>

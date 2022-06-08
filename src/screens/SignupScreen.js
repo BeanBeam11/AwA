@@ -21,7 +21,11 @@ const SignupScreen = ({ navigation }) => {
     const loginStatus = useSelector(selectStatus);
 
     const handleSignup = () => {
-        dispatch(signupAsync({ name, email, password, passwordConfirm }));
+        if (name !== '' && email !== '' && password !== '' && passwordConfirm !== '') {
+            dispatch(signupAsync({ name, email, password, passwordConfirm }));
+        } else {
+            alert('-`д´- 請確認每一個欄位都有填寫呦');
+        }
     };
 
     const handleGoToLogin = () => {
