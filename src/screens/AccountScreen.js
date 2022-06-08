@@ -27,7 +27,7 @@ const AccountScreen = ({ navigation }) => {
                 style={[
                     styles.optionWrapper,
                     {
-                        height: Dimensions.get('window').height > 780 ? 510 : 420,
+                        height: Dimensions.get('window').height - 350,
                     },
                 ]}
                 _dark={{ bg: colors.dark[100] }}

@@ -41,11 +41,19 @@ const ShareSearchScreen = ({ navigation, route }) => {
                     value={keyword}
                 />
                 <Box style={styles.listWrapper}>
-                    <Box style={styles.postWrapper}>
-                        {postResult &&
+                    <Box>
+                        {postResult.length !== 0 ? (
                             postResult.map((item, index) => {
                                 return <Post item={item} key={index} navigation={navigation} />;
-                            })}
+                            })
+                        ) : (
+                            <Text
+                                style={{ textAlign: 'center', marginTop: 50 }}
+                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                            >
+                                ( ×ω× ) 尚無搜尋結果
+                            </Text>
+                        )}
                     </Box>
                 </Box>
             </ScrollView>
