@@ -54,6 +54,7 @@ const SightScreen = ({ navigation, route }) => {
                         name="map-marker-outline"
                         size={20}
                         color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
+                        style={{ marginTop: 2 }}
                     />
                     <Text style={styles.info} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
                         {sight.Add ? sight.Add : `尚無資訊`}
@@ -64,7 +65,7 @@ const SightScreen = ({ navigation, route }) => {
                         name="clock-outline"
                         size={18}
                         color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                        style={{ paddingHorizontal: 1 }}
+                        style={{ paddingHorizontal: 1, marginTop: 2 }}
                     />
                     <Text style={styles.info} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
                         {sight.Opentime ? sight.Opentime : `尚無資訊`}
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
     infoWrapper: {
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         marginBottom: 8,
         paddingRight: 24,
     },

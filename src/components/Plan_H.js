@@ -14,7 +14,9 @@ const Plan_H = ({ navigation, item }) => {
             style={styles.planBox}
             _dark={{ bg: colors.dark[100] }}
             _light={{ bg: '#fff' }}
-            onPress={() => navigation.navigate('Planner', { screen: 'PlanDetailScreen' })}
+            onPress={() =>
+                navigation.navigate('Planner', { screen: 'PlanDetailScreen', params: { planName: item.name } })
+            }
         >
             <Box style={styles.planDay}>
                 <MaterialCommunityIcons name="bookmark" size={40} color={colors.primary[200]} />
