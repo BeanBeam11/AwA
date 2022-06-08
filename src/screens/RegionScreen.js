@@ -52,7 +52,7 @@ const RegionScreen = ({ navigation, route }) => {
                             </Text>
                         </Pressable>
                     </Box>
-                    <SightList />
+                    <SightList navigation={navigation} />
                 </Box>
                 <Box style={styles.sectionWrapper}>
                     <Box style={styles.sectionHeader}>
@@ -71,7 +71,7 @@ const RegionScreen = ({ navigation, route }) => {
                             </Text>
                         </Pressable>
                     </Box>
-                    <PlanList />
+                    <PlanList navigation={navigation} />
                 </Box>
             </ScrollView>
             <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />

@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import thunk from 'redux-thunk';
 
 import accountReducer from './accountSlice';
+import contentReducer from './contentSlice';
 
 const persistConfig = {
     key: 'root',
@@ -13,6 +14,7 @@ const persistConfig = {
 export const store = configureStore({
     reducer: {
         account: accountReducer,
+        contentSlice: contentReducer,
     },
     devTools: process.env.NODE_ENV !== 'production',
     middleware: [thunk],

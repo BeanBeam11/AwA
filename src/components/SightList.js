@@ -11,12 +11,13 @@ const SightList = ({ navigation }) => {
 
     return (
         <FlatList
-            data={sightData}
+            data={sightData.slice(0, 5)}
             renderItem={renderItem}
             keyExtractor={(item, index) => index}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingHorizontal: 24 }}
+            initialNumToRender={5}
         />
     );
 };

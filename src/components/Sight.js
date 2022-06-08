@@ -16,7 +16,11 @@ const Sight = ({ navigation, item }) => {
             onPress={() => navigation.navigate('SightScreen', { sightName: item.Name })}
         >
             <Box style={styles.sightImageBox}>
-                <Image source={{ uri: item.Picture1 }} style={styles.sightImage} resizeMode="cover" />
+                <Image
+                    source={{ uri: item.Picture1 ? item.Picture1 : null }}
+                    style={styles.sightImage}
+                    resizeMode="cover"
+                />
             </Box>
             <Box style={styles.sightInfo}>
                 <Text style={styles.sightName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>

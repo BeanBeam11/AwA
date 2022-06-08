@@ -17,11 +17,15 @@ const Sight_H = ({ navigation, item, style }) => {
         >
             <Box style={styles.infoWrapper}>
                 <Box style={styles.sightImageBox}>
-                    <Image source={{ uri: item.Picture1 }} style={styles.sightImage} resizeMode="cover" />
+                    <Image
+                        source={{ uri: item.Picture1 ? item.Picture1 : null }}
+                        style={styles.sightImage}
+                        resizeMode="cover"
+                    />
                 </Box>
                 <Box style={styles.sightInfo}>
                     <Text style={styles.sightName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        {item.Name}
+                        {item.Name.length > 9 ? `${item.Name.slice(0, 9)}...` : item.Name}
                     </Text>
                     <Text style={styles.sightLocation} color={colors.dark[300]}>
                         {item.Region}・{item.Town}

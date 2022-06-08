@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, FlatList, Image, ScrollView } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
@@ -11,6 +11,7 @@ const SightScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const { sightName } = route.params;
+    const [saved, setSaved] = useState(false);
 
     const sight = sightData.find((el) => el.Name === sightName);
 
@@ -21,7 +22,11 @@ const SightScreen = ({ navigation, route }) => {
                 contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 60 }}
                 showsVerticalScrollIndicator={false}
             >
-                <Image source={{ uri: sight.Picture1 }} style={styles.image} resizeMode="cover" />
+                <Image
+                    source={{ uri: sight.Picture1 ? sight.Picture1 : null }}
+                    style={styles.image}
+                    resizeMode="cover"
+                />
                 <Text style={styles.name} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                     {sight.Name}
                 </Text>
@@ -60,13 +65,23 @@ const SightScreen = ({ navigation, route }) => {
                     </Text>
                 </Box>
                 <Box style={styles.actionWrapper}>
-                    <Pressable style={[styles.actionBtn, { borderColor: colors.primary[200] }]}>
-                        <MaterialCommunityIcons name="bookmark-outline" size={20} color={colors.primary[200]} />
+                    <Pressable
+                        style={[styles.actionBtn, { borderColor: colors.primary[200] }]}
+                        onPress={() => setSaved(!saved)}
+                    >
+                        {saved ? (
+                            <MaterialCommunityIcons name="bookmark-outline" size={20} color={colors.primary[200]} />
+                        ) : (
+                            <MaterialCommunityIcons name="bookmark" size={20} color={colors.primary[200]} />
+                        )}
                         <Text style={styles.info} color={colors.primary[200]}>
                             收藏
                         </Text>
                     </Pressable>
-                    <Pressable style={[styles.actionBtn, { borderColor: colors.primary[200] }]}>
+                    <Pressable
+                        style={[styles.actionBtn, { borderColor: colors.primary[200] }]}
+                        onPress={() => alert('敬請期待！')}
+                    >
                         <MaterialCommunityIcons name="plus" size={20} color={colors.primary[200]} />
                         <Text style={styles.info} color={colors.primary[200]}>
                             行程
@@ -113,6 +128,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 8,
+        paddingRight: 24,
     },
     info: {
         fontSize: 14,
