@@ -15,7 +15,7 @@ import { EditHeader } from '../components/Header';
 import { formatDate, formatTime } from '../utils/formatter';
 import planData from '../json/myPlan.json';
 
-const PlanDetailEditScreen = ({ navigation }) => {
+const PlanDetailEditScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const [modalVisible, setModalVisible] = useState(false);
@@ -27,6 +27,22 @@ const PlanDetailEditScreen = ({ navigation }) => {
     const [startTime, setStartTime] = useState(new Date());
     const [sightType, setSightType] = useState('');
     const [stayTime, setStayTime] = useState({ hours: 0, minutes: 0 });
+
+    const { planName } = route.params;
+
+    const planArray = planData.filter((el) => el.name === planName);
+    const plan = planArray[0];
+
+    const initialData = plan.plan[0].map((item, index) => {
+        return {
+            order: index + 1,
+            label: item.sight,
+            type: item.type,
+            stay_time: item.stay_time,
+            note: item.note,
+        };
+    });
+    const [dragData, setDragData] = useState(initialData);
 
     const handleDone = () => {
         navigation.goBack();
@@ -46,21 +62,19 @@ const PlanDetailEditScreen = ({ navigation }) => {
         />
     );
 
-    const initialData = [
-        {
-            order: 1,
-            label: '阿妹茶樓',
-        },
-        {
-            order: 2,
-            label: '草仔粿',
-        },
-        {
-            order: 3,
-            label: '九份樓梯',
-        },
-    ];
-    const [data, setData] = useState(initialData);
+    const onChangeTab = (tabIndex) => {
+        setDragData(
+            plan.plan[tabIndex].map((item, index) => {
+                return {
+                    order: index + 1,
+                    label: item.sight,
+                    type: item.type,
+                    stay_time: item.stay_time,
+                    note: item.note,
+                };
+            })
+        );
+    };
 
     const renderItem = ({ item, index, drag, isActive }) => (
         <Pressable
@@ -75,7 +89,7 @@ const PlanDetailEditScreen = ({ navigation }) => {
                 color={colorMode === 'dark' ? colors.dark[200] : colors.dark[500]}
             />
             <Box style={[styles.planBoxDivider, { backgroundColor: colors.secondary[200] }]}></Box>
-            <Image source={{ uri: planData[0].cover_image }} style={styles.planBoxImage} resizeMode="cover" />
+            <Image source={{ uri: plan.cover_image }} style={styles.planBoxImage} resizeMode="cover" />
             <Box style={styles.planBoxInfo}>
                 <Text style={styles.planSightName}>{item?.label}</Text>
                 <Box style={styles.planBoxNote}>
@@ -86,9 +100,9 @@ const PlanDetailEditScreen = ({ navigation }) => {
                             color={colors.dark[400]}
                             style={{ marginRight: 4 }}
                         />
-                        <Text color={colors.dark[300]}>01:20</Text>
+                        <Text color={colors.dark[300]}>{item.stay_time}</Text>
                     </Box>
-                    <Text color={colors.dark[300]}>註：記得拍合照</Text>
+                    <Text color={colors.dark[300]}>{item.note}</Text>
                 </Box>
             </Box>
             <Pressable style={{ marginLeft: 'auto' }} onPress={() => setModalVisible(!modalVisible)}>
@@ -121,28 +135,25 @@ const PlanDetailEditScreen = ({ navigation }) => {
             <Box style={styles.topWrapper} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
                 <EditHeader navigation={navigation} title={'編輯行程'} onPressDone={handleDone} />
                 <Box style={styles.infoWrapper}>
-                    <Image source={{ uri: planData[0].cover_image }} style={styles.introImage} resizeMode="cover" />
+                    <Image source={{ uri: plan.cover_image }} style={styles.introImage} resizeMode="cover" />
                     <Box style={styles.introBox}>
                         <Text
                             style={styles.introName}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         >
-                            {planData[0].name}
+                            {plan.name}
                         </Text>
                         <Text style={styles.introDate} color={colors.dark[300]}>
-                            {formatDate(planData[0].start_date)}-{formatDate(planData[0].end_date)}
+                            {formatDate(plan.start_date)}-{formatDate(plan.end_date)}
                         </Text>
-                        <Image
-                            source={{ uri: planData[0].owner_image }}
-                            style={styles.ownerAvatar}
-                            resizeMode="cover"
-                        />
+                        <Image source={{ uri: plan.owner_image }} style={styles.ownerAvatar} resizeMode="cover" />
                     </Box>
                 </Box>
             </Box>
             <ScrollableTabView
                 initialPage={0}
                 renderTabBar={renderTabBar}
+                onChangeTab={({ i, ref }) => onChangeTab(i)}
                 tabBarUnderlineStyle={{
                     backgroundColor: colors.secondary[200],
                     position: 'absolute',
@@ -153,49 +164,39 @@ const PlanDetailEditScreen = ({ navigation }) => {
                 tabBarActiveTextColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                 tabBarInactiveTextColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
             >
-                <Box style={styles.detailWrapper} tabLabel="Day 1">
-                    <Box style={styles.detailHeader}>
-                        <Text style={styles.dayText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                            Day 1
-                        </Text>
-                        <Text style={styles.dateText} color={colors.dark[400]}>
-                            04/04 (六)
-                        </Text>
-                    </Box>
-                    <DraggableFlatList
-                        data={data}
-                        renderItem={renderItem}
-                        keyExtractor={(item, index) => index.toString()}
-                        showsVerticalScrollIndicator={false}
-                        onDragEnd={({ data }) => setData(data)}
-                        ListFooterComponent={renderListFooter}
-                    />
-                </Box>
-                <Box style={styles.detailWrapper} tabLabel="Day 2">
-                    <Box style={styles.detailHeader}>
-                        <Text style={styles.dayText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                            Day 2
-                        </Text>
-                        <Text style={styles.dateText} color={colors.dark[400]}>
-                            04/05 (日)
-                        </Text>
-                    </Box>
-                </Box>
-                <Box style={styles.detailWrapper} tabLabel="Day 3">
-                    <Box style={styles.detailHeader}>
-                        <Text style={styles.dayText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                            Day 3
-                        </Text>
-                        <Text style={styles.dateText} color={colors.dark[400]}>
-                            04/06 (一)
-                        </Text>
-                    </Box>
-                </Box>
-                <Pressable
+                {plan.plan.map((item, index) => {
+                    const firstDate = new Date(plan.start_date);
+                    const currentDate = formatDate(firstDate.setDate(firstDate.getDate() + index)).slice(5, 10);
+
+                    return (
+                        <Box style={styles.detailWrapper} tabLabel={`Day ${index + 1}`}>
+                            <Box style={styles.detailHeader}>
+                                <Text
+                                    style={styles.dayText}
+                                    color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                                >
+                                    {`Day ${index + 1}`}
+                                </Text>
+                                <Text style={styles.dateText} color={colors.dark[400]}>
+                                    {currentDate}
+                                </Text>
+                            </Box>
+                            <DraggableFlatList
+                                data={dragData}
+                                renderItem={renderItem}
+                                keyExtractor={(item, index) => index.toString()}
+                                showsVerticalScrollIndicator={false}
+                                onDragEnd={({ data }) => setDragData(data)}
+                                ListFooterComponent={renderListFooter}
+                            />
+                        </Box>
+                    );
+                })}
+                {/* <Pressable
                     style={styles.detailWrapper}
                     tabLabel="+ new"
                     onPress={() => alert('再加一天！')}
-                ></Pressable>
+                ></Pressable> */}
             </ScrollableTabView>
             <Modal
                 animationType="slide"

@@ -11,21 +11,21 @@
                 {
                     "sight": "阿妹茶樓",
                     "type": "美食",
-                    "stay_time": "",
-                    "note": ""
+                    "stay_time": "00:40",
+                    "note": "記得拍合照！"
                 },
                 {
                     "sight": "草仔粿",
                     "type": "美食",
-                    "stay_time": "",
-                    "note": ""
+                    "stay_time": "00:10",
+                    "note": "多買幾3份"
                 }
             ],
             [
                 {
                     "sight": "黃金博物館",
                     "type": "景點",
-                    "stay_time": "",
+                    "stay_time": "01:30",
                     "note": ""
                 }
             ],
@@ -44,13 +44,13 @@
                 {
                     "sight": "澄霖沉香味道森林館",
                     "type": "景點",
-                    "stay_time": "",
+                    "stay_time": "00:50",
                     "note": "帶腳架"
                 },
                 {
                     "sight": "雲嶺之丘",
                     "type": "景點",
-                    "stay_time": "",
+                    "stay_time": "01:20",
                     "note": ""
                 }
             ],
@@ -69,13 +69,13 @@
                 {
                     "sight": "山度空間",
                     "type": "景點",
-                    "stay_time": "",
+                    "stay_time": "00:55",
                     "note": ""
                 },
                 {
                     "sight": "海崖谷",
                     "type": "景點",
-                    "stay_time": "",
+                    "stay_time": "00:30",
                     "note": ""
                 }
             ],
@@ -83,19 +83,19 @@
                 {
                     "sight": "九曲洞隧道",
                     "type": "景點",
-                    "stay_time": "",
+                    "stay_time": "00:40",
                     "note": ""
                 },
                 {
                     "sight": "斷崖駐在所",
                     "type": "景點",
-                    "stay_time": "",
+                    "stay_time": "00:40",
                     "note": ""
                 },
                 {
                     "sight": "綠水步道",
                     "type": "景點",
-                    "stay_time": "",
+                    "stay_time": "00:40",
                     "note": ""
                 }
             ]

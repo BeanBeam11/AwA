@@ -35,7 +35,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
 
     const handleGoToEdit = async () => {
         await SheetManager.hide('edit_sheet');
-        navigation.navigate('PlanDetailEditScreen');
+        navigation.navigate('PlanDetailEditScreen', { planName });
     };
 
     return (
@@ -141,7 +141,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                                                             color={colors.dark[400]}
                                                             style={{ marginRight: 4 }}
                                                         />
-                                                        <Text color={colors.dark[300]}>00:40</Text>
+                                                        <Text color={colors.dark[300]}>{val.stay_time}</Text>
                                                     </Box>
                                                     {val.note && <Text color={colors.dark[300]}>註：{val.note}</Text>}
                                                 </Box>
