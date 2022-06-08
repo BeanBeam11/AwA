@@ -169,7 +169,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                     const currentDate = formatDate(firstDate.setDate(firstDate.getDate() + index)).slice(5, 10);
 
                     return (
-                        <Box style={styles.detailWrapper} tabLabel={`Day ${index + 1}`}>
+                        <Box style={styles.detailWrapper} tabLabel={`Day ${index + 1}`} key={index}>
                             <Box style={styles.detailHeader}>
                                 <Text
                                     style={styles.dayText}

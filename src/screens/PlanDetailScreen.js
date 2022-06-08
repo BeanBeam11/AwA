@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, Image, ScrollView, Platform } from 'react-native';
+import React from 'react';
+import { StyleSheet, Image, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
@@ -16,8 +16,6 @@ const PlanDetailScreen = ({ navigation, route }) => {
 
     const planArray = planData.filter((el) => el.name === planName);
     const plan = planArray[0];
-
-    const [day, setDay] = useState(plan.plan.length);
 
     const renderTabBar = (props) => (
         <ScrollableTabBar
@@ -87,7 +85,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                     const currentDate = formatDate(firstDate.setDate(firstDate.getDate() + index)).slice(5, 10);
 
                     return (
-                        <Box style={styles.detailWrapper} tabLabel={`Day ${index + 1}`}>
+                        <Box style={styles.detailWrapper} tabLabel={`Day ${index + 1}`} key={index}>
                             <Box style={styles.detailHeader}>
                                 <Text
                                     style={styles.dayText}
@@ -101,7 +99,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                             </Box>
                             {item.map((val, index) => {
                                 return (
-                                    <Box style={styles.detailContent}>
+                                    <Box style={styles.detailContent} key={index}>
                                         <Box style={styles.detailTime}>
                                             <Text color={colors.dark[300]}>11:00</Text>
                                             <MaterialIcon

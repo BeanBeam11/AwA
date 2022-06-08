@@ -101,7 +101,7 @@ const PlannerScreen = ({ navigation }) => {
 
     const handleNextStep = () => {
         setModalVisible(!modalVisible);
-        navigation.navigate('PlanDetailScreen');
+        navigation.navigate('PlanDetailScreen', { planName: '九份三日遊' });
     };
 
     return (
