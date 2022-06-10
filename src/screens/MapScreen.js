@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Dimensions, TextInput } from 'react-native';
+import { StyleSheet, View, Dimensions, Image } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import MapView, { Marker } from 'react-native-maps';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { GOOGLE_PLACES_API } from '@env';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { SearchBar } from '../components/SearchBar';
 
-const SearchScreen = ({ navigation }) => {
+const MapScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const [location, setLocation] = useState(null);
@@ -71,24 +73,48 @@ const SearchScreen = ({ navigation }) => {
                 region={region}
                 // onRegionChangeComplete={onRegionChangeComplete}
                 showsTraffic
-                provider='google'
+                provider="google"
             >
-                <Marker
-                    coordinate={marker.coord}
-                    title={marker.name}
-                    description={marker.address}
-                >
+                <Marker coordinate={marker.coord} title={marker.name} description={marker.address}>
                     <View></View>
                 </Marker>
             </MapView> */}
-            <Box style={styles.searchHeader}>
-                <SearchBar placeholder={'搜尋景點'} />
+            <Box
+                style={[styles.searchBarWrapper, { width: Dimensions.get('window').width - 48 }]}
+                _dark={{ bg: colors.dark[200] }}
+                _light={{ bg: '#fff' }}
+            >
+                <Image
+                    source={require('../../assets/icons/ic_search.png')}
+                    style={styles.searchIcon}
+                    resizeMode="cover"
+                />
+                <GooglePlacesAutocomplete
+                    placeholder="搜尋景點"
+                    onPress={(data, details = null) => {
+                        // 'details' is provided when fetchDetails = true
+                        console.log(data, details);
+                    }}
+                    query={{
+                        key: GOOGLE_PLACES_API,
+                        language: 'zh_tw',
+                    }}
+                    styles={{
+                        textInput: {
+                            height: 40,
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginLeft: 24,
+                        },
+                    }}
+                />
             </Box>
         </Box>
     );
 };
 
-export default SearchScreen;
+export default MapScreen;
 
 const styles = StyleSheet.create({
     container: {
@@ -101,32 +127,24 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
     },
-    searchHeader: {
+    searchBarWrapper: {
         position: 'absolute',
-        width: '100%',
+        top: 60,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        top: 60,
+        paddingHorizontal: 10,
+        borderRadius: 5,
     },
+    searchIcon: {
+        width: 24,
+        height: 24,
+        position: 'absolute',
+        top: 8,
+        left: 8,
+    },
+    searchGoogle: {},
     goBackBtn: {
         marginLeft: 20,
-    },
-    searchBar: {
-        width: '75%',
-        height: 40,
-        borderRadius: 20,
-        paddingHorizontal: 14,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        justifyContent: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 4,
     },
 });

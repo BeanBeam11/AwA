@@ -7,7 +7,7 @@ import RegionScreen from '../screens/RegionScreen';
 import RecommendSightScreen from '../screens/RecommendSightScreen';
 import SightScreen from '../screens/SightScreen';
 import PlanListScreen from '../screens/PlanListScreen';
-import SearchScreen from '../screens/SearchScreen';
+import MapScreen from '../screens/MapScreen';
 import PlannerScreen from '../screens/PlannerScreen';
 import PlanDetailScreen from '../screens/PlanDetailScreen';
 import PlanDetailEditScreen from '../screens/PlanDetailEditScreen';
@@ -38,14 +38,14 @@ export const HomeStack = () => {
     );
 };
 
-export const SearchStack = () => {
+export const MapStack = () => {
     return (
         <Stack.Navigator
             screenOptions={{
                 headerShown: false,
             }}
         >
-            <Stack.Screen name="SearchScreen" component={SearchScreen} />
+            <Stack.Screen name="MapScreen" component={MapScreen} />
         </Stack.Navigator>
     );
 };
