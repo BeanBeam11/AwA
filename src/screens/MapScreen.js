@@ -99,33 +99,6 @@ const MapScreen = ({ navigation }) => {
                     },
                 },
             },
-            name: '茉莉花壇夢想館',
-            opening_hours: {
-                open_now: false,
-                periods: [],
-                weekday_text: [
-                    '星期一: 09:00 – 17:00',
-                    '星期二: 09:00 – 17:00',
-                    '星期三: 09:00 – 17:00',
-                    '星期四: 09:00 – 17:00',
-                    '星期五: 09:00 – 17:00',
-                    '星期六: 09:00 – 17:00',
-                    '星期日: 09:00 – 17:00',
-                ],
-            },
-            photos: [
-                {
-                    height: 3024,
-                    html_attributions: [
-                        '<a href="https://maps.google.com/maps/contrib/112131876555866784406">張瓈文</a>',
-                    ],
-                    photo_reference:
-                        'Aap_uEC2ojQimT5itZaZBkKE9Kup5jyVY4E9v_YEuvd9FoRUyGJSjDxLgbuFRys8JS3cGts_pde-SMcPOwzDxhW91b_gyjZzWgt8qxJJxT2LDClyqS1fl_c5r1QAx_jCPSedTFyHx36mI89pvS58i4C0VtNxFfSFdnAG9UuFNaRDTmaCgDS1',
-                    width: 4032,
-                },
-            ],
-            place_id: 'ChIJg3qg5AI4aTQRSXlNLh9HNxk',
-            rating: 3.7,
         },
         {
             formatted_address: '505台灣彰化縣鹿港鎮瑤林街9號',
@@ -172,52 +145,6 @@ const MapScreen = ({ navigation }) => {
             ],
             place_id: 'ChIJbZ03BtZFaTQRVSahxk_O324',
             rating: 4.4,
-        },
-        {
-            formatted_address: '505台灣彰化縣鹿港鎮鹿工南四路30號',
-            geometry: {
-                location: {
-                    lat: 24.0684557,
-                    lng: 120.3948468,
-                },
-                viewport: {
-                    northeast: {
-                        lat: 24.0696038302915,
-                        lng: 120.3962023302915,
-                    },
-                    southwest: {
-                        lat: 24.0669058697085,
-                        lng: 120.3935043697085,
-                    },
-                },
-            },
-            name: '臺灣玻璃館',
-            opening_hours: {
-                open_now: false,
-                periods: [],
-                weekday_text: [
-                    '星期一: 08:00 – 17:00',
-                    '星期二: 08:00 – 17:00',
-                    '星期三: 08:00 – 17:00',
-                    '星期四: 08:00 – 16:30',
-                    '星期五: 08:00 – 17:00',
-                    '星期六: 08:00 – 18:00',
-                    '星期日: 08:00 – 18:00',
-                ],
-            },
-            photos: [
-                {
-                    height: 760,
-                    html_attributions: [
-                        '<a href="https://maps.google.com/maps/contrib/117678142995300055863">許乃予</a>',
-                    ],
-                    photo_reference:
-                        'Aap_uECkG8eS1zFpEOXbXMlhP-rDIF5sizDR7tZEinq-2tlUHkpI-PgfufPgg52cADd5Pf0UGVmKKzLSzOHgoHBEy_66zS-fitbT8I05Y32jiDuza23wNMCLRY5j_N6NRtZm8L5ZMxYU7BYndkbgERNglS8MY-75l3M1Eui1dbm6ArPGOlI5',
-                    width: 1159,
-                },
-            ],
-            place_id: 'ChIJbSGqBZxFaTQRMgOxsNfqnGs',
-            rating: 4.1,
         },
         {
             formatted_address: '507台灣彰化縣線西鄉草豐路501巷5號',
