@@ -14,11 +14,11 @@ const Sight = ({ navigation, item }) => {
             style={styles.sightBox}
             _dark={{ bg: colors.dark[100] }}
             _light={{ bg: '#fff' }}
-            onPress={() => navigation.navigate('SightScreen', { sightName: item.Name })}
+            onPress={() => navigation.navigate('SightScreen', { spot: item })}
         >
             <Box style={styles.sightImageBox} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}>
-                {item.Picture1 ? (
-                    <Image source={{ uri: item.Picture1 }} style={styles.sightImage} resizeMode="cover" />
+                {item.image ? (
+                    <Image source={{ uri: item.image }} style={styles.sightImage} resizeMode="cover" />
                 ) : (
                     <MaterialCommunityIcons
                         name="image-remove"
@@ -29,10 +29,10 @@ const Sight = ({ navigation, item }) => {
             </Box>
             <Box style={styles.sightInfo}>
                 <Text style={styles.sightName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                    {item.Name.length > 9 ? `${item.Name.slice(0, 9)}...` : item.Name}
+                    {item.name.length > 9 ? `${item.name.slice(0, 9)}...` : item.name}
                 </Text>
                 <Text style={styles.sightLocation} color={colors.dark[300]}>
-                    {item.Region}・{item.Town}
+                    {item.city}・{item.town}
                 </Text>
                 <Rating
                     count={5}

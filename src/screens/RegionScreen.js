@@ -1,24 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, FlatList, Image, ScrollView } from 'react-native';
+import { StyleSheet, Image, ScrollView } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import { GoBackHeader } from '../components/Header';
 import { cities } from '../data/cities';
 import { SightList } from '../components/SightList';
 import { PlanList } from '../components/PlanList';
-import sightData from '../json/recommendSight.json';
+import Loading from '../components/Loading';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCitySpots, selectStatus, getCitySpotsAsync } from '../redux/spotSlice';
 
 const RegionScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const { city } = route.params;
+    const [loading, setLoading] = useState(true);
+    const [spots, setSpots] = useState([]);
+
+    const dispatch = useDispatch();
+    const citySpots = useSelector(selectCitySpots);
+    const spotStatus = useSelector(selectStatus);
 
     const region = cities.find((el) => el.city === city);
-    const sightDatafilter = sightData.filter((el) => {
-        if (el.Region.startsWith('臺')) el.Region = el.Region.replace('臺', '台');
-        const cityName = el.Region.slice(0, 2);
-        return cityName === city;
-    });
+
+    useEffect(() => {
+        dispatch(getCitySpotsAsync(city));
+    }, []);
+
+    useEffect(() => {
+        if (spotStatus == 'loading') {
+            setLoading(true);
+        } else if (spotStatus == 'error') {
+            setLoading(false);
+        } else if (spotStatus == 'idle') {
+            setSpots(citySpots);
+            if (spots) setLoading(false);
+        }
+    }, [spotStatus]);
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
@@ -49,7 +68,10 @@ const RegionScreen = ({ navigation, route }) => {
                         >
                             {region.city}景點
                         </Text>
-                        <Pressable style={styles.sectionRightBox}>
+                        <Pressable
+                            style={styles.sectionRightBox}
+                            onPress={() => navigation.navigate('CitySightScreen')}
+                        >
                             <Text
                                 style={styles.sectionTitleRight}
                                 color={colorMode === 'dark' ? colors.dark[500] : colors.dark[300]}
@@ -58,14 +80,14 @@ const RegionScreen = ({ navigation, route }) => {
                             </Text>
                         </Pressable>
                     </Box>
-                    {sightDatafilter.length !== 0 ? (
-                        <SightList navigation={navigation} data={sightDatafilter} />
+                    {!loading ? (
+                        spots.length !== 0 && <SightList navigation={navigation} data={spots.slice(0, 5)} />
                     ) : (
                         <Text
                             style={{ fontSize: 16, textAlign: 'center' }}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         >
-                            (；´ﾟωﾟ｀人) 資料整理中...
+                            ✧*｡٩(ˊᗜˋ*)و✧*｡ 資料整理中...
                         </Text>
                     )}
                 </Box>
@@ -89,6 +111,7 @@ const RegionScreen = ({ navigation, route }) => {
                     <PlanList navigation={navigation} />
                 </Box>
             </ScrollView>
+            {loading && <Loading />}
             <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />
         </Box>
     );

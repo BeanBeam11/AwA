@@ -1,6 +1,6 @@
 export const cities = [
     {
-        city: '台北',
+        city: '臺北',
         name: 'Taipei',
         image: require('../../assets/cities/taipei.png'),
         map: require('../../assets/map_cities/map_taipei.png'),
@@ -42,7 +42,7 @@ export const cities = [
         map: require('../../assets/map_cities/map_miaoli.png'),
     },
     {
-        city: '台中',
+        city: '臺中',
         name: 'Taichung',
         image: require('../../assets/cities/taichung.png'),
         map: require('../../assets/map_cities/map_taichung.png'),
@@ -72,7 +72,7 @@ export const cities = [
         map: require('../../assets/map_cities/map_chiayi.png'),
     },
     {
-        city: '台南',
+        city: '臺南',
         name: 'Tainan',
         image: require('../../assets/cities/tainan.png'),
         map: require('../../assets/map_cities/map_tainan.png'),
@@ -102,21 +102,9 @@ export const cities = [
         map: require('../../assets/map_cities/map_hualien.png'),
     },
     {
-        city: '台東',
+        city: '臺東',
         name: 'Taitung',
         image: require('../../assets/cities/taitung.png'),
         map: require('../../assets/map_cities/map_taitung.png'),
-    },
-    {
-        city: '綠島',
-        name: 'Green Island',
-        image: require('../../assets/cities/green_island.png'),
-        map: require('../../assets/map_cities/map_green_island.png'),
-    },
-    {
-        city: '蘭嶼',
-        name: 'Orchid Island',
-        image: require('../../assets/cities/orchid_island.png'),
-        map: require('../../assets/map_cities/map_orchid_island.png'),
     },
 ];

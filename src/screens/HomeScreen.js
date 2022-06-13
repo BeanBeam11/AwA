@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, FlatList, Image, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { CityListHorizontal } from '../components/CityList';
@@ -8,11 +8,35 @@ import { SightList } from '../components/SightList';
 import { PlanList } from '../components/PlanList';
 import { SearchBar } from '../components/SearchBar';
 import { News } from '../components/News';
-import sightData from '../json/recommendSight.json';
+import Loading from '../components/Loading';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { selectRecommendSpots, selectStatus, getRecommendSpotsAsync } from '../redux/spotSlice';
 
 const HomeScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
+    const [loading, setLoading] = useState(true);
+    const [spots, setSpots] = useState([]);
+
+    const dispatch = useDispatch();
+    const recommendSpots = useSelector(selectRecommendSpots);
+    const spotStatus = useSelector(selectStatus);
+
+    useEffect(() => {
+        dispatch(getRecommendSpotsAsync());
+    }, []);
+
+    useEffect(() => {
+        if (spotStatus == 'loading') {
+            setLoading(true);
+        } else if (spotStatus == 'error') {
+            setLoading(false);
+        } else if (spotStatus == 'idle') {
+            setSpots(recommendSpots);
+            if (spots) setLoading(false);
+        }
+    }, [spotStatus]);
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
@@ -68,7 +92,16 @@ const HomeScreen = ({ navigation }) => {
                             </Text>
                         </Pressable>
                     </Box>
-                    <SightList navigation={navigation} data={sightData.slice(0, 5)} />
+                    {!loading ? (
+                        spots.length !== 0 && <SightList navigation={navigation} data={spots.slice(0, 5)} />
+                    ) : (
+                        <Text
+                            style={{ fontSize: 16, textAlign: 'center' }}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            ✧*｡٩(ˊᗜˋ*)و✧*｡ 資料整理中...
+                        </Text>
+                    )}
                 </Box>
                 <Box style={styles.sectionWrapper}>
                     <Box style={styles.sectionHeader}>
@@ -96,6 +129,7 @@ const HomeScreen = ({ navigation }) => {
                     <News style={{ marginHorizontal: 24 }} />
                 </Box>
             </ScrollView>
+            {loading && <Loading />}
             <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />
         </Box>
     );

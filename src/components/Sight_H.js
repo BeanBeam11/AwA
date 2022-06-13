@@ -14,12 +14,12 @@ const Sight_H = ({ navigation, item, style }) => {
             style={[styles.sightBox, style]}
             _dark={{ bg: colors.dark[100] }}
             _light={{ bg: '#fff' }}
-            onPress={() => navigation.navigate('SightScreen', { sightName: item.Name })}
+            onPress={() => navigation.navigate('SightScreen', { spot: item })}
         >
             <Box style={styles.infoWrapper}>
                 <Box style={styles.sightImageBox} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}>
-                    {item.Picture1 ? (
-                        <Image source={{ uri: item.Picture1 }} style={styles.sightImage} resizeMode="cover" />
+                    {item.image ? (
+                        <Image source={{ uri: item.image }} style={styles.sightImage} resizeMode="cover" />
                     ) : (
                         <MaterialCommunityIcons
                             name="image-remove"
@@ -30,10 +30,10 @@ const Sight_H = ({ navigation, item, style }) => {
                 </Box>
                 <Box style={styles.sightInfo}>
                     <Text style={styles.sightName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        {item.Name.length > 9 ? `${item.Name.slice(0, 9)}...` : item.Name}
+                        {item.name.length > 9 ? `${item.name.slice(0, 9)}...` : item.name}
                     </Text>
                     <Text style={styles.sightLocation} color={colors.dark[300]}>
-                        {item.Region}・{item.Town}
+                        {item.city}・{item.town}
                     </Text>
                     <Rating
                         count={5}
@@ -48,9 +48,9 @@ const Sight_H = ({ navigation, item, style }) => {
                 </Box>
                 <AddButton size={'medium'} style={styles.addSightBtn} onPress={null} />
             </Box>
-            {item.Toldescribe ? (
+            {item.description ? (
                 <Box style={styles.sightDescription}>
-                    <Text color={colors.dark[300]}>{item.Toldescribe.slice(0, 40)}...</Text>
+                    <Text color={colors.dark[300]}>{item.description.slice(0, 40)}...</Text>
                 </Box>
             ) : null}
         </Pressable>

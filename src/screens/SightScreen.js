@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, FlatList, Image, ScrollView } from 'react-native';
+import { StyleSheet, Image, ScrollView } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import { GoBackHeader } from '../components/Header';
-import sightData from '../json/recommendSight';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const SightScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    const { sightName } = route.params;
+    const { spot } = route.params;
     const [saved, setSaved] = useState(false);
-
-    const sight = sightData.find((el) => el.Name === sightName);
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
@@ -23,8 +20,8 @@ const SightScreen = ({ navigation, route }) => {
                 showsVerticalScrollIndicator={false}
             >
                 <Box style={styles.imageBox} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}>
-                    {sight.Picture1 ? (
-                        <Image source={{ uri: sight.Picture1 }} style={styles.image} resizeMode="cover" />
+                    {spot.image ? (
+                        <Image source={{ uri: spot.image }} style={styles.image} resizeMode="cover" />
                     ) : (
                         <MaterialCommunityIcons
                             name="image-remove"
@@ -34,10 +31,10 @@ const SightScreen = ({ navigation, route }) => {
                     )}
                 </Box>
                 <Text style={styles.name} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                    {sight.Name}
+                    {spot.name}
                 </Text>
                 <Text style={styles.location} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
-                    {sight.Region}・{sight.Town}
+                    {spot.city}・{spot.town}
                 </Text>
                 <Rating
                     count={5}
@@ -57,7 +54,7 @@ const SightScreen = ({ navigation, route }) => {
                         style={{ marginTop: 2 }}
                     />
                     <Text style={styles.info} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
-                        {sight.Add ? sight.Add : `尚無資訊`}
+                        {spot.address ? spot.address : `尚無資訊`}
                     </Text>
                 </Box>
                 <Box style={styles.infoWrapper}>
@@ -68,7 +65,7 @@ const SightScreen = ({ navigation, route }) => {
                         style={{ paddingHorizontal: 1, marginTop: 2 }}
                     />
                     <Text style={styles.info} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
-                        {sight.Opentime ? sight.Opentime : `尚無資訊`}
+                        {spot.open_time ? spot.open_time : `尚無資訊`}
                     </Text>
                 </Box>
                 <Box style={styles.actionWrapper}>
@@ -96,7 +93,7 @@ const SightScreen = ({ navigation, route }) => {
                     </Pressable>
                 </Box>
                 <Text style={styles.description} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                    {sight.Toldescribe}
+                    {spot.description}
                 </Text>
             </ScrollView>
             <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />

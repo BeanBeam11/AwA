@@ -318,7 +318,7 @@ const MapScreen = ({ navigation }) => {
                     }}
                 />
             </Box>
-            <Carousel
+            {/* <Carousel
                 ref={isCarousel}
                 data={carouselData}
                 containerCustomStyle={styles.carousel}
@@ -340,7 +340,7 @@ const MapScreen = ({ navigation }) => {
                         longitude: carouselData[index].geometry.location.lng,
                     });
                 }}
-            />
+            /> */}
             {loading && <Loading />}
         </Box>
     );
