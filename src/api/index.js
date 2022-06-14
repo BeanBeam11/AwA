@@ -24,6 +24,7 @@ export const signup = async ({ name, email, password, passwordConfirm }) => {
     }
 };
 
+// Users
 export const getCurrentUser = async ({ token }) => {
     try {
         const res = await axios.get(`${baseUrl}api/v1/users/me`, { headers: { Authorization: `Bearer ${token}` } });
@@ -124,6 +125,16 @@ export const getCitySpots = async (city) => {
     }
     try {
         const res = await axios.get(`${baseUrl}api/v1/spots?city=${city}`);
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
+// Trips
+export const getAllTrips = async () => {
+    try {
+        const res = await axios.get(`${baseUrl}api/v1/trips?is_private=false`);
         return res.data;
     } catch (err) {
         console.log(err.response.data);

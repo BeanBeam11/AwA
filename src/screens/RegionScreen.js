@@ -9,7 +9,7 @@ import { PlanList } from '../components/PlanList';
 import Loading from '../components/Loading';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCitySpots, selectStatus, getCitySpotsAsync } from '../redux/spotSlice';
+import { selectCitySpots, selectSpotStatus, getCitySpotsAsync } from '../redux/spotSlice';
 
 const RegionScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
@@ -20,7 +20,7 @@ const RegionScreen = ({ navigation, route }) => {
 
     const dispatch = useDispatch();
     const citySpots = useSelector(selectCitySpots);
-    const spotStatus = useSelector(selectStatus);
+    const spotStatus = useSelector(selectSpotStatus);
 
     const region = cities.find((el) => el.city === city);
 

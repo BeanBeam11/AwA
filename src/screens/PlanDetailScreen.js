@@ -12,10 +12,7 @@ import planData from '../json/myPlan.json';
 const PlanDetailScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    const { planName } = route.params;
-
-    const planArray = planData.filter((el) => el.name === planName);
-    const plan = planArray[0];
+    const { trip } = route.params;
 
     const renderTabBar = (props) => (
         <ScrollableTabBar
@@ -33,7 +30,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
 
     const handleGoToEdit = async () => {
         await SheetManager.hide('edit_sheet');
-        navigation.navigate('PlanDetailEditScreen', { planName });
+        navigation.navigate('PlanDetailEditScreen', { trip });
     };
 
     return (
@@ -41,19 +38,29 @@ const PlanDetailScreen = ({ navigation, route }) => {
             <Box style={styles.topWrapper} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
                 <PlanDetailHeader navigation={navigation} onPress={() => SheetManager.show('edit_sheet')} />
                 <Box style={styles.infoWrapper}>
-                    <Image source={{ uri: plan.cover_image }} style={styles.introImage} resizeMode="cover" />
+                    {trip.cover_image ? (
+                        <Image source={{ uri: trip.cover_image }} style={styles.introImage} resizeMode="cover" />
+                    ) : (
+                        <Box style={styles.introImage} />
+                    )}
                     <Box style={styles.introBox}>
                         <Text
                             style={styles.introName}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         >
-                            {plan.name}
+                            {trip.name}
                         </Text>
-                        <Text style={styles.introDate} color={colors.dark[300]}>
-                            {formatDate(plan.start_date)}-{formatDate(plan.end_date)}
-                        </Text>
+                        {trip.start_date ? (
+                            <Text style={styles.introDate} color={colors.dark[300]}>
+                                {formatDate(trip.start_date)}-{formatDate(trip.end_date)}
+                            </Text>
+                        ) : (
+                            <Text style={styles.introDate} color={colors.dark[300]}>
+                                {trip.duration}天
+                            </Text>
+                        )}
                         <Box style={styles.groupWrapper}>
-                            <Image source={{ uri: plan.owner_image }} style={styles.ownerAvatar} resizeMode="cover" />
+                            <Image source={{ uri: trip.owner_image }} style={styles.ownerAvatar} resizeMode="cover" />
                             <Pressable
                                 style={[styles.shareBtn, { borderColor: colors.primary[200] }]}
                                 onPress={() => alert('正在開發中...༼ ༎ຶ ෴ ༎ຶ༽')}
@@ -80,8 +87,8 @@ const PlanDetailScreen = ({ navigation, route }) => {
                 tabBarActiveTextColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                 tabBarInactiveTextColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
             >
-                {plan.plan.map((item, index) => {
-                    const firstDate = new Date(plan.start_date);
+                {trip.trips.map((item, index) => {
+                    const firstDate = new Date(trip.start_date);
                     const currentDate = formatDate(firstDate.setDate(firstDate.getDate() + index)).slice(5, 10);
 
                     return (
@@ -93,9 +100,11 @@ const PlanDetailScreen = ({ navigation, route }) => {
                                 >
                                     {`Day ${index + 1}`}
                                 </Text>
-                                <Text style={styles.dateText} color={colors.dark[400]}>
-                                    {currentDate}
-                                </Text>
+                                {trip.start_date && (
+                                    <Text style={styles.dateText} color={colors.dark[400]}>
+                                        {currentDate}
+                                    </Text>
+                                )}
                             </Box>
                             {item.map((val, index) => {
                                 return (
@@ -129,7 +138,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                                                     style={styles.planSightName}
                                                     color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                                                 >
-                                                    {val.sight}
+                                                    {val.spot}
                                                 </Text>
                                                 <Box style={styles.planBoxNote}>
                                                     <Box style={styles.planStayTime}>
@@ -139,17 +148,23 @@ const PlanDetailScreen = ({ navigation, route }) => {
                                                             color={colors.dark[400]}
                                                             style={{ marginRight: 4 }}
                                                         />
-                                                        <Text color={colors.dark[300]}>{val.stay_time}</Text>
+                                                        <Text color={colors.dark[300]}>
+                                                            {val.stay_time[0]}:{val.stay_time[1]}
+                                                        </Text>
                                                     </Box>
                                                     {val.note && <Text color={colors.dark[300]}>註：{val.note}</Text>}
                                                 </Box>
                                             </Box>
                                         </Box>
-                                        <Image
-                                            source={{ uri: plan.cover_image }}
-                                            style={styles.detailImage}
-                                            resizeMode="cover"
-                                        />
+                                        {val.image ? (
+                                            <Image
+                                                source={{ uri: val.image }}
+                                                style={styles.detailImage}
+                                                resizeMode="cover"
+                                            />
+                                        ) : (
+                                            <Box style={styles.detailImage} />
+                                        )}
                                     </Box>
                                 );
                             })}

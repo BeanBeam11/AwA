@@ -28,18 +28,19 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
     const [sightType, setSightType] = useState('');
     const [stayTime, setStayTime] = useState({ hours: 0, minutes: 0 });
 
-    const { planName } = route.params;
+    const { trip } = route.params;
 
-    const planArray = planData.filter((el) => el.name === planName);
-    const plan = planArray[0];
-
-    const initialData = plan.plan[0].map((item, index) => {
+    const initialData = trip.trips[0].map((item, index) => {
         return {
             order: index + 1,
-            label: item.sight,
+            label: item.spot,
+            spot_id: item.spot_id,
+            image: item.image,
             type: item.type,
             stay_time: item.stay_time,
             note: item.note,
+            location: item.location,
+            address: item.address,
         };
     });
     const [dragData, setDragData] = useState(initialData);
@@ -64,13 +65,17 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
 
     const onChangeTab = (tabIndex) => {
         setDragData(
-            plan.plan[tabIndex].map((item, index) => {
+            trip.trips[tabIndex].map((item, index) => {
                 return {
                     order: index + 1,
-                    label: item.sight,
+                    label: item.spot,
+                    spot_id: item.spot_id,
+                    image: item.image,
                     type: item.type,
                     stay_time: item.stay_time,
                     note: item.note,
+                    location: item.location,
+                    address: item.address,
                 };
             })
         );
@@ -89,7 +94,11 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                 color={colorMode === 'dark' ? colors.dark[200] : colors.dark[500]}
             />
             <Box style={[styles.planBoxDivider, { backgroundColor: colors.secondary[200] }]}></Box>
-            <Image source={{ uri: plan.cover_image }} style={styles.planBoxImage} resizeMode="cover" />
+            {item.image ? (
+                <Image source={{ uri: item.image }} style={styles.planBoxImage} resizeMode="cover" />
+            ) : (
+                <Box style={styles.planBoxImage} />
+            )}
             <Box style={styles.planBoxInfo}>
                 <Text style={styles.planSightName}>{item?.label}</Text>
                 <Box style={styles.planBoxNote}>
@@ -100,7 +109,9 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                             color={colors.dark[400]}
                             style={{ marginRight: 4 }}
                         />
-                        <Text color={colors.dark[300]}>{item.stay_time}</Text>
+                        <Text color={colors.dark[300]}>
+                            {item.stay_time[0]}:{item.stay_time[1]}
+                        </Text>
                     </Box>
                     <Text color={colors.dark[300]}>{item.note}</Text>
                 </Box>
@@ -135,18 +146,28 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
             <Box style={styles.topWrapper} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
                 <EditHeader navigation={navigation} title={'編輯行程'} onPressDone={handleDone} />
                 <Box style={styles.infoWrapper}>
-                    <Image source={{ uri: plan.cover_image }} style={styles.introImage} resizeMode="cover" />
+                    {trip.cover_image ? (
+                        <Image source={{ uri: trip.cover_image }} style={styles.introImage} resizeMode="cover" />
+                    ) : (
+                        <Box style={styles.introImage} />
+                    )}
                     <Box style={styles.introBox}>
                         <Text
                             style={styles.introName}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         >
-                            {plan.name}
+                            {trip.name}
                         </Text>
-                        <Text style={styles.introDate} color={colors.dark[300]}>
-                            {formatDate(plan.start_date)}-{formatDate(plan.end_date)}
-                        </Text>
-                        <Image source={{ uri: plan.owner_image }} style={styles.ownerAvatar} resizeMode="cover" />
+                        {trip.start_date ? (
+                            <Text style={styles.introDate} color={colors.dark[300]}>
+                                {formatDate(trip.start_date)}-{formatDate(trip.end_date)}
+                            </Text>
+                        ) : (
+                            <Text style={styles.introDate} color={colors.dark[300]}>
+                                {trip.duration}天
+                            </Text>
+                        )}
+                        <Image source={{ uri: trip.owner_image }} style={styles.ownerAvatar} resizeMode="cover" />
                     </Box>
                 </Box>
             </Box>
@@ -164,8 +185,8 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                 tabBarActiveTextColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                 tabBarInactiveTextColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
             >
-                {plan.plan.map((item, index) => {
-                    const firstDate = new Date(plan.start_date);
+                {trip.trips.map((item, index) => {
+                    const firstDate = new Date(trip.start_date);
                     const currentDate = formatDate(firstDate.setDate(firstDate.getDate() + index)).slice(5, 10);
 
                     return (
@@ -177,9 +198,11 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 >
                                     {`Day ${index + 1}`}
                                 </Text>
-                                <Text style={styles.dateText} color={colors.dark[400]}>
-                                    {currentDate}
-                                </Text>
+                                {trip.start_date && (
+                                    <Text style={styles.dateText} color={colors.dark[400]}>
+                                        {currentDate}
+                                    </Text>
+                                )}
                             </Box>
                             <DraggableFlatList
                                 data={dragData}

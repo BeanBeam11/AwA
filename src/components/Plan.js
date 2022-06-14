@@ -12,19 +12,25 @@ const Plan = ({ navigation, item }) => {
             style={styles.planBox}
             _dark={{ bg: colors.dark[100] }}
             _light={{ bg: '#fff' }}
-            onPress={() =>
-                navigation.navigate('Planner', { screen: 'PlanDetailScreen', params: { planName: item.name } })
-            }
+            onPress={() => navigation.navigate('Planner', { screen: 'PlanDetailScreen', params: { trip: item } })}
         >
             <Box style={styles.planImageBox}>
-                <Image source={{ uri: item.cover_image }} style={styles.planImage} resizeMode="cover" />
+                {item.cover_image ? (
+                    <Image source={{ uri: item.cover_image }} style={styles.planImage} resizeMode="cover" />
+                ) : null}
             </Box>
             <Text style={styles.planName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                {item.name}
+                {item.name.length > 9 ? `${item.name.slice(0, 9)}...` : item.name}
             </Text>
-            <Text style={styles.planDate} color={colors.dark[300]}>
-                {formatDate(item.start_date)} - {formatDate(item.end_date)}
-            </Text>
+            {item.start_date ? (
+                <Text style={styles.planDate} color={colors.dark[300]}>
+                    {formatDate(item.start_date)} - {formatDate(item.end_date)}
+                </Text>
+            ) : (
+                <Text style={styles.planDate} color={colors.dark[300]}>
+                    共{item.duration}天
+                </Text>
+            )}
             <Pressable _dark={{ bg: '#fff' }} _light={{ bg: '#C4C4C4' }} style={styles.ownerAvatar} onPress={null}>
                 <Image source={{ uri: item.owner_image }} style={styles.ownerImage} resizeMode="cover" />
             </Pressable>
@@ -44,6 +50,9 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     planImageBox: {
+        width: 145,
+        height: 92,
+        borderRadius: 5,
         marginBottom: Platform.OS === 'ios' ? 8 : 5,
     },
     planImage: {

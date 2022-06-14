@@ -11,20 +11,25 @@ import { News } from '../components/News';
 import Loading from '../components/Loading';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { selectRecommendSpots, selectStatus, getRecommendSpotsAsync } from '../redux/spotSlice';
+import { selectRecommendSpots, selectSpotStatus, getRecommendSpotsAsync } from '../redux/spotSlice';
+import { selectAllTrips, selectTripStatus, getAllTripsAsync } from '../redux/tripSlice';
 
 const HomeScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const [loading, setLoading] = useState(true);
     const [spots, setSpots] = useState([]);
+    const [trips, setTrips] = useState([]);
 
     const dispatch = useDispatch();
     const recommendSpots = useSelector(selectRecommendSpots);
-    const spotStatus = useSelector(selectStatus);
+    const spotStatus = useSelector(selectSpotStatus);
+    const allTrips = useSelector(selectAllTrips);
+    const tripStatus = useSelector(selectTripStatus);
 
     useEffect(() => {
         dispatch(getRecommendSpotsAsync());
+        dispatch(getAllTripsAsync());
     }, []);
 
     useEffect(() => {
@@ -37,6 +42,17 @@ const HomeScreen = ({ navigation }) => {
             if (spots) setLoading(false);
         }
     }, [spotStatus]);
+
+    useEffect(() => {
+        if (tripStatus == 'loading') {
+            setLoading(true);
+        } else if (tripStatus == 'error') {
+            setLoading(false);
+        } else if (tripStatus == 'idle') {
+            setTrips(allTrips);
+            if (trips) setLoading(false);
+        }
+    }, [tripStatus]);
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
@@ -120,7 +136,7 @@ const HomeScreen = ({ navigation }) => {
                             </Text>
                         </Pressable>
                     </Box>
-                    <PlanList navigation={navigation} />
+                    <PlanList navigation={navigation} data={allTrips} />
                 </Box>
                 <Box style={styles.sectionWrapper}>
                     <Box style={styles.sectionHeader}>

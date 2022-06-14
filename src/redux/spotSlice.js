@@ -72,7 +72,7 @@ const spotSlice = createSlice({
 // export state to global
 export const selectRecommendSpots = (state) => state.spot.recommendSpots;
 export const selectCitySpots = (state) => state.spot.citySpots;
-export const selectStatus = (state) => state.spot.status;
+export const selectSpotStatus = (state) => state.spot.status;
 
 // export actions to global
 export const { setCitySpots, setRecommendSpots } = spotSlice.actions;

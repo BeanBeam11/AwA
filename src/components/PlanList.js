@@ -4,14 +4,14 @@ import { Plan } from './Plan';
 import { Plan_H } from './Plan_H';
 import planData from '../json/myPlan';
 
-const PlanList = ({ navigation }) => {
+const PlanList = ({ navigation, data }) => {
     const renderItem = ({ item }) => {
         return <Plan item={item} navigation={navigation} />;
     };
 
     return (
         <FlatList
-            data={planData}
+            data={data}
             renderItem={renderItem}
             keyExtractor={(item, index) => index}
             horizontal={true}
