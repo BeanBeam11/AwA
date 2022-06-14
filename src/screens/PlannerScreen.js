@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Modal, View, Image, FlatList, TextInput, Dimensions, Platform } from 'react-native';
+import {
+    StyleSheet,
+    Modal,
+    View,
+    Image,
+    FlatList,
+    TextInput,
+    Dimensions,
+    Platform,
+    RefreshControl,
+} from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Radio } from 'native-base';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -14,44 +24,122 @@ import { formatDate } from '../utils/formatter';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectToken, selectUser } from '../redux/accountSlice';
-import { selectUserTrips, selectTripStatus, getUserTripsAsync } from '../redux/tripSlice';
+import {
+    selectUserTrips,
+    selectCreatedTrip,
+    selectTripStatus,
+    selectCreateTripStatus,
+    getUserTripsAsync,
+    createUserTripAsync,
+} from '../redux/tripSlice';
+import { set } from 'react-native-reanimated';
 
 const PlannerScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
-    const [title, setTitle] = useState('');
+    const [name, setName] = useState('');
+    const [coverImage, setCoverImage] = useState(null);
     const [isAsigned, setIsAssigned] = useState(true);
     const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
-    const [day, setDay] = useState(1);
+    const [duration, setDuration] = useState(1);
 
     const [loading, setLoading] = useState(true);
     const [trips, setTrips] = useState([]);
+    const [trip, setTrip] = useState({});
 
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
     const token = useSelector(selectToken);
     const userTrips = useSelector(selectUserTrips);
+    const createdTrip = useSelector(selectCreatedTrip);
     const tripStatus = useSelector(selectTripStatus);
+    const createTripStatus = useSelector(selectCreateTripStatus);
 
     useEffect(() => {
-        dispatch(getUserTripsAsync({ token, userId: user._id }));
+        setLoading(true);
+        fetchUserTrips();
     }, []);
 
     useEffect(() => {
-        if (tripStatus == 'loading') {
-            setLoading(true);
-        } else if (tripStatus == 'error') {
+        if (tripStatus == 'error') {
             setLoading(false);
         } else if (tripStatus == 'idle') {
             setTrips(userTrips);
             if (trips) setLoading(false);
         }
     }, [tripStatus]);
+
+    useEffect(() => {
+        if (createTripStatus == 'idle') {
+            setTrip(createdTrip);
+            if (createdTrip) {
+                setLoading(false);
+                setModalVisible(false);
+                navigation.navigate('PlanDetailScreen', { trip: createdTrip });
+            }
+        }
+    }, [createTripStatus]);
+
+    const fetchUserTrips = () => {
+        dispatch(getUserTripsAsync({ token, userId: user._id }));
+    };
+
+    const handleCreateTrip = () => {
+        dispatch(
+            createUserTripAsync({
+                token,
+                name,
+                cover_image: coverImage,
+                start_date: startDate,
+                end_date: endDate,
+                duration,
+                owner_id: user._id,
+                owner_image: user.photo,
+            })
+        );
+    };
+
+    const handleNextStep = () => {
+        if (name.length < 2) {
+            alert('行程名稱須介於2~20字');
+            setLoading(false);
+            return;
+        }
+        if (isAsigned == false) {
+            setStartDate(null);
+            setEndDate(null);
+        }
+        handleCreateTrip();
+        setLoading(true);
+    };
+
+    const showStartDatePicker = () => {
+        setStartDatePickerVisibility(true);
+    };
+    const showEndDatePicker = () => {
+        setEndDatePickerVisibility(true);
+    };
+
+    const hideStartDatePicker = () => {
+        setStartDatePickerVisibility(false);
+    };
+    const hideEndDatePicker = () => {
+        setEndDatePickerVisibility(false);
+    };
+
+    const handleStartConfirm = (date) => {
+        setStartDate(date);
+        hideStartDatePicker();
+    };
+    const handleEndConfirm = (date) => {
+        setEndDate(date);
+        hideEndDatePicker();
+    };
 
     const SegmentedContent = () => {
         if (selectedIndex == 0) {
@@ -80,6 +168,13 @@ const PlannerScreen = ({ navigation }) => {
                         columnWrapperStyle={{ justifyContent: 'space-between' }}
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={{ paddingBottom: 280 }}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={loading}
+                                tintColor={colorMode == 'dark' ? colors.dark[400] : colors.secondary[100]}
+                                onRefresh={fetchUserTrips}
+                            />
+                        }
                     />
                 ) : (
                     <Box style={styles.planNullBox}>
@@ -108,34 +203,6 @@ const PlannerScreen = ({ navigation }) => {
                 </Box>
             </Box>
         );
-    };
-
-    const showStartDatePicker = () => {
-        setStartDatePickerVisibility(true);
-    };
-    const showEndDatePicker = () => {
-        setEndDatePickerVisibility(true);
-    };
-
-    const hideStartDatePicker = () => {
-        setStartDatePickerVisibility(false);
-    };
-    const hideEndDatePicker = () => {
-        setEndDatePickerVisibility(false);
-    };
-
-    const handleStartConfirm = (date) => {
-        setStartDate(date);
-        hideStartDatePicker();
-    };
-    const handleEndConfirm = (date) => {
-        setEndDate(date);
-        hideEndDatePicker();
-    };
-
-    const handleNextStep = () => {
-        setModalVisible(!modalVisible);
-        navigation.navigate('PlanDetailScreen', { planName: '九份三日遊' });
     };
 
     return (
@@ -199,7 +266,7 @@ const PlannerScreen = ({ navigation }) => {
                         </Box>
                         <Box style={styles.modalContent}>
                             <Box style={styles.imageWrapper}>
-                                <Image src={null} style={styles.image} />
+                                <Image source={{ uri: coverImage }} style={styles.image} />
                             </Box>
                             <Text style={styles.modalLabel}>行程名稱</Text>
                             <Box
@@ -212,11 +279,12 @@ const PlannerScreen = ({ navigation }) => {
                                 ]}
                             >
                                 <TextInput
-                                    placeholder="行程名稱"
+                                    placeholder="行程名稱（字數須介於2~20）"
                                     placeholderTextColor={colors.dark[400]}
-                                    value={title}
-                                    onChangeText={(text) => setTitle(text)}
+                                    value={name}
+                                    onChangeText={(text) => setName(text)}
                                     returnKeyType="done"
+                                    maxLength={20}
                                 />
                             </Box>
                             <Radio.Group
@@ -279,7 +347,7 @@ const PlannerScreen = ({ navigation }) => {
                                         >
                                             <RNPickerSelect
                                                 placeholder={{}}
-                                                onValueChange={(value) => setDay(value)}
+                                                onValueChange={(value) => setDuration(value)}
                                                 items={[
                                                     { label: '1', value: 1 },
                                                     { label: '2', value: 2 },
@@ -455,7 +523,9 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     planWrapper: {
-        alignItems: 'center',
+        width: '100%',
+        paddingRight: 12,
+        paddingLeft: 22,
     },
     planNullBox: {
         height: 300,

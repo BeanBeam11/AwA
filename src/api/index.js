@@ -151,3 +151,25 @@ export const getUserTrips = async ({ token, userId }) => {
         console.log(err.response.data);
     }
 };
+
+export const createUserTrip = async ({
+    token,
+    name,
+    cover_image,
+    start_date,
+    end_date,
+    duration,
+    owner_id,
+    owner_image,
+}) => {
+    try {
+        const res = await axios.post(
+            `${baseUrl}api/v1/trips`,
+            { name, cover_image, start_date, end_date, duration, owner_id, owner_image },
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
