@@ -11,6 +11,7 @@ import { News } from '../components/News';
 import Loading from '../components/Loading';
 
 import { useDispatch, useSelector } from 'react-redux';
+import { readUserAsync, selectToken } from '../redux/accountSlice';
 import { selectRecommendSpots, selectSpotStatus, getRecommendSpotsAsync } from '../redux/spotSlice';
 import { selectAllTrips, selectTripStatus, getAllTripsAsync } from '../redux/tripSlice';
 
@@ -22,6 +23,7 @@ const HomeScreen = ({ navigation }) => {
     const [trips, setTrips] = useState([]);
 
     const dispatch = useDispatch();
+    const token = useSelector(selectToken);
     const recommendSpots = useSelector(selectRecommendSpots);
     const spotStatus = useSelector(selectSpotStatus);
     const allTrips = useSelector(selectAllTrips);
@@ -30,6 +32,7 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         dispatch(getRecommendSpotsAsync());
         dispatch(getAllTripsAsync());
+        dispatch(readUserAsync({ token }));
     }, []);
 
     useEffect(() => {

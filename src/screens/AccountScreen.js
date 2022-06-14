@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, Image, Platform, Dimensions, ScrollView } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Switch } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 import { SimpleHeader } from '../components/Header';
-import { readUserAsync, selectToken, selectUser, signOut } from '../redux/accountSlice';
+import { selectUser, signOut } from '../redux/accountSlice';
 
 const AccountScreen = ({ navigation }) => {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -12,11 +12,6 @@ const AccountScreen = ({ navigation }) => {
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
     const { photo, name } = user;
-    const token = useSelector(selectToken);
-
-    useEffect(() => {
-        dispatch(readUserAsync({ token }));
-    }, []);
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>

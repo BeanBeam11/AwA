@@ -7,7 +7,6 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { PlanDetailHeader } from '../components/Header';
 import { formatDate, formatTime } from '../utils/formatter';
-import planData from '../json/myPlan.json';
 
 const PlanDetailScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();

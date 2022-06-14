@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Modal, View, Image, FlatList, TextInput, Dimensions, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Radio } from 'native-base';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import myPlanData from '../json/myPlan.json';
 import { AddButton } from '../components/AddButton';
 import { ActionButton } from '../components/ActionButton';
-import { MyPlan } from '../components/MyPlan';
+import { Plan } from '../components/Plan';
 import { PlannerHeader } from '../components/Header';
+import Loading from '../components/Loading';
 import { formatDate } from '../utils/formatter';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { selectToken, selectUser } from '../redux/accountSlice';
+import { selectUserTrips, selectTripStatus, getUserTripsAsync } from '../redux/tripSlice';
 
 const PlannerScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
@@ -25,6 +29,30 @@ const PlannerScreen = ({ navigation }) => {
     const [endDate, setEndDate] = useState(new Date());
     const [day, setDay] = useState(1);
 
+    const [loading, setLoading] = useState(true);
+    const [trips, setTrips] = useState([]);
+
+    const dispatch = useDispatch();
+    const user = useSelector(selectUser);
+    const token = useSelector(selectToken);
+    const userTrips = useSelector(selectUserTrips);
+    const tripStatus = useSelector(selectTripStatus);
+
+    useEffect(() => {
+        dispatch(getUserTripsAsync({ token, userId: user._id }));
+    }, []);
+
+    useEffect(() => {
+        if (tripStatus == 'loading') {
+            setLoading(true);
+        } else if (tripStatus == 'error') {
+            setLoading(false);
+        } else if (tripStatus == 'idle') {
+            setTrips(userTrips);
+            if (trips) setLoading(false);
+        }
+    }, [tripStatus]);
+
     const SegmentedContent = () => {
         if (selectedIndex == 0) {
             return <MyPlanList />;
@@ -37,21 +65,27 @@ const PlannerScreen = ({ navigation }) => {
 
     const MyPlanList = () => {
         const renderItem = ({ item }) => {
-            return <MyPlan item={item} navigation={navigation} />;
+            return <Plan item={item} navigation={navigation} />;
         };
 
         return (
             <Box style={styles.planWrapper}>
-                <FlatList
-                    data={myPlanData}
-                    renderItem={renderItem}
-                    keyExtractor={(item, index) => index}
-                    horizontal={false}
-                    numColumns={2}
-                    columnWrapperStyle={{ justifyContent: 'space-between' }}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 280 }}
-                />
+                {trips.length !== 0 ? (
+                    <FlatList
+                        data={trips}
+                        renderItem={renderItem}
+                        keyExtractor={(item, index) => index}
+                        horizontal={false}
+                        numColumns={2}
+                        columnWrapperStyle={{ justifyContent: 'space-between' }}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{ paddingBottom: 280 }}
+                    />
+                ) : (
+                    <Box style={styles.planNullBox}>
+                        <Text style={styles.planNullText}>目前無行程</Text>
+                    </Box>
+                )}
             </Box>
         );
     };
@@ -304,6 +338,7 @@ const PlannerScreen = ({ navigation }) => {
                     </View>
                 </Modal>
             </View>
+            {loading && <Loading />}
         </Box>
     );
 };
