@@ -161,11 +161,12 @@ export const createUserTrip = async ({
     duration,
     owner_id,
     owner_image,
+    trips,
 }) => {
     try {
         const res = await axios.post(
             `${baseUrl}api/v1/trips`,
-            { name, cover_image, start_date, end_date, duration, owner_id, owner_image },
+            { name, cover_image, start_date, end_date, duration, owner_id, owner_image, trips },
             { headers: { Authorization: `Bearer ${token}` } }
         );
         return res.data;

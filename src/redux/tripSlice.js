@@ -26,7 +26,7 @@ const getUserTripsAsync = createAsyncThunk('trip/getUserTrips', async ({ token, 
 
 const createUserTripAsync = createAsyncThunk(
     'trip/createUserTrip',
-    async ({ token, name, cover_image, start_date, end_date, duration, owner_id, owner_image }) => {
+    async ({ token, name, cover_image, start_date, end_date, duration, owner_id, owner_image, trips }) => {
         try {
             const { data } = await createUserTrip({
                 token,
@@ -37,6 +37,7 @@ const createUserTripAsync = createAsyncThunk(
                 duration,
                 owner_id,
                 owner_image,
+                trips,
             });
             // The value we return becomes the `fulfilled` action payload
             return data.data;

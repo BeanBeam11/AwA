@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { useColorMode, useTheme, Text, Pressable } from 'native-base';
+import { StyleSheet, Pressable } from 'react-native';
+import { useColorMode, useTheme, Text } from 'native-base';
 
 const ActionButton = (props) => {
     const { navigation, style, text, onPress } = props;
@@ -9,9 +9,14 @@ const ActionButton = (props) => {
 
     return (
         <Pressable
-            _dark={{ bg: colors.primary[100] }}
-            _light={{ bg: colors.primary[100] }}
-            style={[styles.btnWrapper, style]}
+            style={({ pressed }) => [
+                {
+                    backgroundColor: colors.primary[100],
+                    opacity: pressed ? 0.6 : 1,
+                },
+                styles.btnWrapper,
+                style,
+            ]}
             onPress={onPress}
         >
             <Text style={styles.btnText} color={colorMode === 'dark' ? colors.dark[200] : '#fff'}>

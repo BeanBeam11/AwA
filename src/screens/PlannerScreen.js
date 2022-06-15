@@ -32,7 +32,6 @@ import {
     getUserTripsAsync,
     createUserTripAsync,
 } from '../redux/tripSlice';
-import { set } from 'react-native-reanimated';
 
 const PlannerScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
@@ -50,7 +49,7 @@ const PlannerScreen = ({ navigation }) => {
 
     const [loading, setLoading] = useState(true);
     const [trips, setTrips] = useState([]);
-    const [trip, setTrip] = useState({});
+    const dayArray = [[]];
 
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
@@ -61,7 +60,6 @@ const PlannerScreen = ({ navigation }) => {
     const createTripStatus = useSelector(selectCreateTripStatus);
 
     useEffect(() => {
-        setLoading(true);
         fetchUserTrips();
     }, []);
 
@@ -76,11 +74,11 @@ const PlannerScreen = ({ navigation }) => {
 
     useEffect(() => {
         if (createTripStatus == 'idle') {
-            setTrip(createdTrip);
             if (createdTrip) {
                 setLoading(false);
                 setModalVisible(false);
-                navigation.navigate('PlanDetailScreen', { trip: createdTrip });
+                navigation.navigate('PlanDetailEditScreen', { trip: createdTrip });
+                clearState();
             }
         }
     }, [createTripStatus]);
@@ -90,32 +88,69 @@ const PlannerScreen = ({ navigation }) => {
     };
 
     const handleCreateTrip = () => {
-        dispatch(
-            createUserTripAsync({
-                token,
-                name,
-                cover_image: coverImage,
-                start_date: startDate,
-                end_date: endDate,
-                duration,
-                owner_id: user._id,
-                owner_image: user.photo,
-            })
-        );
+        if (isAsigned) {
+            dispatch(
+                createUserTripAsync({
+                    token,
+                    name,
+                    cover_image: coverImage,
+                    start_date: startDate,
+                    end_date: endDate,
+                    duration: dayArray.length,
+                    owner_id: user._id,
+                    owner_image: user.photo,
+                    trips: dayArray,
+                })
+            );
+        } else {
+            dispatch(
+                createUserTripAsync({
+                    token,
+                    name,
+                    cover_image: coverImage,
+                    start_date: null,
+                    end_date: null,
+                    duration,
+                    owner_id: user._id,
+                    owner_image: user.photo,
+                    trips: dayArray,
+                })
+            );
+        }
+    };
+
+    const clearState = () => {
+        setName('');
+        setStartDate(new Date());
+        setEndDate(new Date());
+        setDuration(1);
     };
 
     const handleNextStep = () => {
+        setLoading(true);
         if (name.length < 2) {
             alert('行程名稱須介於2~20字');
             setLoading(false);
             return;
         }
-        if (isAsigned == false) {
-            setStartDate(null);
-            setEndDate(null);
+        if (isAsigned) {
+            const diff = endDate - startDate;
+            if (diff < 0) {
+                alert('開始日期不可以晚於結束日期呦！');
+                setLoading(false);
+                return;
+            }
+            const diffTime = Math.abs(endDate - startDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            for (let i = 0; i < diffDays; i++) {
+                dayArray.push([]);
+            }
+        } else {
+            for (let i = 1; i < duration; i++) {
+                dayArray.push([]);
+            }
         }
         handleCreateTrip();
-        setLoading(true);
     };
 
     const showStartDatePicker = () => {
@@ -156,31 +191,35 @@ const PlannerScreen = ({ navigation }) => {
             return <Plan item={item} navigation={navigation} />;
         };
 
+        const renderEmptyComponent = () => {
+            return (
+                <Box style={styles.planNullBox}>
+                    <Text style={styles.planNullText}>{`✧ﾟ･:*(✪ω✪)*:･ﾟ✧`}</Text>
+                    <Text style={styles.planNullText}>!!! 開始新增行程吧 !!!</Text>
+                </Box>
+            );
+        };
+
         return (
             <Box style={styles.planWrapper}>
-                {trips.length !== 0 ? (
-                    <FlatList
-                        data={trips}
-                        renderItem={renderItem}
-                        keyExtractor={(item, index) => index}
-                        horizontal={false}
-                        numColumns={2}
-                        columnWrapperStyle={{ justifyContent: 'space-between' }}
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{ paddingBottom: 280 }}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={loading}
-                                tintColor={colorMode == 'dark' ? colors.dark[400] : colors.secondary[100]}
-                                onRefresh={fetchUserTrips}
-                            />
-                        }
-                    />
-                ) : (
-                    <Box style={styles.planNullBox}>
-                        <Text style={styles.planNullText}>目前無行程</Text>
-                    </Box>
-                )}
+                <FlatList
+                    data={trips}
+                    renderItem={renderItem}
+                    keyExtractor={(item, index) => index}
+                    horizontal={false}
+                    numColumns={2}
+                    columnWrapperStyle={{ justifyContent: 'space-between' }}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ paddingBottom: 280 }}
+                    ListEmptyComponent={renderEmptyComponent}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={loading}
+                            tintColor={colorMode == 'dark' ? colors.dark[400] : colors.secondary[100]}
+                            onRefresh={fetchUserTrips}
+                        />
+                    }
+                />
             </Box>
         );
     };
@@ -343,10 +382,10 @@ const PlannerScreen = ({ navigation }) => {
                                             style={styles.dayBox}
                                             _dark={{ bg: colors.dark[200] }}
                                             _light={{ bg: colors.secondary[50] }}
-                                            onPress={null}
                                         >
                                             <RNPickerSelect
                                                 placeholder={{}}
+                                                value={duration}
                                                 onValueChange={(value) => setDuration(value)}
                                                 items={[
                                                     { label: '1', value: 1 },
@@ -383,16 +422,17 @@ const PlannerScreen = ({ navigation }) => {
                                     </Box>
                                 </Box>
                             )}
-
                             <DateTimePickerModal
                                 isVisible={isStartDatePickerVisible}
                                 mode="date"
+                                date={startDate}
                                 onConfirm={handleStartConfirm}
                                 onCancel={hideStartDatePicker}
                             />
                             <DateTimePickerModal
                                 isVisible={isEndDatePickerVisible}
                                 mode="date"
+                                date={endDate}
                                 onConfirm={handleEndConfirm}
                                 onCancel={hideEndDatePicker}
                             />
@@ -535,5 +575,6 @@ const styles = StyleSheet.create({
     planNullText: {
         fontSize: 16,
         color: '#969696',
+        marginBottom: 6,
     },
 });
