@@ -61,6 +61,43 @@ const PlanDetailHeader = ({ navigation, onPress }) => {
     );
 };
 
+const PlanDetailSaveHeader = ({ navigation, onPress }) => {
+    const { colorMode } = useColorMode();
+    const { colors } = useTheme();
+
+    return (
+        <Box
+            style={[
+                styles.headerWrapper,
+                {
+                    borderBottomWidth: 1,
+                    borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
+                },
+            ]}
+        >
+            <Pressable style={styles.headerLeft} onPress={() => navigation.goBack()}>
+                {colorMode === 'dark' ? (
+                    <Image source={require('../../assets/icons/ic_goback_dark.png')} style={styles.headerLeft} />
+                ) : (
+                    <Image source={require('../../assets/icons/ic_goback.png')} style={styles.headerLeft} />
+                )}
+            </Pressable>
+            <Box style={styles.headerCenter}>
+                <Text style={styles.headerTitle} ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                    行程細節
+                </Text>
+            </Box>
+            <Pressable style={styles.headerRight} onPress={onPress}>
+                <MaterialIcon
+                    name="bookmark"
+                    size={24}
+                    color={colorMode == 'dark' ? colors.dark[600] : colors.dark[400]}
+                />
+            </Pressable>
+        </Box>
+    );
+};
+
 const SimpleHeader = ({ navigation, title }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
@@ -157,7 +194,15 @@ const SearchGoBackHeader = (props) => {
     );
 };
 
-export { PlannerHeader, PlanDetailHeader, SimpleHeader, GoBackHeader, EditHeader, SearchGoBackHeader };
+export {
+    PlannerHeader,
+    PlanDetailHeader,
+    PlanDetailSaveHeader,
+    SimpleHeader,
+    GoBackHeader,
+    EditHeader,
+    SearchGoBackHeader,
+};
 
 const styles = StyleSheet.create({
     headerWrapper: {

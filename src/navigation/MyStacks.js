@@ -36,6 +36,7 @@ export const HomeStack = () => {
             <Stack.Screen name="RecommendSightScreen" component={RecommendSightScreen} />
             <Stack.Screen name="SightScreen" component={SightScreen} />
             <Stack.Screen name="PlanListScreen" component={PlanListScreen} />
+            <Stack.Screen name="PlanDetailScreen" component={PlanDetailScreen} />
         </Stack.Navigator>
     );
 };

@@ -1,17 +1,23 @@
 import React from 'react';
-import { StyleSheet, Image, Platform } from 'react-native';
+import { StyleSheet, Image, Platform, Dimensions } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { PlanDetailHeader } from '../components/Header';
+import { PlanDetailHeader, PlanDetailSaveHeader } from '../components/Header';
 import { formatDate, formatTime } from '../utils/formatter';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser } from '../redux/accountSlice';
 
 const PlanDetailScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const { trip } = route.params;
+
+    const user = useSelector(selectUser);
+    const isOwner = trip.owner_id === user._id ? true : false;
 
     const renderTabBar = (props) => (
         <ScrollableTabBar
@@ -35,14 +41,18 @@ const PlanDetailScreen = ({ navigation, route }) => {
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: '#fff' }}>
             <Box style={styles.topWrapper} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
-                <PlanDetailHeader navigation={navigation} onPress={() => SheetManager.show('edit_sheet')} />
+                {isOwner ? (
+                    <PlanDetailHeader navigation={navigation} onPress={() => SheetManager.show('edit_sheet')} />
+                ) : (
+                    <PlanDetailSaveHeader navigation={navigation} onPress={null} />
+                )}
                 <Box style={styles.infoWrapper}>
                     {trip.cover_image ? (
                         <Image source={{ uri: trip.cover_image }} style={styles.introImage} resizeMode="cover" />
                     ) : (
                         <Box style={styles.introImage} />
                     )}
-                    <Box style={styles.introBox}>
+                    <Box style={[styles.introBox, { width: Dimensions.get('window').width - 216 }]}>
                         <Text
                             style={styles.introName}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
@@ -60,15 +70,17 @@ const PlanDetailScreen = ({ navigation, route }) => {
                         )}
                         <Box style={styles.groupWrapper}>
                             <Image source={{ uri: trip.owner_image }} style={styles.ownerAvatar} resizeMode="cover" />
-                            <Pressable
-                                style={[styles.shareBtn, { borderColor: colors.primary[200] }]}
-                                onPress={() => alert('正在開發中...༼ ༎ຶ ෴ ༎ຶ༽')}
-                            >
-                                <MaterialIcon name="add" size={14} color={colors.primary[200]} />
-                                <Text style={styles.shareText} color={colors.primary[200]}>
-                                    共用
-                                </Text>
-                            </Pressable>
+                            {isOwner && (
+                                <Pressable
+                                    style={[styles.shareBtn, { borderColor: colors.primary[200] }]}
+                                    onPress={() => alert('正在開發中...༼ ༎ຶ ෴ ༎ຶ༽')}
+                                >
+                                    <MaterialIcon name="add" size={14} color={colors.primary[200]} />
+                                    <Text style={styles.shareText} color={colors.primary[200]}>
+                                        共用
+                                    </Text>
+                                </Pressable>
+                            )}
                         </Box>
                     </Box>
                 </Box>
