@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getCitySpots, getRecommendSpots } from '../api';
-import { getAccessToken } from '../api/transportData';
+import { getAccessToken, getRecommendScenicSpots, getCityScenicSpots } from '../api/transportData';
 
 // Define async functions
 const getAccessTokenAsync = createAsyncThunk('spot/getAccessToken', async () => {
@@ -14,22 +14,22 @@ const getAccessTokenAsync = createAsyncThunk('spot/getAccessToken', async () => 
     }
 });
 
-const getRecommendSpotsAsync = createAsyncThunk('spot/getRecommendSpots', async () => {
+const getRecommendSpotsAsync = createAsyncThunk('spot/getRecommendSpots', async ({ accessToken }) => {
     try {
-        const { data } = await getRecommendSpots();
+        const { data } = await getRecommendScenicSpots({ accessToken });
         // The value we return becomes the `fulfilled` action payload
-        return data.data;
+        return data;
     } catch (err) {
         // The value we return becomes the `rejected` action payload
         return rejectWithValue(err);
     }
 });
 
-const getCitySpotsAsync = createAsyncThunk('spot/getCitySpots', async (city) => {
+const getCitySpotsAsync = createAsyncThunk('spot/getCitySpots', async ({ accessToken, city }) => {
     try {
-        const { data } = await getCitySpots(city);
+        const { data } = await getCityScenicSpots({ accessToken, city });
         // The value we return becomes the `fulfilled` action payload
-        return data.data;
+        return data;
     } catch (err) {
         // The value we return becomes the `rejected` action payload
         return rejectWithValue(err);

@@ -12,7 +12,7 @@ import Loading from '../components/Loading';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { readUserAsync, selectToken } from '../redux/accountSlice';
-import { selectRecommendSpots, selectSpotStatus, getRecommendSpotsAsync } from '../redux/spotSlice';
+import { selectAccessToken, selectRecommendSpots, selectSpotStatus, getRecommendSpotsAsync } from '../redux/spotSlice';
 import { selectAllTrips, selectTripStatus, getAllTripsAsync } from '../redux/tripSlice';
 
 const HomeScreen = ({ navigation }) => {
@@ -24,13 +24,14 @@ const HomeScreen = ({ navigation }) => {
 
     const dispatch = useDispatch();
     const token = useSelector(selectToken);
+    const accessToken = useSelector(selectAccessToken);
     const recommendSpots = useSelector(selectRecommendSpots);
     const spotStatus = useSelector(selectSpotStatus);
     const allTrips = useSelector(selectAllTrips);
     const tripStatus = useSelector(selectTripStatus);
 
     useEffect(() => {
-        dispatch(getRecommendSpotsAsync());
+        dispatch(getRecommendSpotsAsync({ accessToken }));
         dispatch(getAllTripsAsync());
         dispatch(readUserAsync({ token }));
     }, []);

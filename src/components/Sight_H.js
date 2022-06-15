@@ -9,6 +9,12 @@ const Sight_H = ({ navigation, item, style }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
+    const image = item.Picture.PictureUrl1 ? item.Picture.PictureUrl1 : null;
+    const name = item.ScenicSpotName;
+    const city = item.City;
+    const town = item.Address ? item.Address.replace(/\s/g, '').replace(/[0-9]/g, '').slice(3, 6) : '';
+    const description = item.DescriptionDetail;
+
     return (
         <Pressable
             style={[styles.sightBox, style]}
@@ -18,8 +24,8 @@ const Sight_H = ({ navigation, item, style }) => {
         >
             <Box style={styles.infoWrapper}>
                 <Box style={styles.sightImageBox} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}>
-                    {item.image ? (
-                        <Image source={{ uri: item.image }} style={styles.sightImage} resizeMode="cover" />
+                    {image ? (
+                        <Image source={{ uri: image }} style={styles.sightImage} resizeMode="cover" />
                     ) : (
                         <MaterialCommunityIcons
                             name="image-remove"
@@ -30,10 +36,10 @@ const Sight_H = ({ navigation, item, style }) => {
                 </Box>
                 <Box style={styles.sightInfo}>
                     <Text style={styles.sightName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        {item.name.length > 9 ? `${item.name.slice(0, 9)}...` : item.name}
+                        {name.length > 9 ? `${name.slice(0, 9)}...` : name}
                     </Text>
                     <Text style={styles.sightLocation} color={colors.dark[300]}>
-                        {item.city}・{item.town}
+                        {city}・{town}
                     </Text>
                     <Rating
                         count={5}
@@ -48,9 +54,9 @@ const Sight_H = ({ navigation, item, style }) => {
                 </Box>
                 <AddButton size={'medium'} style={styles.addSightBtn} onPress={null} />
             </Box>
-            {item.description ? (
+            {description ? (
                 <Box style={styles.sightDescription}>
-                    <Text color={colors.dark[300]}>{item.description.slice(0, 40)}...</Text>
+                    <Text color={colors.dark[300]}>{description.slice(0, 40)}...</Text>
                 </Box>
             ) : null}
         </Pressable>

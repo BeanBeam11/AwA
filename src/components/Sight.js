@@ -9,6 +9,11 @@ const Sight = ({ navigation, item }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
+    const image = item.Picture.PictureUrl1 ? item.Picture.PictureUrl1 : null;
+    const name = item.ScenicSpotName;
+    const city = item.City;
+    const town = item.Address ? item.Address.replace(/\s/g, '').replace(/[0-9]/g, '').slice(3, 6) : '';
+
     return (
         <Pressable
             style={styles.sightBox}
@@ -17,8 +22,8 @@ const Sight = ({ navigation, item }) => {
             onPress={() => navigation.navigate('SightScreen', { spot: item })}
         >
             <Box style={styles.sightImageBox} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}>
-                {item.image ? (
-                    <Image source={{ uri: item.image }} style={styles.sightImage} resizeMode="cover" />
+                {image ? (
+                    <Image source={{ uri: image }} style={styles.sightImage} resizeMode="cover" />
                 ) : (
                     <MaterialCommunityIcons
                         name="image-remove"
@@ -29,10 +34,10 @@ const Sight = ({ navigation, item }) => {
             </Box>
             <Box style={styles.sightInfo}>
                 <Text style={styles.sightName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                    {item.name.length > 9 ? `${item.name.slice(0, 9)}...` : item.name}
+                    {name.length > 9 ? `${name.slice(0, 9)}...` : name}
                 </Text>
                 <Text style={styles.sightLocation} color={colors.dark[300]}>
-                    {item.city}・{item.town}
+                    {city}・{town}
                 </Text>
                 <Rating
                     count={5}

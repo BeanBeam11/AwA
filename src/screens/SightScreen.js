@@ -12,6 +12,14 @@ const SightScreen = ({ navigation, route }) => {
     const { spot } = route.params;
     const [saved, setSaved] = useState(false);
 
+    const image = spot.Picture.PictureUrl1;
+    const name = spot.ScenicSpotName;
+    const city = spot.City;
+    const town = spot.Address ? spot.Address.replace(/\s/g, '').replace(/[0-9]/g, '').slice(3, 6) : '';
+    const address = spot.Address.replace(/\s/g, '');
+    const open_time = spot.OpenTime;
+    const description = spot.DescriptionDetail;
+
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
             <GoBackHeader title={'景點資訊'} navigation={navigation} />
@@ -20,8 +28,8 @@ const SightScreen = ({ navigation, route }) => {
                 showsVerticalScrollIndicator={false}
             >
                 <Box style={styles.imageBox} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}>
-                    {spot.image ? (
-                        <Image source={{ uri: spot.image }} style={styles.image} resizeMode="cover" />
+                    {image ? (
+                        <Image source={{ uri: image }} style={styles.image} resizeMode="cover" />
                     ) : (
                         <MaterialCommunityIcons
                             name="image-remove"
@@ -31,10 +39,10 @@ const SightScreen = ({ navigation, route }) => {
                     )}
                 </Box>
                 <Text style={styles.name} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                    {spot.name}
+                    {name}
                 </Text>
                 <Text style={styles.location} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
-                    {spot.city}・{spot.town}
+                    {city}・{town}
                 </Text>
                 <Rating
                     count={5}
@@ -54,7 +62,7 @@ const SightScreen = ({ navigation, route }) => {
                         style={{ marginTop: 2 }}
                     />
                     <Text style={styles.info} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
-                        {spot.address ? spot.address : `尚無資訊`}
+                        {address ? address : `尚無資訊`}
                     </Text>
                 </Box>
                 <Box style={styles.infoWrapper}>
@@ -65,7 +73,7 @@ const SightScreen = ({ navigation, route }) => {
                         style={{ paddingHorizontal: 1, marginTop: 2 }}
                     />
                     <Text style={styles.info} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
-                        {spot.open_time ? spot.open_time : `尚無資訊`}
+                        {open_time ? open_time : `尚無資訊`}
                     </Text>
                 </Box>
                 <Box style={styles.actionWrapper}>
@@ -93,7 +101,7 @@ const SightScreen = ({ navigation, route }) => {
                     </Pressable>
                 </Box>
                 <Text style={styles.description} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                    {spot.description}
+                    {description}
                 </Text>
             </ScrollView>
             <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />
