@@ -2,11 +2,12 @@ import { useEffect } from 'react';
 import { Dimensions } from 'react-native';
 import { useColorMode, useTheme, Box } from 'native-base';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import LoginScreen from './LoginSrceen';
 import SignupScreen from './SignupScreen';
 import { selectLogin } from '../redux/accountSlice';
+import { getAccessTokenAsync } from '../redux/spotSlice';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -17,6 +18,7 @@ const AuthScreen = () => {
     const loginPosition = useSharedValue('0%');
     const registerPosition = useSharedValue('100%');
     const login = useSelector(selectLogin);
+    const dispatch = useDispatch();
 
     const loginStyle = useAnimatedStyle(() => {
         return { left: loginPosition.value };
@@ -25,6 +27,10 @@ const AuthScreen = () => {
     const registerStyle = useAnimatedStyle(() => {
         return { left: registerPosition.value };
     }, [registerPosition.value]);
+
+    useEffect(() => {
+        dispatch(getAccessTokenAsync());
+    }, []);
 
     useEffect(() => {
         if (login.hasAccount) {

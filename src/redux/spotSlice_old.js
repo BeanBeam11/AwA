@@ -1,19 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getCitySpots, getRecommendSpots } from '../api';
-import { getAccessToken } from '../api/transportData';
 
 // Define async functions
-const getAccessTokenAsync = createAsyncThunk('spot/getAccessToken', async () => {
-    try {
-        const { data } = await getAccessToken();
-        // The value we return becomes the `fulfilled` action payload
-        return data.access_token;
-    } catch (err) {
-        // The value we return becomes the `rejected` action payload
-        return rejectWithValue(err);
-    }
-});
-
 const getRecommendSpotsAsync = createAsyncThunk('spot/getRecommendSpots', async () => {
     try {
         const { data } = await getRecommendSpots();
@@ -41,7 +29,6 @@ const initialState = {
     recommendSpots: [],
     citySpots: [],
     status: 'loading',
-    accessToken: '',
 };
 
 const spotSlice = createSlice({
@@ -59,16 +46,6 @@ const spotSlice = createSlice({
     extraReducers: (builder) => {
         builder
 
-            .addCase(getAccessTokenAsync.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(getAccessTokenAsync.fulfilled, (state, action) => {
-                state.status = 'idle';
-                state.accessToken = action.payload;
-            })
-            .addCase(getAccessTokenAsync.rejected, (state, action) => {
-                state.status = 'error';
-            })
             .addCase(getRecommendSpotsAsync.pending, (state) => {
                 state.status = 'loading';
             })
@@ -93,7 +70,6 @@ const spotSlice = createSlice({
 });
 
 // export state to global
-export const selectAccessToken = (state) => state.spot.accessToken;
 export const selectRecommendSpots = (state) => state.spot.recommendSpots;
 export const selectCitySpots = (state) => state.spot.citySpots;
 export const selectSpotStatus = (state) => state.spot.status;
@@ -102,7 +78,7 @@ export const selectSpotStatus = (state) => state.spot.status;
 export const { setCitySpots, setRecommendSpots } = spotSlice.actions;
 
 // export async function to global
-export { getAccessTokenAsync, getRecommendSpotsAsync, getCitySpotsAsync };
+export { getRecommendSpotsAsync, getCitySpotsAsync };
 
 // export reducer to global
 export default spotSlice.reducer;
