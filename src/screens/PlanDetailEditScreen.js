@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Image, View, Modal, TouchableOpacity, TextInput, Platform, Dimensions } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Checkbox } from 'native-base';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import RNPickerSelect from 'react-native-picker-select';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { TimePicker } from 'react-native-simple-time-picker';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
@@ -12,25 +11,28 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { ActionButton } from '../components/ActionButton';
 import { AddButton } from '../components/AddButton';
 import { EditHeader } from '../components/Header';
+import Loading from '../components/Loading';
 import { formatDate, formatTime } from '../utils/formatter';
-import planData from '../json/myPlan.json';
 
 const PlanDetailEditScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const [modalVisible, setModalVisible] = useState(false);
     const [stayTimeModalVisible, setStayTimeModalVisible] = useState(false);
-    const [sightName, setSightName] = useState('');
-    const [sightNote, setSightNote] = useState('');
+    const [spotName, setSpotName] = useState('');
+    const [spotNote, setSpotNote] = useState('');
     const [startTimeRequired, setStartTimeRequired] = useState(false);
     const [isStartTimePickerVisible, setStartTimePickerVisibility] = useState(false);
     const [startTime, setStartTime] = useState(new Date());
-    const [sightType, setSightType] = useState('');
     const [stayTime, setStayTime] = useState({ hours: 0, minutes: 0 });
+    const [dayIndex, setDayIndex] = useState(0);
+    const [daysStartTime, setDaysStartTime] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const { trip } = route.params;
+    const [tripData, setTripData] = useState(trip);
 
-    const initialData = trip.trips[0].map((item, index) => {
+    const initialData = tripData.trips[0].map((item, index) => {
         return {
             order: index + 1,
             label: item.spot,
@@ -45,8 +47,90 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
     });
     const [dragData, setDragData] = useState(initialData);
 
+    const showStartTimePicker = () => {
+        setStartTimePickerVisibility(true);
+    };
+    const hideStartTimePicker = () => {
+        setStartTimePickerVisibility(false);
+    };
+    const handleStartTimeConfirm = (time) => {
+        setStartTime(time);
+        hideStartTimePicker();
+    };
+
     const handleDone = () => {
         navigation.goBack();
+    };
+
+    const handleAddSpot = () => {
+        let newData = tripData.trips.map((item, index) => {
+            if (index === dayIndex) {
+                return [
+                    ...item,
+                    {
+                        spot: spotName,
+                        spot_id: null,
+                        image: null,
+                        stay_time: [stayTime.hours, stayTime.minutes],
+                        note: spotNote,
+                        location: [],
+                        address: '',
+                    },
+                ];
+            } else {
+                return item;
+            }
+        });
+        setTripData({
+            ...tripData,
+            trips: [...newData],
+        });
+        setModalVisible(!modalVisible);
+    };
+
+    const handleOnDragEnd = (data) => {
+        setDragData(data);
+        let dragEndData = data.map((item, index) => {
+            return {
+                spot: item.label,
+                spot_id: item.spot_id,
+                image: item.image,
+                stay_time: item.stay_time,
+                note: item.note,
+                location: item.location,
+                address: item.address,
+            };
+        });
+        let newData = tripData.trips.map((item, index) => {
+            if (index === dayIndex) {
+                return [...dragEndData];
+            } else {
+                return item;
+            }
+        });
+        setTripData({
+            ...tripData,
+            trips: [...newData],
+        });
+    };
+
+    const onChangeTab = (tabIndex) => {
+        setDayIndex(tabIndex);
+        setDragData(
+            tripData.trips[tabIndex].map((item, index) => {
+                return {
+                    order: index + 1,
+                    label: item.spot,
+                    spot_id: item.spot_id,
+                    image: item.image,
+                    type: item.type,
+                    stay_time: item.stay_time,
+                    note: item.note,
+                    location: item.location,
+                    address: item.address,
+                };
+            })
+        );
     };
 
     const renderTabBar = (props) => (
@@ -62,24 +146,6 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
             }}
         />
     );
-
-    const onChangeTab = (tabIndex) => {
-        setDragData(
-            trip.trips[tabIndex].map((item, index) => {
-                return {
-                    order: index + 1,
-                    label: item.spot,
-                    spot_id: item.spot_id,
-                    image: item.image,
-                    type: item.type,
-                    stay_time: item.stay_time,
-                    note: item.note,
-                    location: item.location,
-                    address: item.address,
-                };
-            })
-        );
-    };
 
     const renderItem = ({ item, index, drag, isActive }) => (
         <Pressable
@@ -126,27 +192,12 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
         <AddButton size={'medium'} style={styles.addPlanBox} onPress={() => setModalVisible(!modalVisible)} />
     );
 
-    const showStartTimePicker = () => {
-        setStartTimePickerVisibility(true);
-    };
-    const hideStartTimePicker = () => {
-        setStartTimePickerVisibility(false);
-    };
-    const handleStartTimeConfirm = (time) => {
-        setStartTime(time);
-        hideStartTimePicker();
-    };
-
-    const handleFinished = () => {
-        setModalVisible(!modalVisible);
-    };
-
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
             <Box style={styles.topWrapper} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
                 <EditHeader navigation={navigation} title={'編輯行程'} onPressDone={handleDone} />
                 <Box style={styles.infoWrapper}>
-                    {trip.cover_image ? (
+                    {tripData.cover_image ? (
                         <Image source={{ uri: trip.cover_image }} style={styles.introImage} resizeMode="cover" />
                     ) : (
                         <Box style={styles.introImage} />
@@ -156,18 +207,18 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                             style={styles.introName}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         >
-                            {trip.name}
+                            {tripData.name}
                         </Text>
-                        {trip.start_date ? (
+                        {tripData.start_date ? (
                             <Text style={styles.introDate} color={colors.dark[300]}>
-                                {formatDate(trip.start_date)}-{formatDate(trip.end_date)}
+                                {formatDate(tripData.start_date)}-{formatDate(tripData.end_date)}
                             </Text>
                         ) : (
                             <Text style={styles.introDate} color={colors.dark[300]}>
-                                {trip.duration}天
+                                {tripData.duration}天
                             </Text>
                         )}
-                        <Image source={{ uri: trip.owner_image }} style={styles.ownerAvatar} resizeMode="cover" />
+                        <Image source={{ uri: tripData.owner_image }} style={styles.ownerAvatar} resizeMode="cover" />
                     </Box>
                 </Box>
             </Box>
@@ -185,8 +236,8 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                 tabBarActiveTextColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                 tabBarInactiveTextColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
             >
-                {trip.trips.map((item, index) => {
-                    const firstDate = new Date(trip.start_date);
+                {tripData.trips.map((item, index) => {
+                    const firstDate = new Date(tripData.start_date);
                     const currentDate = formatDate(firstDate.setDate(firstDate.getDate() + index)).slice(5, 10);
 
                     return (
@@ -198,7 +249,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 >
                                     {`Day ${index + 1}`}
                                 </Text>
-                                {trip.start_date && (
+                                {tripData.start_date && (
                                     <Text style={styles.dateText} color={colors.dark[400]}>
                                         {currentDate}
                                     </Text>
@@ -209,17 +260,12 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 renderItem={renderItem}
                                 keyExtractor={(item, index) => index.toString()}
                                 showsVerticalScrollIndicator={false}
-                                onDragEnd={({ data }) => setDragData(data)}
+                                onDragEnd={({ data }) => handleOnDragEnd(data)}
                                 ListFooterComponent={renderListFooter}
                             />
                         </Box>
                     );
                 })}
-                {/* <Pressable
-                    style={styles.detailWrapper}
-                    tabLabel="+ new"
-                    onPress={() => alert('再加一天！')}
-                ></Pressable> */}
             </ScrollableTabView>
             <Modal
                 animationType="slide"
@@ -269,7 +315,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                     },
                                 ]}
                             >
-                                <Text color={colors.dark[300]}>{planData[0].name}</Text>
+                                <Text color={colors.dark[300]}>{tripData.name}</Text>
                             </Box>
                         </Box>
                         <Box style={styles.optionWrapper}>
@@ -290,8 +336,8 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 <TextInput
                                     placeholder="輸入景點名稱"
                                     placeholderTextColor={colors.dark[400]}
-                                    value={sightName}
-                                    onChangeText={(text) => setSightName(text)}
+                                    value={spotName}
+                                    onChangeText={(text) => setSpotName(text)}
                                     returnKeyType="done"
                                 />
                             </Box>
@@ -314,8 +360,8 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 <TextInput
                                     placeholder="輸入備註"
                                     placeholderTextColor={colors.dark[400]}
-                                    value={sightNote}
-                                    onChangeText={(text) => setSightNote(text)}
+                                    value={spotNote}
+                                    onChangeText={(text) => setSpotNote(text)}
                                     returnKeyType="done"
                                 />
                             </Box>
@@ -356,44 +402,6 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 style={styles.modalLabel}
                                 color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                             >
-                                景點類別
-                            </Text>
-                            <Box
-                                _dark={{ bg: colors.dark[200] }}
-                                _light={{ bg: colors.secondary[50] }}
-                                style={[styles.optionSelectBox, { paddingLeft: Platform.OS === 'ios' ? 0 : 10 }]}
-                            >
-                                <RNPickerSelect
-                                    placeholder={{}}
-                                    onValueChange={(value) => setSightType(value)}
-                                    items={[
-                                        { label: '景點', value: 'landmark' },
-                                        { label: '美食', value: 'food' },
-                                        { label: '購物', value: 'shopping' },
-                                        { label: '住宿', value: 'hotel' },
-                                    ]}
-                                    style={{
-                                        placeholder: {
-                                            color: colorMode === 'dark' ? colors.dark[300] : colors.dark[400],
-                                        },
-                                        color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                                        inputAndroid: {
-                                            color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                                        },
-                                        inputIOS: {
-                                            color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                                        },
-                                        viewContainer: { justifyContent: 'center' },
-                                        inputIOSContainer: { alignItems: 'center' },
-                                    }}
-                                />
-                            </Box>
-                        </Box>
-                        <Box style={styles.optionWrapper}>
-                            <Text
-                                style={styles.modalLabel}
-                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                            >
                                 加入天數
                             </Text>
                             <Pressable
@@ -402,7 +410,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 style={styles.optionSelectBox}
                                 onPress={null}
                             >
-                                <Text style={{ color: '#969696' }}>Day 1</Text>
+                                <Text style={{ color: '#969696' }}>Day {dayIndex + 1}</Text>
                             </Pressable>
                         </Box>
                         <Box style={styles.optionWrapper}>
@@ -427,7 +435,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                     <ActionButton
                         text={'新增'}
                         style={{ marginTop: Platform.OS === 'ios' ? 60 : 40 }}
-                        onPress={() => handleFinished()}
+                        onPress={() => handleAddSpot()}
                     />
                 </View>
                 <DateTimePickerModal
@@ -461,6 +469,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                     </Box>
                 </ActionSheet>
             </Modal>
+            {loading && <Loading />}
         </Box>
     );
 };

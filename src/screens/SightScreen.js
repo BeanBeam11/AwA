@@ -16,7 +16,7 @@ const SightScreen = ({ navigation, route }) => {
     const name = spot.ScenicSpotName;
     const city = spot.City;
     const town = spot.Address ? spot.Address.replace(/\s/g, '').replace(/[0-9]/g, '').slice(3, 6) : '';
-    const address = spot.Address.replace(/\s/g, '');
+    const address = spot.Address ? spot.Address.replace(/\s/g, '') : null;
     const open_time = spot.OpenTime;
     const description = spot.DescriptionDetail;
 
