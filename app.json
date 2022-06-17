@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "final_03_旅罐_Trip_Can",
+    "name": "旅罐 Trip Can",
     "slug": "tripcan",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -29,6 +29,6 @@
       "favicon": "./assets/favicon.png"
     },
     "userInterfaceStyle": "automatic",
-    "description": "Trip Planner"
+    "description": "探索、規劃下一段旅行！"
   }
 }
