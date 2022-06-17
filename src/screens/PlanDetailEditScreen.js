@@ -62,6 +62,23 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
         navigation.goBack();
     };
 
+    useEffect(() => {
+        let newDragData = tripData.trips[dayIndex].map((item, index) => {
+            return {
+                order: index + 1,
+                label: item.spot,
+                spot_id: item.spot_id,
+                image: item.image,
+                type: item.type,
+                stay_time: item.stay_time,
+                note: item.note,
+                location: item.location,
+                address: item.address,
+            };
+        });
+        setDragData(newDragData);
+    }, [tripData]);
+
     const handleAddSpot = () => {
         let newData = tripData.trips.map((item, index) => {
             if (index === dayIndex) {
