@@ -174,3 +174,16 @@ export const createUserTrip = async ({
         console.log(err.response.data);
     }
 };
+
+export const updateUserTripDetail = async ({ token, tripId, trips }) => {
+    try {
+        const res = await axios.patch(
+            `${baseUrl}api/v1/trips/${tripId}`,
+            { trips },
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};

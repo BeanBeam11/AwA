@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getAllTrips, getUserTrips, createUserTrip } from '../api';
+import { getAllTrips, getUserTrips, createUserTrip, updateUserTripDetail } from '../api';
 
 // Define async functions
 const getAllTripsAsync = createAsyncThunk('trip/getAllTrips', async () => {
@@ -47,6 +47,17 @@ const createUserTripAsync = createAsyncThunk(
         }
     }
 );
+
+const updateUserTripDetailAsync = createAsyncThunk('trip/updateUserTripDetail', async ({ token, tripId, trips }) => {
+    try {
+        const { data } = await updateUserTripDetail({ token, tripId, trips });
+        // The value we return becomes the `fulfilled` action payload
+        return data.data;
+    } catch (err) {
+        // The value we return becomes the `rejected` action payload
+        return rejectWithValue(err);
+    }
+});
 
 // Part1: Define Slice (including reducers and actions)
 const initialState = {
@@ -103,6 +114,20 @@ const tripSlice = createSlice({
             })
             .addCase(createUserTripAsync.rejected, (state, action) => {
                 state.createStatus = 'error';
+            })
+            .addCase(updateUserTripDetailAsync.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(updateUserTripDetailAsync.fulfilled, (state, action) => {
+                state.status = 'idle';
+                state.userTrips = state.userTrips.map((item, index) => {
+                    if (item._id === action.payload._id) {
+                        return { ...item, ...action.payload };
+                    } else return item;
+                });
+            })
+            .addCase(updateUserTripDetailAsync.rejected, (state, action) => {
+                state.status = 'error';
             });
     },
 });
@@ -118,7 +143,7 @@ export const selectCreateTripStatus = (state) => state.trip.createStatus;
 export const { setAllTrips, setUserTrips, setCreatedTrip } = tripSlice.actions;
 
 // export async function to global
-export { getAllTripsAsync, getUserTripsAsync, createUserTripAsync };
+export { getAllTripsAsync, getUserTripsAsync, createUserTripAsync, updateUserTripDetailAsync };
 
 // export reducer to global
 export default tripSlice.reducer;

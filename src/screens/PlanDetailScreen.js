@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Image, Platform, Dimensions } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
@@ -6,10 +6,12 @@ import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { PlanDetailHeader, PlanDetailSaveHeader } from '../components/Header';
+import Loading from '../components/Loading';
 import { formatDate, formatTime } from '../utils/formatter';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from '../redux/accountSlice';
+import { selectUserTrips, selectTripStatus } from '../redux/tripSlice';
 
 const PlanDetailScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
@@ -17,7 +19,33 @@ const PlanDetailScreen = ({ navigation, route }) => {
     const { trip } = route.params;
 
     const user = useSelector(selectUser);
+    const userTrips = useSelector(selectUserTrips);
+    const tripStatus = useSelector(selectTripStatus);
     const isOwner = trip.owner_id === user._id ? true : false;
+
+    const [tripData, setTripData] = useState(trip);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (isOwner) {
+            if (tripStatus === 'loading') {
+                setLoading(true);
+            } else if (tripStatus === 'error') {
+                setLoading(false);
+            } else if (tripStatus === 'idle') {
+                setLoading(false);
+                const currentTrip = userTrips.find((el) => el._id === trip._id);
+                setTripData(currentTrip);
+            }
+        } else {
+            setLoading(false);
+        }
+    }, [tripStatus]);
+
+    const handleGoToEdit = async () => {
+        await SheetManager.hide('edit_sheet');
+        navigation.navigate('PlanDetailEditScreen', { trip: tripData });
+    };
 
     const renderTabBar = (props) => (
         <ScrollableTabBar
@@ -33,11 +61,6 @@ const PlanDetailScreen = ({ navigation, route }) => {
         />
     );
 
-    const handleGoToEdit = async () => {
-        await SheetManager.hide('edit_sheet');
-        navigation.navigate('PlanDetailEditScreen', { trip });
-    };
-
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: '#fff' }}>
             <Box style={styles.topWrapper} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
@@ -47,8 +70,8 @@ const PlanDetailScreen = ({ navigation, route }) => {
                     <PlanDetailSaveHeader navigation={navigation} onPress={null} />
                 )}
                 <Box style={styles.infoWrapper}>
-                    {trip.cover_image ? (
-                        <Image source={{ uri: trip.cover_image }} style={styles.introImage} resizeMode="cover" />
+                    {tripData.cover_image ? (
+                        <Image source={{ uri: tripData.cover_image }} style={styles.introImage} resizeMode="cover" />
                     ) : (
                         <Box style={styles.introImage} />
                     )}
@@ -57,19 +80,23 @@ const PlanDetailScreen = ({ navigation, route }) => {
                             style={styles.introName}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         >
-                            {trip.name}
+                            {tripData.name}
                         </Text>
-                        {trip.start_date ? (
+                        {tripData.start_date ? (
                             <Text style={styles.introDate} color={colors.dark[300]}>
-                                {formatDate(trip.start_date)}-{formatDate(trip.end_date)}
+                                {formatDate(tripData.start_date)}-{formatDate(tripData.end_date)}
                             </Text>
                         ) : (
                             <Text style={styles.introDate} color={colors.dark[300]}>
-                                {trip.duration}天
+                                {tripData.duration}天
                             </Text>
                         )}
                         <Box style={styles.groupWrapper}>
-                            <Image source={{ uri: trip.owner_image }} style={styles.ownerAvatar} resizeMode="cover" />
+                            <Image
+                                source={{ uri: tripData.owner_image }}
+                                style={styles.ownerAvatar}
+                                resizeMode="cover"
+                            />
                             {isOwner && (
                                 <Pressable
                                     style={[styles.shareBtn, { borderColor: colors.primary[200] }]}
@@ -98,8 +125,8 @@ const PlanDetailScreen = ({ navigation, route }) => {
                 tabBarActiveTextColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                 tabBarInactiveTextColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
             >
-                {trip.trips.map((item, index) => {
-                    const firstDate = new Date(trip.start_date);
+                {tripData.trips.map((item, index) => {
+                    const firstDate = new Date(tripData.start_date);
                     const currentDate = formatDate(firstDate.setDate(firstDate.getDate() + index)).slice(5, 10);
 
                     return (
@@ -111,7 +138,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                                 >
                                     {`Day ${index + 1}`}
                                 </Text>
-                                {trip.start_date && (
+                                {tripData.start_date && (
                                     <Text style={styles.dateText} color={colors.dark[400]}>
                                         {currentDate}
                                     </Text>
@@ -204,6 +231,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                     </Pressable>
                 </Box>
             </ActionSheet>
+            {loading && <Loading />}
         </Box>
     );
 };

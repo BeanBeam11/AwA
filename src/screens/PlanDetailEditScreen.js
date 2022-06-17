@@ -14,6 +14,10 @@ import { EditHeader } from '../components/Header';
 import Loading from '../components/Loading';
 import { formatDate, formatTime } from '../utils/formatter';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { selectToken } from '../redux/accountSlice';
+import { updateUserTripDetailAsync, selectUserTrips } from '../redux/tripSlice';
+
 const PlanDetailEditScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
@@ -31,6 +35,10 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
 
     const { trip } = route.params;
     const [tripData, setTripData] = useState(trip);
+
+    const dispatch = useDispatch();
+    const token = useSelector(selectToken);
+    const userTrips = useSelector(selectUserTrips);
 
     const initialData = tripData.trips[0].map((item, index) => {
         return {
@@ -59,7 +67,9 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
     };
 
     const handleDone = () => {
-        navigation.goBack();
+        dispatch(updateUserTripDetailAsync({ token, tripId: tripData._id, trips: tripData.trips }));
+        const currentTrip = userTrips.find((el) => el._id === trip._id);
+        navigation.navigate('PlanDetailScreen', { trip: currentTrip });
     };
 
     useEffect(() => {
