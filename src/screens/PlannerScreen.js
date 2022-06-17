@@ -75,11 +75,12 @@ const PlannerScreen = ({ navigation }) => {
     useEffect(() => {
         if (createTripStatus == 'idle') {
             if (createdTrip) {
-                setLoading(false);
                 setModalVisible(false);
+                navigation.navigate('PlanDetailScreen', { trip: createdTrip });
                 navigation.navigate('PlanDetailEditScreen', { trip: createdTrip });
                 clearState();
             }
+            fetchUserTrips();
         }
     }, [createTripStatus]);
 

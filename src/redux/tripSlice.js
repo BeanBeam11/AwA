@@ -110,7 +110,7 @@ const tripSlice = createSlice({
             })
             .addCase(createUserTripAsync.fulfilled, (state, action) => {
                 state.createStatus = 'idle';
-                state.createdTrip = { ...state.createdTrip, ...action.payload };
+                state.createdTrip = action.payload;
             })
             .addCase(createUserTripAsync.rejected, (state, action) => {
                 state.createStatus = 'error';

@@ -73,7 +73,11 @@ const PlanDetailScreen = ({ navigation, route }) => {
                     {tripData.cover_image ? (
                         <Image source={{ uri: tripData.cover_image }} style={styles.introImage} resizeMode="cover" />
                     ) : (
-                        <Box style={styles.introImage} />
+                        <Box
+                            style={styles.introImage}
+                            _dark={{ bg: colors.dark[200] }}
+                            _light={{ bg: colors.dark[500] }}
+                        />
                     )}
                     <Box style={[styles.introBox, { width: Dimensions.get('window').width - 216 }]}>
                         <Text
@@ -149,14 +153,14 @@ const PlanDetailScreen = ({ navigation, route }) => {
                                     <Box style={styles.detailContent} key={index}>
                                         <Box style={styles.detailTime}>
                                             <Text color={colors.dark[300]}>11:00</Text>
-                                            <MaterialIcon
+                                            {/* <MaterialIcon
                                                 name="restaurant"
                                                 size={20}
                                                 color={
                                                     colorMode === 'dark' ? colors.secondary[100] : colors.secondary[200]
                                                 }
                                                 style={styles.detailType}
-                                            />
+                                            /> */}
                                         </Box>
                                         <Box>
                                             <Box style={[styles.detailbox, { borderLeftColor: colors.primary[100] }]}>
@@ -190,7 +194,19 @@ const PlanDetailScreen = ({ navigation, route }) => {
                                                             {val.stay_time[0]}:{val.stay_time[1]}
                                                         </Text>
                                                     </Box>
-                                                    {val.note && <Text color={colors.dark[300]}>註：{val.note}</Text>}
+                                                    {val.note && (
+                                                        <Text
+                                                            style={{
+                                                                marginTop: 12,
+                                                                width: val.image
+                                                                    ? Dimensions.get('window').width - 168
+                                                                    : Dimensions.get('window').width - 108,
+                                                            }}
+                                                            color={colors.dark[300]}
+                                                        >
+                                                            註：{val.note}
+                                                        </Text>
+                                                    )}
                                                 </Box>
                                             </Box>
                                         </Box>
@@ -266,7 +282,6 @@ const styles = StyleSheet.create({
         width: 172,
         height: 95,
         borderRadius: 5,
-        backgroundColor: '#969696',
     },
     introName: {
         fontSize: 16,
@@ -334,8 +349,8 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     detailbox: {
-        marginLeft: 25,
-        paddingLeft: 24,
+        marginLeft: 20,
+        paddingLeft: 20,
         paddingBottom: 20,
         borderLeftWidth: 1.5,
     },
@@ -363,6 +378,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         fontSize: 11,
         marginRight: 8,
+        marginTop: 3,
     },
     detailImage: {
         width: 50,

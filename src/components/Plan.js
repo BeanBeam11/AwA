@@ -14,7 +14,7 @@ const Plan = ({ navigation, item }) => {
             _light={{ bg: '#fff' }}
             onPress={() => navigation.navigate('PlanDetailScreen', { trip: item })}
         >
-            <Box style={styles.planImageBox}>
+            <Box style={styles.planImageBox} _dark={{ bg: colors.dark[200] }} _light={{ bg: colors.dark[500] }}>
                 {item.cover_image ? (
                     <Image source={{ uri: item.cover_image }} style={styles.planImage} resizeMode="cover" />
                 ) : null}

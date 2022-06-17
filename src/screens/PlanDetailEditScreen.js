@@ -89,6 +89,12 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
         setDragData(newDragData);
     }, [tripData]);
 
+    const clearState = () => {
+        setSpotName('');
+        setSpotNote('');
+        setStayTime({ hours: 0, minutes: 0 });
+    };
+
     const handleAddSpot = () => {
         let newData = tripData.trips.map((item, index) => {
             if (index === dayIndex) {
@@ -96,8 +102,8 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                     ...item,
                     {
                         spot: spotName,
-                        spot_id: null,
-                        image: null,
+                        spot_id: '',
+                        image: '',
                         stay_time: [stayTime.hours, stayTime.minutes],
                         note: spotNote,
                         location: [],
@@ -112,6 +118,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
             ...tripData,
             trips: [...newData],
         });
+        clearState();
         setModalVisible(!modalVisible);
     };
 
@@ -194,18 +201,18 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
             )}
             <Box style={styles.planBoxInfo}>
                 <Text style={styles.planSightName}>{item?.label}</Text>
-                <Box style={styles.planBoxNote}>
-                    <Box style={styles.planStayTime}>
-                        <MaterialCommunityIcons
-                            name="clock-time-four"
-                            size={14}
-                            color={colors.dark[400]}
-                            style={{ marginRight: 4 }}
-                        />
-                        <Text color={colors.dark[300]}>
-                            {item.stay_time[0]}:{item.stay_time[1]}
-                        </Text>
-                    </Box>
+                <Box style={styles.planStayTime}>
+                    <MaterialCommunityIcons
+                        name="clock-time-four"
+                        size={14}
+                        color={colors.dark[400]}
+                        style={{ marginRight: 4 }}
+                    />
+                    <Text color={colors.dark[300]}>
+                        {item.stay_time[0]}:{item.stay_time[1]}
+                    </Text>
+                </Box>
+                <Box style={{ width: Dimensions.get('window').width - 186 }}>
                     <Text color={colors.dark[300]}>{item.note}</Text>
                 </Box>
             </Box>
@@ -227,9 +234,13 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                     {tripData.cover_image ? (
                         <Image source={{ uri: trip.cover_image }} style={styles.introImage} resizeMode="cover" />
                     ) : (
-                        <Box style={styles.introImage} />
+                        <Box
+                            style={styles.introImage}
+                            _dark={{ bg: colors.dark[200] }}
+                            _light={{ bg: colors.dark[500] }}
+                        />
                     )}
-                    <Box style={styles.introBox}>
+                    <Box style={[styles.introBox, { width: Dimensions.get('window').width - 216 }]}>
                         <Text
                             style={styles.introName}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
@@ -363,6 +374,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 <TextInput
                                     placeholder="輸入景點名稱"
                                     placeholderTextColor={colors.dark[400]}
+                                    style={{ color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200] }}
                                     value={spotName}
                                     onChangeText={(text) => setSpotName(text)}
                                     returnKeyType="done"
@@ -387,6 +399,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 <TextInput
                                     placeholder="輸入備註"
                                     placeholderTextColor={colors.dark[400]}
+                                    style={{ color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200] }}
                                     value={spotNote}
                                     onChangeText={(text) => setSpotNote(text)}
                                     returnKeyType="done"
@@ -521,7 +534,6 @@ const styles = StyleSheet.create({
         width: 172,
         height: 95,
         borderRadius: 5,
-        backgroundColor: '#969696',
     },
     introName: {
         fontSize: 16,
@@ -589,11 +601,6 @@ const styles = StyleSheet.create({
     },
     planBoxInfo: {
         marginLeft: 10,
-    },
-    planBoxNote: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
     },
     addPlanBox: {
         marginTop: 20,
