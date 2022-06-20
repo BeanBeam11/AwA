@@ -4,7 +4,7 @@ import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import { SearchBar } from './SearchBar';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
-const PlannerHeader = ({ onPress }) => {
+const PlannerHeader = ({ title, headerRight, onPress }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
@@ -13,7 +13,7 @@ const PlannerHeader = ({ onPress }) => {
             <Pressable style={styles.headerLeft}></Pressable>
             <Box style={styles.headerCenter}>
                 <Text style={styles.headerTitle} ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                    行程
+                    {title}
                 </Text>
             </Box>
             <Pressable style={styles.headerRight} onPress={onPress}>
@@ -21,7 +21,7 @@ const PlannerHeader = ({ onPress }) => {
                     style={styles.headerRightText}
                     ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                 >
-                    編輯
+                    {headerRight}
                 </Text>
             </Pressable>
         </Box>

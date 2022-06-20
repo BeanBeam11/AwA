@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getAllTrips, getUserTrips, createUserTrip, updateUserTripDetail } from '../api';
+import { getAllTrips, getUserTrips, createUserTrip, updateUserTripInfo, updateUserTripDetail } from '../api';
 
 // Define async functions
 const getAllTripsAsync = createAsyncThunk('trip/getAllTrips', async () => {
@@ -37,6 +37,29 @@ const createUserTripAsync = createAsyncThunk(
                 duration,
                 owner_id,
                 owner_image,
+                trips,
+            });
+            // The value we return becomes the `fulfilled` action payload
+            return data.data;
+        } catch (err) {
+            // The value we return becomes the `rejected` action payload
+            return rejectWithValue(err);
+        }
+    }
+);
+
+const updateUserTripInfoAsync = createAsyncThunk(
+    'trip/updateUserTripInfo',
+    async ({ token, tripId, name, cover_image, start_date, end_date, duration, trips }) => {
+        try {
+            const { data } = await updateUserTripInfo({
+                token,
+                tripId,
+                name,
+                cover_image,
+                start_date,
+                end_date,
+                duration,
                 trips,
             });
             // The value we return becomes the `fulfilled` action payload
@@ -115,6 +138,20 @@ const tripSlice = createSlice({
             .addCase(createUserTripAsync.rejected, (state, action) => {
                 state.createStatus = 'error';
             })
+            .addCase(updateUserTripInfoAsync.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(updateUserTripInfoAsync.fulfilled, (state, action) => {
+                state.status = 'idle';
+                state.userTrips = state.userTrips.map((item, index) => {
+                    if (item._id === action.payload._id) {
+                        return { ...item, ...action.payload };
+                    } else return item;
+                });
+            })
+            .addCase(updateUserTripInfoAsync.rejected, (state, action) => {
+                state.status = 'error';
+            })
             .addCase(updateUserTripDetailAsync.pending, (state) => {
                 state.status = 'loading';
             })
@@ -143,7 +180,7 @@ export const selectCreateTripStatus = (state) => state.trip.createStatus;
 export const { setAllTrips, setUserTrips, setCreatedTrip } = tripSlice.actions;
 
 // export async function to global
-export { getAllTripsAsync, getUserTripsAsync, createUserTripAsync, updateUserTripDetailAsync };
+export { getAllTripsAsync, getUserTripsAsync, createUserTripAsync, updateUserTripInfoAsync, updateUserTripDetailAsync };
 
 // export reducer to global
 export default tripSlice.reducer;

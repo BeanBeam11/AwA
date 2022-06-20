@@ -66,7 +66,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
         const currentDate = formatDate(firstDate.setDate(firstDate.getDate() + index)).slice(5, 10);
 
         return (
-            <Box style={styles.detailHeader}>
+            <Box style={[styles.detailHeader, { width: Dimensions.get('window').width - 48 }]}>
                 <Text style={styles.dayText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                     {`Day ${index + 1}`}
                 </Text>
@@ -318,7 +318,6 @@ const styles = StyleSheet.create({
         paddingBottom: 80,
     },
     detailHeader: {
-        width: '100%',
         display: 'flex',
         flexDirection: 'row',
         paddingTop: 20,

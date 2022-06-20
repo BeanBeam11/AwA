@@ -31,6 +31,7 @@ import {
     selectCreateTripStatus,
     getUserTripsAsync,
     createUserTripAsync,
+    updateUserTripInfoAsync,
 } from '../redux/tripSlice';
 
 const PlannerScreen = ({ navigation }) => {
@@ -46,7 +47,8 @@ const PlannerScreen = ({ navigation }) => {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [duration, setDuration] = useState(1);
-
+    const [isEditable, setIsEditable] = useState(false);
+    const [tripIndex, setTripIndex] = useState(0);
     const [loading, setLoading] = useState(true);
     const [trips, setTrips] = useState([]);
     const dayArray = [[]];
@@ -120,6 +122,63 @@ const PlannerScreen = ({ navigation }) => {
         }
     };
 
+    const handleUpdateTrip = () => {
+        const tripId = trips[tripIndex]._id;
+        let newData = [...trips[tripIndex].trips];
+        if (dayArray.length < newData.length) {
+            const diff = newData.length - dayArray.length;
+            if (isAsigned) {
+                if (new Date(endDate).getDate() === new Date(startDate).getDate()) {
+                    newData.splice(1, diff);
+                } else if (diff === 1) {
+                    newData.pop();
+                } else {
+                    for (let i = 0; i < diff + 1; i++) {
+                        newData.pop();
+                    }
+                }
+            } else {
+                for (let i = 0; i < diff; i++) {
+                    newData.pop();
+                }
+            }
+        } else if (dayArray.length > newData.length) {
+            const diff = dayArray.length - newData.length;
+            for (let i = 0; i < diff; i++) {
+                newData.push([]);
+            }
+        }
+        if (isAsigned) {
+            dispatch(
+                updateUserTripInfoAsync({
+                    token,
+                    tripId,
+                    name,
+                    cover_image: coverImage,
+                    start_date: startDate,
+                    end_date: endDate,
+                    duration: dayArray.length,
+                    trips: newData,
+                })
+            );
+        } else {
+            dispatch(
+                updateUserTripInfoAsync({
+                    token,
+                    tripId,
+                    name,
+                    cover_image: coverImage,
+                    start_date: null,
+                    end_date: null,
+                    duration,
+                    trips: newData,
+                })
+            );
+        }
+        setModalVisible(!modalVisible);
+        clearState();
+    };
+
     const clearState = () => {
         setName('');
         setStartDate(new Date());
@@ -135,23 +194,48 @@ const PlannerScreen = ({ navigation }) => {
             return;
         }
         if (isAsigned) {
-            const diff = endDate - startDate;
-            if (diff < 0) {
+            const diff = Date.parse(endDate) - Date.parse(startDate);
+            if (diff < 0 && new Date(endDate).getDate() !== new Date(startDate).getDate()) {
                 alert('開始日期不可以晚於結束日期呦！');
                 setLoading(false);
                 return;
             }
-            const diffTime = Math.abs(endDate - startDate);
+            const diffTime = Math.abs(diff);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            for (let i = 0; i < diffDays; i++) {
-                dayArray.push([]);
+            if (new Date(endDate).getDate() !== new Date(startDate).getDate()) {
+                for (let i = 0; i < diffDays; i++) {
+                    dayArray.push([]);
+                }
             }
         } else {
-            for (let i = 1; i < duration; i++) {
+            for (let i = 0; i < duration - 1; i++) {
                 dayArray.push([]);
             }
         }
-        handleCreateTrip();
+        if (isEditable) {
+            handleUpdateTrip();
+        } else {
+            handleCreateTrip();
+        }
+    };
+
+    const handleEditTrip = (index) => {
+        setModalVisible(!modalVisible);
+        setTripIndex(index);
+        const currentTrip = trips[index];
+        setName(currentTrip.name);
+        setCoverImage(currentTrip.cover_image);
+        if (currentTrip.start_date) {
+            setIsAssigned(true);
+            setStartDate(currentTrip.start_date);
+            setEndDate(currentTrip.end_date);
+            setDuration(currentTrip.duration);
+        } else {
+            setIsAssigned(false);
+            setStartDate(new Date());
+            setEndDate(new Date());
+            setDuration(currentTrip.duration);
+        }
     };
 
     const showStartDatePicker = () => {
@@ -188,15 +272,37 @@ const PlannerScreen = ({ navigation }) => {
     };
 
     const MyPlanList = () => {
-        const renderItem = ({ item }) => {
-            return <Plan item={item} navigation={navigation} />;
+        const renderItem = ({ item, index }) => {
+            return (
+                <Box>
+                    <Plan item={item} navigation={navigation} isEditable={isEditable} />
+                    {isEditable && (
+                        <Pressable
+                            style={[
+                                styles.editMask,
+                                {
+                                    backgroundColor:
+                                        colorMode === 'dark' ? 'rgba(41, 41, 41, 0.7)' : 'rgba(72, 72, 72, 0.5)',
+                                },
+                            ]}
+                            onPress={() => handleEditTrip(index)}
+                        >
+                            <Text color={colors.dark[500]} style={styles.editText}>
+                                編輯
+                            </Text>
+                        </Pressable>
+                    )}
+                </Box>
+            );
         };
 
         const renderEmptyComponent = () => {
             return (
                 <Box style={styles.planNullBox}>
-                    <Text style={styles.planNullText}>{`✧ﾟ･:*(✪ω✪)*:･ﾟ✧`}</Text>
-                    <Text style={styles.planNullText}>!!! 開始新增行程吧 !!!</Text>
+                    <Text style={styles.planNullText} color={colors.dark[400]}>{`✧ﾟ･:*(✪ω✪)*:･ﾟ✧`}</Text>
+                    <Text style={styles.planNullText} color={colors.dark[400]}>
+                        !!! 開始新增行程吧 !!!
+                    </Text>
                 </Box>
             );
         };
@@ -247,7 +353,12 @@ const PlannerScreen = ({ navigation }) => {
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
-            <PlannerHeader navigation={navigation} onPress={null} />
+            <PlannerHeader
+                title={isEditable ? '編輯行程' : '行程'}
+                headerRight={isEditable ? '完成' : '編輯'}
+                navigation={navigation}
+                onPress={() => (isEditable ? setIsEditable(false) : setIsEditable(true))}
+            />
             <SegmentedControl
                 values={['我的行程', '共用行程', '收藏行程']}
                 selectedIndex={selectedIndex}
@@ -268,7 +379,9 @@ const PlannerScreen = ({ navigation }) => {
                 appearance={colorMode === 'dark' ? 'dark' : 'light'}
             />
             <SegmentedContent />
-            <AddButton size={'large'} style={styles.fabWrapper} onPress={() => setModalVisible(true)} />
+            {!isEditable && (
+                <AddButton size={'large'} style={styles.fabWrapper} onPress={() => setModalVisible(true)} />
+            )}
             <View>
                 <Modal
                     animationType="slide"
@@ -295,7 +408,7 @@ const PlannerScreen = ({ navigation }) => {
                                 },
                             ]}
                         >
-                            <Text style={styles.modalHeaderText}>建立行程</Text>
+                            <Text style={styles.modalHeaderText}>{isEditable ? '編輯行程' : '建立行程'}</Text>
                             <Pressable style={styles.modalClose} onPress={() => setModalVisible(!modalVisible)}>
                                 <MaterialIcon
                                     name="close"
@@ -439,11 +552,24 @@ const PlannerScreen = ({ navigation }) => {
                             />
                         </Box>
                         <ActionButton
-                            text={'下一步'}
+                            text={isEditable ? '更新' : '下一步'}
                             style={{ marginTop: 60 }}
                             onPress={() => handleNextStep()}
                             navigation={navigation}
                         />
+                        {isEditable && (
+                            <Box style={styles.editNote}>
+                                <MaterialIcon
+                                    name="warning"
+                                    size={16}
+                                    color={colors.dark[300]}
+                                    style={{ marginTop: 2, marginRight: 5 }}
+                                />
+                                <Text color={colors.dark[300]} style={{ fontSize: 14 }}>
+                                    若編輯後的行程天數少於原行程，將從最後一天開始裁減行程內容
+                                </Text>
+                            </Box>
+                        )}
                     </View>
                 </Modal>
             </View>
@@ -577,5 +703,24 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#969696',
         marginBottom: 6,
+    },
+    editMask: {
+        width: 165,
+        height: 200,
+        borderRadius: 5,
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    editText: {
+        fontSize: 20,
+        fontWeight: '500',
+    },
+    editNote: {
+        width: 250,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginTop: 20,
     },
 });

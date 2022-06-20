@@ -112,8 +112,8 @@ const HomeScreen = ({ navigation }) => {
                             </Text>
                         </Pressable>
                     </Box>
-                    {!loading ? (
-                        spots.length !== 0 && <SightList navigation={navigation} data={spots.slice(0, 5)} />
+                    {spots.length !== 0 ? (
+                        <SightList navigation={navigation} data={spots.slice(0, 5)} />
                     ) : (
                         <Text
                             style={{ fontSize: 16, textAlign: 'center' }}
