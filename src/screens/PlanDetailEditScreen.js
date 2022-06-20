@@ -30,6 +30,8 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
     const [startTime, setStartTime] = useState(new Date());
     const [stayTime, setStayTime] = useState({ hours: 0, minutes: 0 });
     const [dayIndex, setDayIndex] = useState(0);
+    const [spotIndex, setSpotIndex] = useState(0);
+    const [isAddingSpot, setIsAddingSpot] = useState(true);
     const [daysStartTime, setDaysStartTime] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -119,6 +121,46 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
             trips: [...newData],
         });
         clearState();
+        setModalVisible(!modalVisible);
+    };
+
+    const handleEditSpot = (index) => {
+        setModalVisible(!modalVisible);
+        setSpotIndex(index);
+        const currentSpot = tripData.trips[dayIndex][index];
+        setSpotName(currentSpot.spot);
+        setSpotNote(currentSpot.note);
+        setStayTime({ hours: currentSpot.stay_time[0], minutes: currentSpot.stay_time[1] });
+    };
+
+    const handleUpdateSpot = () => {
+        let newData = tripData.trips.map((item, index) => {
+            if (index === dayIndex) {
+                let updatedSpot = item.map((val, valIndex) => {
+                    if (valIndex === spotIndex) {
+                        return {
+                            ...val,
+                            spot: spotName,
+                            spot_id: '',
+                            image: '',
+                            stay_time: [stayTime.hours, stayTime.minutes],
+                            note: spotNote,
+                            location: [],
+                            address: '',
+                        };
+                    } else {
+                        return val;
+                    }
+                });
+                return updatedSpot;
+            } else {
+                return item;
+            }
+        });
+        setTripData({
+            ...tripData,
+            trips: [...newData],
+        });
         setModalVisible(!modalVisible);
     };
 
@@ -216,14 +258,27 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                     <Text color={colors.dark[300]}>{item.note}</Text>
                 </Box>
             </Box>
-            <Pressable style={{ marginLeft: 'auto' }} onPress={() => setModalVisible(!modalVisible)}>
+            <Pressable
+                style={{ marginLeft: 'auto' }}
+                onPress={() => {
+                    setIsAddingSpot(false);
+                    handleEditSpot(index);
+                }}
+            >
                 <MaterialIcon name="edit" size={24} color={colors.dark[400]} />
             </Pressable>
         </Pressable>
     );
 
     const renderListFooter = () => (
-        <AddButton size={'medium'} style={styles.addPlanBox} onPress={() => setModalVisible(!modalVisible)} />
+        <AddButton
+            size={'medium'}
+            style={styles.addPlanBox}
+            onPress={() => {
+                setIsAddingSpot(true);
+                setModalVisible(!modalVisible);
+            }}
+        />
     );
 
     return (
@@ -329,7 +384,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                             },
                         ]}
                     >
-                        <Text style={styles.modalHeaderText}>新增景點</Text>
+                        <Text style={styles.modalHeaderText}>{isAddingSpot ? '新增景點' : '編輯景點'}</Text>
                         <TouchableOpacity style={styles.modalClose} onPress={() => setModalVisible(!modalVisible)}>
                             <MaterialIcon name="close" size={24} color={colorMode === 'dark' ? '#fff' : '#484848'} />
                         </TouchableOpacity>
@@ -473,9 +528,9 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                         </Box>
                     </Box>
                     <ActionButton
-                        text={'新增'}
+                        text={isAddingSpot ? '新增' : '更新'}
                         style={{ marginTop: Platform.OS === 'ios' ? 60 : 40 }}
-                        onPress={() => handleAddSpot()}
+                        onPress={() => (isAddingSpot ? handleAddSpot() : handleUpdateSpot())}
                     />
                 </View>
                 <DateTimePickerModal
