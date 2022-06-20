@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Image, Platform, Dimensions } from 'react-native';
+import { StyleSheet, Image, Platform, Dimensions, FlatList } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
@@ -60,6 +60,84 @@ const PlanDetailScreen = ({ navigation, route }) => {
             }}
         />
     );
+
+    const renderListHeader = (index) => {
+        const firstDate = new Date(tripData.start_date);
+        const currentDate = formatDate(firstDate.setDate(firstDate.getDate() + index)).slice(5, 10);
+
+        return (
+            <Box style={styles.detailHeader}>
+                <Text style={styles.dayText} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                    {`Day ${index + 1}`}
+                </Text>
+                {tripData.start_date && (
+                    <Text style={styles.dateText} color={colors.dark[400]}>
+                        {currentDate}
+                    </Text>
+                )}
+            </Box>
+        );
+    };
+
+    const renderItem = ({ item, index }) => {
+        return (
+            <Box style={styles.detailContent}>
+                <Box style={styles.detailTime}>
+                    <Text color={colors.dark[300]}>11:00</Text>
+                </Box>
+                <Box>
+                    <Box style={[styles.detailbox, { borderLeftColor: colors.primary[100] }]}>
+                        <Box
+                            _dark={{ bg: colors.primary[100] }}
+                            _light={{ bg: colors.primary[100] }}
+                            style={styles.planIndexBox}
+                        >
+                            <Text style={styles.planIndex} color={colorMode === 'dark' ? colors.dark[200] : '#fff'}>
+                                {index + 1}
+                            </Text>
+                        </Box>
+                        <Text
+                            style={styles.planSightName}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            {item.spot}
+                        </Text>
+                        <Box style={styles.planBoxNote}>
+                            <Box style={styles.planStayTime}>
+                                <MaterialCommunityIcons
+                                    name="clock-time-four"
+                                    size={14}
+                                    color={colors.dark[400]}
+                                    style={{ marginRight: 4 }}
+                                />
+                                <Text color={colors.dark[300]}>
+                                    {item.stay_time[0]}:{item.stay_time[1]}
+                                </Text>
+                            </Box>
+                            {item.note && (
+                                <Text
+                                    style={{
+                                        marginTop: 12,
+                                        width: item.image
+                                            ? Dimensions.get('window').width - 168
+                                            : Dimensions.get('window').width - 108,
+                                    }}
+                                    color={colors.dark[300]}
+                                >
+                                    註：{item.note}
+                                </Text>
+                            )}
+                        </Box>
+                    </Box>
+                </Box>
+                {item.image ? (
+                    <Image source={{ uri: item.image }} style={styles.detailImage} resizeMode="cover" />
+                ) : (
+                    <Box style={styles.detailImage} />
+                )}
+            </Box>
+        );
+    };
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: '#fff' }}>
@@ -130,98 +208,16 @@ const PlanDetailScreen = ({ navigation, route }) => {
                 tabBarInactiveTextColor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
             >
                 {tripData.trips.map((item, index) => {
-                    const firstDate = new Date(tripData.start_date);
-                    const currentDate = formatDate(firstDate.setDate(firstDate.getDate() + index)).slice(5, 10);
-
                     return (
                         <Box style={styles.detailWrapper} tabLabel={`Day ${index + 1}`} key={index}>
-                            <Box style={styles.detailHeader}>
-                                <Text
-                                    style={styles.dayText}
-                                    color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                                >
-                                    {`Day ${index + 1}`}
-                                </Text>
-                                {tripData.start_date && (
-                                    <Text style={styles.dateText} color={colors.dark[400]}>
-                                        {currentDate}
-                                    </Text>
-                                )}
-                            </Box>
-                            {item.map((val, index) => {
-                                return (
-                                    <Box style={styles.detailContent} key={index}>
-                                        <Box style={styles.detailTime}>
-                                            <Text color={colors.dark[300]}>11:00</Text>
-                                            {/* <MaterialIcon
-                                                name="restaurant"
-                                                size={20}
-                                                color={
-                                                    colorMode === 'dark' ? colors.secondary[100] : colors.secondary[200]
-                                                }
-                                                style={styles.detailType}
-                                            /> */}
-                                        </Box>
-                                        <Box>
-                                            <Box style={[styles.detailbox, { borderLeftColor: colors.primary[100] }]}>
-                                                <Box
-                                                    _dark={{ bg: colors.primary[100] }}
-                                                    _light={{ bg: colors.primary[100] }}
-                                                    style={styles.planIndexBox}
-                                                >
-                                                    <Text
-                                                        style={styles.planIndex}
-                                                        color={colorMode === 'dark' ? colors.dark[200] : '#fff'}
-                                                    >
-                                                        {index + 1}
-                                                    </Text>
-                                                </Box>
-                                                <Text
-                                                    style={styles.planSightName}
-                                                    color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                                                >
-                                                    {val.spot}
-                                                </Text>
-                                                <Box style={styles.planBoxNote}>
-                                                    <Box style={styles.planStayTime}>
-                                                        <MaterialCommunityIcons
-                                                            name="clock-time-four"
-                                                            size={14}
-                                                            color={colors.dark[400]}
-                                                            style={{ marginRight: 4 }}
-                                                        />
-                                                        <Text color={colors.dark[300]}>
-                                                            {val.stay_time[0]}:{val.stay_time[1]}
-                                                        </Text>
-                                                    </Box>
-                                                    {val.note && (
-                                                        <Text
-                                                            style={{
-                                                                marginTop: 12,
-                                                                width: val.image
-                                                                    ? Dimensions.get('window').width - 168
-                                                                    : Dimensions.get('window').width - 108,
-                                                            }}
-                                                            color={colors.dark[300]}
-                                                        >
-                                                            註：{val.note}
-                                                        </Text>
-                                                    )}
-                                                </Box>
-                                            </Box>
-                                        </Box>
-                                        {val.image ? (
-                                            <Image
-                                                source={{ uri: val.image }}
-                                                style={styles.detailImage}
-                                                resizeMode="cover"
-                                            />
-                                        ) : (
-                                            <Box style={styles.detailImage} />
-                                        )}
-                                    </Box>
-                                );
-                            })}
+                            <FlatList
+                                data={item}
+                                renderItem={renderItem}
+                                keyExtractor={(item, index) => index.toString()}
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={{ flexGrow: 1, paddingBottom: 60 }}
+                                ListHeaderComponent={() => renderListHeader(index)}
+                            />
                         </Box>
                     );
                 })}
