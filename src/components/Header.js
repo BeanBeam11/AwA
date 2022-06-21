@@ -3,6 +3,7 @@ import { StyleSheet, Image } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import { SearchBar } from './SearchBar';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const PlannerHeader = ({ title, headerRight, onPress }) => {
     const { colorMode } = useColorMode();
@@ -194,6 +195,28 @@ const SearchGoBackHeader = (props) => {
     );
 };
 
+const ProfileSettingHeader = ({ navigation, onPress }) => {
+    const { colorMode } = useColorMode();
+    const { colors } = useTheme();
+
+    return (
+        <Box style={styles.headerWrapper}>
+            <Box style={styles.headerCenter}>
+                <Text style={styles.headerTitle} ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                    個人檔案
+                </Text>
+            </Box>
+            <Pressable style={styles.headerRight} onPress={onPress}>
+                <MaterialCommunityIcons
+                    name="cog-outline"
+                    size={24}
+                    color={colorMode == 'dark' ? colors.dark[600] : colors.dark[400]}
+                />
+            </Pressable>
+        </Box>
+    );
+};
+
 export {
     PlannerHeader,
     PlanDetailHeader,
@@ -202,6 +225,7 @@ export {
     GoBackHeader,
     EditHeader,
     SearchGoBackHeader,
+    ProfileSettingHeader,
 };
 
 const styles = StyleSheet.create({

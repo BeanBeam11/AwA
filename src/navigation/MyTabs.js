@@ -4,7 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useColorMode } from 'native-base';
 
-import { HomeStack, MapStack, PlannerStack, ShareStack, AccountStack } from './MyStacks';
+import { HomeStack, MapStack, PlannerStack, ShareStack, ProfileStack } from './MyStacks';
 
 const Tab = createBottomTabNavigator();
 
@@ -83,7 +83,7 @@ export const MyTabs = () => {
                                 <Image source={require('../../assets/icons/ic_share.png')} style={styles.navIcon} />
                             );
                         }
-                    } else if (route.name === 'Account') {
+                    } else if (route.name === 'Profile') {
                         if ((iconName = focused)) {
                             return (
                                 <Image
@@ -123,7 +123,7 @@ export const MyTabs = () => {
             <Tab.Screen name="Map" component={MapStack} />
             <Tab.Screen name="Planner" component={PlannerStack} />
             <Tab.Screen name="Share" component={ShareStack} />
-            <Tab.Screen name="Account" component={AccountStack} />
+            <Tab.Screen name="Profile" component={ProfileStack} />
         </Tab.Navigator>
     );
 };

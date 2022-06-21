@@ -87,16 +87,16 @@ export const ShareStack = () => {
     );
 };
 
-export const AccountStack = () => {
+export const ProfileStack = () => {
     return (
         <Stack.Navigator
             screenOptions={{
                 headerShown: false,
             }}
         >
-            <Stack.Screen name="AccountScreen" component={AccountScreen} />
-            <Stack.Screen name="SettingScreen" component={SettingScreen} />
             <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+            <Stack.Screen name="SettingScreen" component={SettingScreen} />
+            <Stack.Screen name="AccountScreen" component={AccountScreen} />
             <Stack.Screen
                 name="ProfileEditScreen"
                 component={ProfileEditScreen}

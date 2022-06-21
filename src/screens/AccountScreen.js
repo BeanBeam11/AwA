@@ -1,148 +1,90 @@
-import React from 'react';
-import { StyleSheet, Image, Platform, Dimensions, ScrollView } from 'react-native';
-import { useColorMode, useTheme, Box, Text, Pressable, Switch } from 'native-base';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, TextInput } from 'react-native';
+import { useColorMode, useTheme, Box, Text } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
-import { SimpleHeader } from '../components/Header';
-import { selectUser, signOut } from '../redux/accountSlice';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { GoBackHeader } from '../components/Header';
+import { ActionButton } from '../components/ActionButton';
+import Loading from '../components/Loading';
+import { selectUser } from '../redux/accountSlice';
 
 const AccountScreen = ({ navigation }) => {
     const { colorMode, toggleColorMode } = useColorMode();
     const { colors } = useTheme();
+    const [password, setPassword] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
-    const { photo, name } = user;
+    const { email } = user;
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
-            <SimpleHeader title={'個人'} navigation={navigation} />
-            <Image source={{ uri: photo }} style={styles.avatarBox} />
-            <Text style={styles.name}>{name}</Text>
-            <Box
-                style={[
-                    styles.optionWrapper,
-                    {
-                        height: Dimensions.get('window').height - 350,
-                    },
-                ]}
-                _dark={{ bg: colors.dark[100] }}
-                _light={{ bg: '#fff' }}
-            >
-                <ScrollView contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
-                    <Pressable
-                        style={[
-                            styles.optionBox,
-                            {
-                                borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
-                            },
-                        ]}
-                    >
-                        <Image source={require('../../assets/icons/ic_dark_mode.png')} style={styles.optionIcon} />
-                        <Text
-                            style={styles.optionText}
-                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                        >
-                            深色模式
-                        </Text>
-                        <Switch
-                            size="sm"
-                            isChecked={colorMode === 'dark'}
-                            onToggle={toggleColorMode}
-                            onTrackColor={colors.primary[100]}
+            <GoBackHeader title={'帳號設定'} navigation={navigation} />
+            <Box style={styles.contentWrapper}>
+                <Box style={styles.optionWrapper}>
+                    <Text style={styles.optionTitle}>電子郵件 Email</Text>
+                    <Box style={styles.inputBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
+                        <MaterialCommunityIcons
+                            name="email-outline"
+                            size={24}
+                            color={colors.dark[300]}
+                            style={styles.inputIcon}
                         />
-                    </Pressable>
-                    <Pressable
-                        style={[
-                            styles.optionBox,
-                            {
-                                borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
-                            },
-                        ]}
-                        onPress={() => navigation.navigate('ProfileScreen')}
-                    >
-                        <Image source={require('../../assets/icons/ic_edit_profile.png')} style={styles.optionIcon} />
-                        <Text
-                            style={styles.optionText}
-                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                        >
-                            編輯個人檔案
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        style={[
-                            styles.optionBox,
-                            {
-                                borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
-                            },
-                        ]}
-                    >
-                        <Image source={require('../../assets/icons/ic_setting.png')} style={styles.optionIcon} />
-                        <Text
-                            style={styles.optionText}
-                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                        >
-                            帳號設定
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        style={[
-                            styles.optionBox,
-                            {
-                                borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
-                            },
-                        ]}
-                    >
-                        <Image source={require('../../assets/icons/ic_review.png')} style={styles.optionIcon} />
-                        <Text
-                            style={styles.optionText}
-                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                        >
-                            意見回饋
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        style={[
-                            styles.optionBox,
-                            {
-                                borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
-                            },
-                        ]}
-                    >
-                        <Image source={require('../../assets/icons/ic_about.png')} style={styles.optionIcon} />
-                        <Text
-                            style={styles.optionText}
-                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                        >
-                            關於 AwA
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        style={[
-                            styles.optionBox,
-                            {
-                                borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
-                            },
-                        ]}
-                    >
-                        <Image source={require('../../assets/icons/ic_rate_us.png')} style={styles.optionIcon} />
-                        <Text
-                            style={styles.optionText}
-                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                        >
-                            評論我們
-                        </Text>
-                    </Pressable>
-                    <Pressable style={styles.logOutBox} onPress={() => dispatch(signOut())}>
-                        <Image source={require('../../assets/icons/ic_log_out.png')} style={styles.optionIcon} />
-                        <Text
-                            style={styles.optionText}
-                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                        >
-                            登出
-                        </Text>
-                    </Pressable>
-                </ScrollView>
+                        <TextInput
+                            placeholder={email}
+                            placeholderTextColor={colors.dark[300]}
+                            editable={false}
+                            style={styles.input}
+                        />
+                    </Box>
+                </Box>
+                <Box style={styles.optionWrapper}>
+                    <Text style={styles.optionTitle}>密碼 Password</Text>
+                    <Box style={styles.inputBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
+                        <MaterialCommunityIcons
+                            name="lock-outline"
+                            size={24}
+                            color={colors.dark[300]}
+                            style={styles.inputIcon}
+                        />
+                        <TextInput
+                            placeholder="Password"
+                            placeholderTextColor={colors.dark[400]}
+                            value={password}
+                            onChangeText={(text) => setPassword(text)}
+                            returnKeyType="done"
+                            secureTextEntry={true}
+                            maxLength={30}
+                            style={styles.input}
+                        />
+                    </Box>
+                </Box>
+                <Box style={styles.optionWrapper}>
+                    <Text style={styles.optionTitle}>確認密碼 Confirm Password</Text>
+                    <Box style={styles.inputBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
+                        <MaterialCommunityIcons
+                            name="lock-outline"
+                            size={24}
+                            color={colors.dark[300]}
+                            style={styles.inputIcon}
+                        />
+                        <TextInput
+                            placeholder="Confirm Password"
+                            placeholderTextColor={colors.dark[400]}
+                            value={passwordConfirm}
+                            onChangeText={(text) => setPasswordConfirm(text)}
+                            returnKeyType="done"
+                            secureTextEntry={true}
+                            maxLength={30}
+                            style={styles.input}
+                        />
+                    </Box>
+                </Box>
             </Box>
+            <ActionButton text={'更新'} style={{ marginTop: 80 }} onPress={null} />
+            {loading && <Loading />}
         </Box>
     );
 };
@@ -154,50 +96,33 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
-    avatarBox: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        backgroundColor: '#E5E5E5',
-        marginTop: Platform.OS === 'ios' ? 45 : 20,
-    },
-    name: {
-        fontSize: 20,
-        lineHeight: 24,
-        marginTop: 15,
+    contentWrapper: {
+        width: '100%',
+        paddingHorizontal: 24,
+        marginTop: 40,
     },
     optionWrapper: {
-        position: 'absolute',
-        width: '100%',
-        bottom: 0,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        paddingHorizontal: 24,
-        paddingTop: 5,
+        marginBottom: 15,
     },
-    optionBox: {
-        width: '100%',
-        height: 45,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderBottomWidth: 1,
-        marginTop: 12,
-    },
-    optionIcon: {
-        width: 24,
-        height: 24,
-    },
-    optionText: {
-        fontSize: 16,
-        marginLeft: 12,
+    optionTitle: {
         marginRight: 'auto',
+        marginBottom: 10,
     },
-    logOutBox: {
-        height: 45,
+    inputBox: {
+        width: '100%',
+        height: 40,
+        borderRadius: 5,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 20,
+        marginBottom: 12,
+        paddingHorizontal: 5,
+    },
+    inputIcon: {
+        marginHorizontal: 5,
+    },
+    input: {
+        width: '100%',
+        fontSize: 16,
     },
 });
