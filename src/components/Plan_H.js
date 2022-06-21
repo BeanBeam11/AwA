@@ -7,37 +7,37 @@ const Plan_H = ({ navigation, item }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
-    const planDay1 = item.plan[0].map((el) => el.sight);
+    const planDay1 = item.trips[0].map((el) => el.spot);
 
     return (
         <Pressable
             style={styles.planBox}
             _dark={{ bg: colors.dark[100] }}
             _light={{ bg: '#fff' }}
-            onPress={() =>
-                navigation.navigate('Planner', { screen: 'PlanDetailScreen', params: { planName: item.name } })
-            }
+            onPress={() => navigation.navigate('PlanDetailScreen', { trip: item })}
         >
             <Box style={styles.planDay}>
                 <MaterialCommunityIcons name="bookmark" size={40} color={colors.primary[200]} />
                 <Text style={styles.dayText} color={colorMode === 'dark' ? colors.dark[200] : colors.dark[600]}>
-                    {item.plan.length}
+                    {item.trips.length}
                 </Text>
             </Box>
             <Box>
-                <Box style={styles.planImageBox}>
-                    <Image source={{ uri: item.cover_image }} style={styles.planImage} resizeMode="cover" />
+                <Box style={styles.planImageBox} _dark={{ bg: colors.dark[200] }} _light={{ bg: colors.dark[500] }}>
+                    {item.cover_image ? (
+                        <Image source={{ uri: item.cover_image }} style={styles.planImage} resizeMode="cover" />
+                    ) : null}
                 </Box>
                 <Pressable style={styles.owner} onPress={null}>
                     <Image source={{ uri: item.owner_image }} style={styles.ownerImage} resizeMode="cover" />
                     <Text style={styles.ownerName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        {item.owner}
+                        {item.owner ? item.owner : null}
                     </Text>
                 </Pressable>
             </Box>
             <Box style={styles.infoWrapper}>
                 <Text style={styles.planName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                    {item.name}
+                    {item.name.length > 8 ? `${item.name.slice(0, 8)}...` : item.name}
                 </Text>
                 <Text style={styles.planDayTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                     Day 1
@@ -81,6 +81,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     planImageBox: {
+        width: 145,
+        height: 92,
+        borderRadius: 5,
         marginBottom: Platform.OS === 'ios' ? 8 : 5,
     },
     owner: {

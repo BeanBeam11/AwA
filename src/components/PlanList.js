@@ -1,8 +1,7 @@
 import React from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { Plan } from './Plan';
 import { Plan_H } from './Plan_H';
-import planData from '../json/myPlan';
 
 const PlanList = ({ navigation, data }) => {
     const renderItem = ({ item }) => {
@@ -21,19 +20,22 @@ const PlanList = ({ navigation, data }) => {
     );
 };
 
-const PlanList_V = ({ navigation }) => {
+const PlanList_V = ({ navigation, data }) => {
     const renderItem = ({ item }) => {
         return <Plan_H item={item} navigation={navigation} />;
     };
 
+    const renderListFooter = () => <View style={{ width: '100%', height: 80 }}></View>;
+
     return (
         <FlatList
-            data={planData}
+            data={data}
             renderItem={renderItem}
             keyExtractor={(item, index) => index}
             horizontal={false}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingTop: 15, paddingbottom: 200 }}
+            contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 15 }}
+            ListFooterComponent={renderListFooter}
         />
     );
 };
