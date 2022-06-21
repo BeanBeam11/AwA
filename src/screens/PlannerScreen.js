@@ -287,9 +287,17 @@ const PlannerScreen = ({ navigation }) => {
                             ]}
                             onPress={() => handleEditTrip(index)}
                         >
-                            <Text color={colors.dark[500]} style={styles.editText}>
-                                編輯
-                            </Text>
+                            <Box
+                                style={styles.editBtn}
+                                _dark={{ bg: colors.primary[100] }}
+                                _light={{ bg: colors.primary[200] }}
+                            >
+                                <MaterialIcon
+                                    name="edit"
+                                    size={36}
+                                    color={colorMode === 'dark' ? colors.dark[200] : colors.dark[600]}
+                                />
+                            </Box>
                         </Pressable>
                     )}
                 </Box>
@@ -712,9 +720,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    editText: {
-        fontSize: 20,
-        fontWeight: '500',
+    editBtn: {
+        width: 64,
+        height: 64,
+        borderRadius: 32,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     editNote: {
         width: 250,

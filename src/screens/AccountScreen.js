@@ -28,7 +28,7 @@ const AccountScreen = ({ navigation }) => {
                 _dark={{ bg: colors.dark[100] }}
                 _light={{ bg: '#fff' }}
             >
-                <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
+                <ScrollView contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
                     <Pressable
                         style={[
                             styles.optionBox,
