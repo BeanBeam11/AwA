@@ -52,7 +52,7 @@ const initialState = {
         _id: '',
         email: '',
         name: '',
-        photo: 'https://firebasestorage.googleapis.com/v0/b/awa---trip-planner.appspot.com/o/logo_tripcan.png?alt=media&token=eb5cdb11-31a5-4c95-93a9-37273fbb4c58',
+        photo: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_01.png?alt=media&token=7f500577-095b-449b-a286-ceccae6a56db',
     },
     profile: {
         interest: '未填寫',
