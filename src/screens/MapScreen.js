@@ -4,8 +4,6 @@ import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import MapView, { Marker } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { GOOGLE_PLACES_API } from '@env';
-import Constants from 'expo-constants';
-import * as Location from 'expo-location';
 import Carousel from 'react-native-snap-carousel';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Loading from '../components/Loading';
@@ -16,8 +14,6 @@ const MapScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
-    const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
     const [loading, setLoading] = useState(false);
     const [region, setRegion] = useState({
         latitude: 24.08594819999999,
@@ -241,17 +237,6 @@ const MapScreen = ({ navigation }) => {
             </Pressable>
         );
     };
-
-    // const getLocation = async () => {
-    //     let { status } = await Location.requestForegroundPermissionsAsync();
-    //     if (status !== 'granted') {
-    //         setErrorMsg('Permission to access location was denied');
-    //         return;
-    //     }
-
-    //     let location = await Location.getCurrentPositionAsync({});
-    //     setLocation(location);
-    // };
 
     const handleSearchResult = (details) => {
         setCarouselData([details, ...carouselData]);
