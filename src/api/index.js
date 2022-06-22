@@ -24,6 +24,19 @@ export const signup = async ({ name, email, password, passwordConfirm }) => {
     }
 };
 
+export const updatePassword = async ({ token, passwordCurrent, password, passwordConfirm }) => {
+    try {
+        const res = await axios.patch(
+            `${baseUrl}api/v1/users/updateMyPassword`,
+            { passwordCurrent, password, passwordConfirm },
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return res;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
 // Users
 export const getCurrentUser = async ({ token }) => {
     try {
