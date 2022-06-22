@@ -12,7 +12,7 @@ import { ActionButton } from '../components/ActionButton';
 import { AddButton } from '../components/AddButton';
 import { EditHeader } from '../components/Header';
 import Loading from '../components/Loading';
-import { formatDate, formatTime } from '../utils/formatter';
+import { formatDate, formatTime, formatStayTime } from '../utils/formatter';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectToken } from '../redux/accountSlice';
@@ -236,12 +236,12 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                 color={colorMode === 'dark' ? colors.dark[200] : colors.dark[500]}
             />
             <Box style={[styles.planBoxDivider, { backgroundColor: colors.secondary[200] }]}></Box>
-            {item.image ? (
+            {/* {item.image ? (
                 <Image source={{ uri: item.image }} style={styles.planBoxImage} resizeMode="cover" />
             ) : (
-                <Box style={styles.planBoxImage} />
-            )}
-            <Box style={styles.planBoxInfo}>
+                <Box style={styles.planBoxImage} _dark={{ bg: colors.dark[200] }} _light={{ bg: colors.dark[500] }} />
+            )} */}
+            <Box style={[styles.planBoxInfo, { width: Dimensions.get('window').width - 160 }]}>
                 <Text style={styles.planSightName}>{item?.label}</Text>
                 <Box style={styles.planStayTime}>
                     <MaterialCommunityIcons
@@ -250,11 +250,9 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                         color={colors.dark[400]}
                         style={{ marginRight: 4 }}
                     />
-                    <Text color={colors.dark[300]}>
-                        {item.stay_time[0]}:{item.stay_time[1]}
-                    </Text>
+                    <Text color={colors.dark[300]}>{formatStayTime(item.stay_time[0], item.stay_time[1])}</Text>
                 </Box>
-                <Box style={{ width: Dimensions.get('window').width - 186 }}>
+                <Box>
                     <Text color={colors.dark[300]}>{item.note}</Text>
                 </Box>
             </Box>

@@ -7,7 +7,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { PlanDetailHeader, PlanDetailSaveHeader } from '../components/Header';
 import Loading from '../components/Loading';
-import { formatDate, formatTime } from '../utils/formatter';
+import { formatDate, formatTime, formatStayTime } from '../utils/formatter';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from '../redux/accountSlice';
@@ -25,6 +25,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
 
     const [tripData, setTripData] = useState(trip);
     const [loading, setLoading] = useState(true);
+    const [dayIndex, setDayIndex] = useState(0);
 
     useEffect(() => {
         if (isOwner) {
@@ -80,13 +81,44 @@ const PlanDetailScreen = ({ navigation, route }) => {
     };
 
     const renderItem = ({ item, index }) => {
+        let detailboxWidth;
+        let time = tripData.days_start_time[dayIndex] ? tripData.days_start_time[dayIndex] : null;
+        const hasImage = item.image ? true : false;
+        const hasStartTime = time ? true : false;
+
+        if (hasImage && hasStartTime) {
+            detailboxWidth = Dimensions.get('window').width - 168;
+        } else if (hasImage || hasStartTime) {
+            detailboxWidth = Dimensions.get('window').width - 108;
+        } else if (!hasImage && !hasStartTime) {
+            detailboxWidth = Dimensions.get('window').width - 90;
+        }
+
+        if (index !== 0 && time) {
+            for (let i = 0; i < index; i++) {
+                const hour = tripData.trips[dayIndex][i].stay_time[0];
+                const minute = tripData.trips[dayIndex][i].stay_time[1];
+                time = new Date(time).getTime() + hour * 60 * 60 * 1000 + minute * 60 * 1000;
+            }
+        }
+
         return (
             <Box style={styles.detailContent}>
-                <Box style={styles.detailTime}>
-                    <Text color={colors.dark[300]}>11:00</Text>
-                </Box>
+                {time && (
+                    <Box style={styles.detailTime}>
+                        <Text color={colors.dark[300]}>{formatTime(time)}</Text>
+                    </Box>
+                )}
                 <Box>
-                    <Box style={[styles.detailbox, { borderLeftColor: colors.primary[100] }]}>
+                    <Box
+                        style={[
+                            styles.detailBox,
+                            {
+                                borderLeftColor: colors.primary[100],
+                                width: detailboxWidth,
+                            },
+                        ]}
+                    >
                         <Box
                             _dark={{ bg: colors.primary[100] }}
                             _light={{ bg: colors.primary[100] }}
@@ -111,16 +143,13 @@ const PlanDetailScreen = ({ navigation, route }) => {
                                     style={{ marginRight: 4 }}
                                 />
                                 <Text color={colors.dark[300]}>
-                                    {item.stay_time[0]}:{item.stay_time[1]}
+                                    {formatStayTime(item.stay_time[0], item.stay_time[1])}
                                 </Text>
                             </Box>
                             {item.note && (
                                 <Text
                                     style={{
                                         marginTop: 12,
-                                        width: item.image
-                                            ? Dimensions.get('window').width - 168
-                                            : Dimensions.get('window').width - 108,
                                     }}
                                     color={colors.dark[300]}
                                 >
@@ -197,6 +226,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
             <ScrollableTabView
                 initialPage={0}
                 renderTabBar={renderTabBar}
+                onChangeTab={({ i, ref }) => setDayIndex(i)}
                 tabBarUnderlineStyle={{
                     backgroundColor: colors.secondary[200],
                     position: 'absolute',
@@ -321,7 +351,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         paddingTop: 20,
-        marginBottom: 10,
+        marginBottom: 15,
     },
     dayText: {
         fontSize: 16,
@@ -338,13 +368,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     detailTime: {
-        alignItems: 'center',
+        width: 48,
+        alignItems: 'flex-start',
     },
     detailType: {
         marginTop: 5,
     },
-    detailbox: {
-        marginLeft: 20,
+    detailBox: {
+        marginLeft: 10,
         paddingLeft: 20,
         paddingBottom: 20,
         borderLeftWidth: 1.5,

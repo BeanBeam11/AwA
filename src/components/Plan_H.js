@@ -43,7 +43,7 @@ const Plan_H = ({ navigation, item }) => {
                     Day 1
                 </Text>
                 <Text style={styles.planDetail} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
-                    {planDay1[0]}
+                    {planDay1[0].length > 11 ? `${planDay1[0].slice(0, 11)}...` : planDay1[0]}
                 </Text>
                 <Text style={styles.planDetail} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
                     {planDay1[1]}
