@@ -34,6 +34,7 @@ export const updatePassword = async ({ token, passwordCurrent, password, passwor
         return res;
     } catch (err) {
         console.log(err.response.data);
+        alert('更新密碼失敗 Σ(°Д°; 請確認密碼是否正確');
     }
 };
 

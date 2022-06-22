@@ -45,6 +45,16 @@ const AccountScreen = ({ navigation }) => {
     };
 
     const updatePassword = () => {
+        if (password !== passwordConfirm) {
+            setLoading(false);
+            alert('新密碼與確認新密碼不一致(≖＿≖)✧');
+            return;
+        }
+        if (password.length < 8) {
+            setLoading(false);
+            alert('密碼最少要有8個字元(´Ａ｀。)');
+            return;
+        }
         dispatch(updatePasswordAsync({ token, passwordCurrent, password, passwordConfirm }));
     };
 
@@ -91,7 +101,7 @@ const AccountScreen = ({ navigation }) => {
                     </Box>
                 </Box>
                 <Box style={styles.optionWrapper}>
-                    <Text style={styles.optionTitle}>新密碼</Text>
+                    <Text style={styles.optionTitle}>新密碼（最少8個字元）</Text>
                     <Box style={styles.inputBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
                         <MaterialCommunityIcons
                             name="lock-outline"
