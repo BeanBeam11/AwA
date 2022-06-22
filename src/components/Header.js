@@ -201,6 +201,7 @@ const ProfileSettingHeader = ({ navigation, onPress }) => {
 
     return (
         <Box style={styles.headerWrapper}>
+            <Pressable style={{ width: 24 }}></Pressable>
             <Box style={styles.headerCenter}>
                 <Text style={styles.headerTitle} ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                     個人檔案

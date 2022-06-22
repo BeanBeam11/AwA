@@ -34,7 +34,18 @@ const AddButton = ({ navigation, size, style, onPress }) => {
     }
 };
 
-export { AddButton };
+const AddPostButton = ({ navigation, style, onPress }) => {
+    const { colorMode } = useColorMode();
+    const { colors } = useTheme();
+
+    return (
+        <Pressable style={[styles.largeBtn, style, { backgroundColor: colors.primary[100] }]} onPress={onPress}>
+            <MaterialIcon name="edit" size={28} color={colorMode === 'dark' ? colors.dark[200] : '#fff'} />
+        </Pressable>
+    );
+};
+
+export { AddButton, AddPostButton };
 
 const styles = StyleSheet.create({
     smallBtn: {

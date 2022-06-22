@@ -19,7 +19,7 @@ const PostDetailScreen = ({ navigation, route }) => {
     const [isSaved, setIsSaved] = useState(false);
 
     const post = postData.find((el) => el.title === postId);
-    const sight = sightData.find((el) => el.Name === postId);
+    const sight = sightData.find((el) => el.ScenicSpotName === postId);
 
     return (
         <KeyboardAwareScrollView style={{ flex: 1 }}>
