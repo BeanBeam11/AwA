@@ -26,7 +26,18 @@ const getUserTripsAsync = createAsyncThunk('trip/getUserTrips', async ({ token, 
 
 const createUserTripAsync = createAsyncThunk(
     'trip/createUserTrip',
-    async ({ token, name, cover_image, start_date, end_date, duration, owner_id, owner_image, trips }) => {
+    async ({
+        token,
+        name,
+        cover_image,
+        start_date,
+        end_date,
+        duration,
+        owner_id,
+        owner_image,
+        trips,
+        days_start_time,
+    }) => {
         try {
             const { data } = await createUserTrip({
                 token,
@@ -38,6 +49,7 @@ const createUserTripAsync = createAsyncThunk(
                 owner_id,
                 owner_image,
                 trips,
+                days_start_time,
             });
             // The value we return becomes the `fulfilled` action payload
             return data.data;
@@ -50,7 +62,7 @@ const createUserTripAsync = createAsyncThunk(
 
 const updateUserTripInfoAsync = createAsyncThunk(
     'trip/updateUserTripInfo',
-    async ({ token, tripId, name, cover_image, start_date, end_date, duration, trips }) => {
+    async ({ token, tripId, name, cover_image, start_date, end_date, duration, trips, days_start_time }) => {
         try {
             const { data } = await updateUserTripInfo({
                 token,
@@ -61,6 +73,7 @@ const updateUserTripInfoAsync = createAsyncThunk(
                 end_date,
                 duration,
                 trips,
+                days_start_time,
             });
             // The value we return becomes the `fulfilled` action payload
             return data.data;
@@ -71,16 +84,19 @@ const updateUserTripInfoAsync = createAsyncThunk(
     }
 );
 
-const updateUserTripDetailAsync = createAsyncThunk('trip/updateUserTripDetail', async ({ token, tripId, trips }) => {
-    try {
-        const { data } = await updateUserTripDetail({ token, tripId, trips });
-        // The value we return becomes the `fulfilled` action payload
-        return data.data;
-    } catch (err) {
-        // The value we return becomes the `rejected` action payload
-        return rejectWithValue(err);
+const updateUserTripDetailAsync = createAsyncThunk(
+    'trip/updateUserTripDetail',
+    async ({ token, tripId, trips, days_start_time }) => {
+        try {
+            const { data } = await updateUserTripDetail({ token, tripId, trips, days_start_time });
+            // The value we return becomes the `fulfilled` action payload
+            return data.data;
+        } catch (err) {
+            // The value we return becomes the `rejected` action payload
+            return rejectWithValue(err);
+        }
     }
-});
+);
 
 // Part1: Define Slice (including reducers and actions)
 const initialState = {

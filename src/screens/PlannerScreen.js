@@ -52,6 +52,7 @@ const PlannerScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(true);
     const [trips, setTrips] = useState([]);
     const dayArray = [[]];
+    const daysStartTimeArray = [''];
 
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
@@ -103,6 +104,7 @@ const PlannerScreen = ({ navigation }) => {
                     owner_id: user._id,
                     owner_image: user.photo,
                     trips: dayArray,
+                    days_start_time: daysStartTimeArray,
                 })
             );
         } else {
@@ -117,6 +119,7 @@ const PlannerScreen = ({ navigation }) => {
                     owner_id: user._id,
                     owner_image: user.photo,
                     trips: dayArray,
+                    days_start_time: daysStartTimeArray,
                 })
             );
         }
@@ -125,27 +128,33 @@ const PlannerScreen = ({ navigation }) => {
     const handleUpdateTrip = () => {
         const tripId = trips[tripIndex]._id;
         let newData = [...trips[tripIndex].trips];
+        let newStartTime = [...trips[tripIndex].days_start_time];
         if (dayArray.length < newData.length) {
             const diff = newData.length - dayArray.length;
             if (isAsigned) {
                 if (new Date(endDate).getDate() === new Date(startDate).getDate()) {
                     newData.splice(1, diff);
+                    newStartTime.splice(1, diff);
                 } else if (diff === 1) {
                     newData.pop();
+                    newStartTime.pop();
                 } else {
                     for (let i = 0; i < diff + 1; i++) {
                         newData.pop();
+                        newStartTime.pop();
                     }
                 }
             } else {
                 for (let i = 0; i < diff; i++) {
                     newData.pop();
+                    newStartTime.pop();
                 }
             }
         } else if (dayArray.length > newData.length) {
             const diff = dayArray.length - newData.length;
             for (let i = 0; i < diff; i++) {
                 newData.push([]);
+                newStartTime.push('');
             }
         }
         if (isAsigned) {
@@ -159,6 +168,7 @@ const PlannerScreen = ({ navigation }) => {
                     end_date: endDate,
                     duration: dayArray.length,
                     trips: newData,
+                    days_start_time: newStartTime,
                 })
             );
         } else {
@@ -172,6 +182,7 @@ const PlannerScreen = ({ navigation }) => {
                     end_date: null,
                     duration,
                     trips: newData,
+                    days_start_time: newStartTime,
                 })
             );
         }
@@ -205,11 +216,13 @@ const PlannerScreen = ({ navigation }) => {
             if (new Date(endDate).getDate() !== new Date(startDate).getDate()) {
                 for (let i = 0; i < diffDays; i++) {
                     dayArray.push([]);
+                    daysStartTimeArray.push('');
                 }
             }
         } else {
             for (let i = 0; i < duration - 1; i++) {
                 dayArray.push([]);
+                daysStartTimeArray.push('');
             }
         }
         if (isEditable) {
@@ -227,8 +240,8 @@ const PlannerScreen = ({ navigation }) => {
         setCoverImage(currentTrip.cover_image);
         if (currentTrip.start_date) {
             setIsAssigned(true);
-            setStartDate(currentTrip.start_date);
-            setEndDate(currentTrip.end_date);
+            setStartDate(new Date(currentTrip.start_date));
+            setEndDate(new Date(currentTrip.end_date));
             setDuration(currentTrip.duration);
         } else {
             setIsAssigned(false);

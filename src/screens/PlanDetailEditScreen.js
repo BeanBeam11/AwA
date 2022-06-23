@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Image, View, Modal, TouchableOpacity, TextInput, Platform, Dimensions } from 'react-native';
-import { useColorMode, useTheme, Box, Text, Pressable, Checkbox } from 'native-base';
+import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -25,18 +25,19 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
     const [stayTimeModalVisible, setStayTimeModalVisible] = useState(false);
     const [spotName, setSpotName] = useState('');
     const [spotNote, setSpotNote] = useState('');
-    const [startTimeRequired, setStartTimeRequired] = useState(false);
     const [isStartTimePickerVisible, setStartTimePickerVisibility] = useState(false);
-    const [startTime, setStartTime] = useState(new Date());
     const [stayTime, setStayTime] = useState({ hours: 0, minutes: 0 });
     const [dayIndex, setDayIndex] = useState(0);
     const [spotIndex, setSpotIndex] = useState(0);
     const [isAddingSpot, setIsAddingSpot] = useState(true);
-    const [daysStartTime, setDaysStartTime] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const { trip } = route.params;
     const [tripData, setTripData] = useState(trip);
+    const [startTimeRequired, setStartTimeRequired] = useState(trip.days_start_time[dayIndex] ? true : false);
+    const [startTime, setStartTime] = useState(
+        trip.days_start_time[dayIndex] ? new Date(trip.days_start_time[dayIndex]) : new Date()
+    );
 
     const dispatch = useDispatch();
     const token = useSelector(selectToken);
@@ -69,7 +70,14 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
     };
 
     const handleDone = () => {
-        dispatch(updateUserTripDetailAsync({ token, tripId: tripData._id, trips: tripData.trips }));
+        dispatch(
+            updateUserTripDetailAsync({
+                token,
+                tripId: tripData._id,
+                trips: tripData.trips,
+                days_start_time: tripData.days_start_time,
+            })
+        );
         const currentTrip = userTrips.find((el) => el._id === trip._id);
         navigation.navigate('PlanDetailScreen', { trip: currentTrip });
     };
@@ -98,6 +106,10 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
     };
 
     const handleAddSpot = () => {
+        if (spotName.length === 0) {
+            alert('請輸入景點名稱( ˘･з･)');
+            return;
+        }
         let newData = tripData.trips.map((item, index) => {
             if (index === dayIndex) {
                 return [
@@ -116,9 +128,21 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                 return item;
             }
         });
+        let newStartTime = tripData.days_start_time.map((item, index) => {
+            if (index === dayIndex) {
+                if (startTimeRequired) {
+                    return startTime;
+                } else {
+                    return '';
+                }
+            } else {
+                return item;
+            }
+        });
         setTripData({
             ...tripData,
             trips: [...newData],
+            days_start_time: [...newStartTime],
         });
         clearState();
         setModalVisible(!modalVisible);
@@ -134,6 +158,10 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
     };
 
     const handleUpdateSpot = () => {
+        if (spotName.length === 0) {
+            alert('請輸入景點名稱( ˘･з･)');
+            return;
+        }
         let newData = tripData.trips.map((item, index) => {
             if (index === dayIndex) {
                 let updatedSpot = item.map((val, valIndex) => {
@@ -157,9 +185,21 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                 return item;
             }
         });
+        let newStartTime = tripData.days_start_time.map((item, index) => {
+            if (index === dayIndex) {
+                if (startTimeRequired) {
+                    return startTime;
+                } else {
+                    return '';
+                }
+            } else {
+                return item;
+            }
+        });
         setTripData({
             ...tripData,
             trips: [...newData],
+            days_start_time: [...newStartTime],
         });
         setModalVisible(!modalVisible);
     };
@@ -192,6 +232,8 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
 
     const onChangeTab = (tabIndex) => {
         setDayIndex(tabIndex);
+        setStartTimeRequired(tripData.days_start_time[tabIndex] ? true : false);
+        setStartTime(tripData.days_start_time[tabIndex] ? new Date(tripData.days_start_time[tabIndex]) : new Date());
         setDragData(
             tripData.trips[tabIndex].map((item, index) => {
                 return {
@@ -387,8 +429,8 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                             <MaterialIcon name="close" size={24} color={colorMode === 'dark' ? '#fff' : '#484848'} />
                         </TouchableOpacity>
                     </Box>
-                    <Box style={styles.imageWrapper}>
-                        <Image src={null} style={styles.image} />
+                    <Box style={styles.imageWrapper} _dark={{ bg: colors.dark[200] }} _light={{ bg: colors.dark[500] }}>
+                        <Image source={null} style={styles.image} />
                     </Box>
                     <Box style={styles.modalContent}>
                         <Box style={styles.optionWrapper}>
@@ -460,14 +502,24 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                             </Box>
                         </Box>
                         <Box style={styles.optionWrapper}>
-                            <Checkbox
-                                value={startTimeRequired}
-                                onChange={(value) => setStartTimeRequired(value)}
-                                accessibilityLabel="enable time"
-                                colorScheme="gray"
-                                size="sm"
-                                mr={3}
-                            />
+                            <Pressable
+                                style={{ marginRight: 15 }}
+                                onPress={() => setStartTimeRequired(!startTimeRequired)}
+                            >
+                                {startTimeRequired ? (
+                                    <MaterialCommunityIcons
+                                        name="checkbox-marked"
+                                        size={24}
+                                        color={colors.primary[200]}
+                                    />
+                                ) : (
+                                    <MaterialCommunityIcons
+                                        name="checkbox-blank"
+                                        size={24}
+                                        color={colorMode === 'dark' ? colors.dark[200] : colors.dark[500]}
+                                    />
+                                )}
+                            </Pressable>
                             <Box>
                                 <Text
                                     style={styles.modalLabel}
@@ -716,7 +768,6 @@ const styles = StyleSheet.create({
         width: 340,
         height: 190,
         borderRadius: 5,
-        backgroundColor: '#C4C4C4',
         marginTop: 10,
     },
     optionRight: {
