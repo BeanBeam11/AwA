@@ -9,6 +9,7 @@ import {
     Dimensions,
     Platform,
     RefreshControl,
+    Alert,
 } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Radio } from 'native-base';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
@@ -268,10 +269,24 @@ const PlannerScreen = ({ navigation }) => {
         }
     };
 
+    const checkDeleteTrip = () => {
+        Alert.alert('刪除行程', '確定要刪除行程嗎？ (☍﹏⁰)', [
+            {
+                text: '我再想想...',
+                onPress: null,
+                style: 'default',
+            },
+            {
+                text: '刪除！',
+                onPress: () => handleDeleteTrip(),
+                style: 'destructive',
+            },
+        ]);
+    };
+
     const handleDeleteTrip = async () => {
         const currentTrip = trips[tripIndex];
         dispatch(deleteUserTripAsync({ token, tripId: currentTrip._id }));
-        fetchUserTrips();
         await SheetManager.hide('edit_sheet');
         setLoading(true);
     };
@@ -320,7 +335,7 @@ const PlannerScreen = ({ navigation }) => {
                                 styles.editMask,
                                 {
                                     backgroundColor:
-                                        colorMode === 'dark' ? 'rgba(41, 41, 41, 0.7)' : 'rgba(72, 72, 72, 0.5)',
+                                        colorMode === 'dark' ? 'rgba(41, 41, 41, 0.7)' : 'rgba(72, 72, 72, 0.3)',
                                 },
                             ]}
                             onPress={() => showEditSheet(index)}
@@ -427,6 +442,16 @@ const PlannerScreen = ({ navigation }) => {
             <SegmentedContent />
             {!isEditable && (
                 <AddButton size={'large'} style={styles.fabWrapper} onPress={() => setModalVisible(true)} />
+            )}
+            {modalVisible && (
+                <Box
+                    style={{
+                        backgroundColor: colorMode === 'dark' ? 'rgba(0,0,0,0.75)' : 'rgba(0,0,0,0.25)',
+                        position: 'absolute',
+                        width: Dimensions.get('window').width,
+                        height: Dimensions.get('window').height,
+                    }}
+                ></Box>
             )}
             <View>
                 <Modal
@@ -627,7 +652,7 @@ const PlannerScreen = ({ navigation }) => {
                         </Text>
                     </Pressable>
                     <Box style={{ width: '80%', borderBottomWidth: 1, borderBottomColor: colors.dark[500] }}></Box>
-                    <Pressable style={styles.actionBox} onPress={() => handleDeleteTrip()}>
+                    <Pressable style={styles.actionBox} onPress={() => checkDeleteTrip()}>
                         <Text style={styles.actionText} color={'#DD9193'}>
                             刪除
                         </Text>

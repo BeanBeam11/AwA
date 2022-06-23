@@ -400,6 +400,16 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                     );
                 })}
             </ScrollableTabView>
+            {modalVisible && (
+                <Box
+                    style={{
+                        backgroundColor: colorMode === 'dark' ? 'rgba(0,0,0,0.75)' : 'rgba(0,0,0,0.25)',
+                        position: 'absolute',
+                        width: Dimensions.get('window').width,
+                        height: Dimensions.get('window').height,
+                    }}
+                ></Box>
+            )}
             <Modal
                 animationType="slide"
                 transparent={true}
