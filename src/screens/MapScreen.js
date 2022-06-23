@@ -2,210 +2,52 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Dimensions, Image } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import MapView, { Marker } from 'react-native-maps';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { GOOGLE_PLACES_API } from '@env';
 import Carousel from 'react-native-snap-carousel';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Loading from '../components/Loading';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import { AddButton } from '../components/AddButton';
+import { SearchBar } from '../components/SearchBar';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { selectRecommendSpots } from '../redux/spotSlice';
 
 const MapScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
+    const recommendSpots = useSelector(selectRecommendSpots);
 
+    const [keyword, setKeyword] = useState('');
     const [loading, setLoading] = useState(false);
     const [region, setRegion] = useState({
-        latitude: 24.08594819999999,
-        longitude: 120.540171,
+        latitude: recommendSpots[0].Position.PositionLat,
+        longitude: recommendSpots[0].Position.PositionLon,
         latitudeDelta: 0.003,
         longitudeDelta: 0.002,
     });
     const [marker, setMarker] = useState({
         coord: {
-            latitude: 24.08594819999999,
-            longitude: 120.540171,
+            latitude: recommendSpots[0].Position.PositionLat,
+            longitude: recommendSpots[0].Position.PositionLon,
         },
-        name: '彰化扇形車庫',
-        address: '500台灣彰化縣彰化市彰美路一段1號',
+        name: recommendSpots[0].ScenicSpotName,
+        address: recommendSpots[0].Address,
     });
-
-    const initialState = [
-        {
-            formatted_address: '500台灣彰化縣彰化市彰美路一段1號',
-            geometry: {
-                location: {
-                    lat: 24.08594819999999,
-                    lng: 120.540171,
-                },
-                viewport: {
-                    northeast: {
-                        lat: 24.0873917802915,
-                        lng: 120.5415815302915,
-                    },
-                    southwest: {
-                        lat: 24.0846938197085,
-                        lng: 120.5388835697085,
-                    },
-                },
-            },
-            name: '彰化扇形車庫',
-            opening_hours: {
-                open_now: false,
-                periods: [],
-                weekday_text: [
-                    '星期一: 休息',
-                    '星期二: 13:00 – 16:00',
-                    '星期三: 13:00 – 16:00',
-                    '星期四: 13:00 – 16:00',
-                    '星期五: 13:00 – 16:00',
-                    '星期六: 10:00 – 16:00',
-                    '星期日: 10:00 – 16:00',
-                ],
-            },
-            photos: [
-                {
-                    height: 5304,
-                    html_attributions: [
-                        '<a href="https://maps.google.com/maps/contrib/113995950153653784645">Chen Dick</a>',
-                    ],
-                    photo_reference:
-                        'Aap_uEDgcJjVG-smKFhOH6N2oMUqRCYAvrvKVo_WYvIT6zJH_kM9LuSQrGT7Yf0GJ6-sWpF-sjC7CDt6_wbz-4ouHCmU7lvqwJlQm0BGChRz2oO4bdJK-es2aCDYbBS0TU1p9fmVk25Sdpqm-ob-Oc9QjuztgnfRYKhBmm9zOFp-MApZ4oS3',
-                    width: 7952,
-                },
-            ],
-            place_id: 'ChIJzdeE7Zc4aTQRmhsTYz5Q_kw',
-            rating: 4.3,
-        },
-        {
-            formatted_address: '50341台灣彰化縣花壇鄉花壇街273號',
-            geometry: {
-                location: {
-                    lat: 24.0266612,
-                    lng: 120.5373037,
-                },
-                viewport: {
-                    northeast: {
-                        lat: 24.0280168302915,
-                        lng: 120.5387745802915,
-                    },
-                    southwest: {
-                        lat: 24.0253188697085,
-                        lng: 120.5360766197085,
-                    },
-                },
-            },
-        },
-        {
-            formatted_address: '505台灣彰化縣鹿港鎮瑤林街9號',
-            geometry: {
-                location: {
-                    lat: 24.0559063,
-                    lng: 120.4328957,
-                },
-                viewport: {
-                    northeast: {
-                        lat: 24.0572711302915,
-                        lng: 120.4342670302915,
-                    },
-                    southwest: {
-                        lat: 24.0545731697085,
-                        lng: 120.4315690697085,
-                    },
-                },
-            },
-            name: '鹿港老街',
-            opening_hours: {
-                open_now: false,
-                periods: [],
-                weekday_text: [
-                    '星期一: 00:00 – 06:00, 10:00 – 18:00',
-                    '星期二: 10:00 – 18:00',
-                    '星期三: 10:00 – 18:00',
-                    '星期四: 10:00 – 18:00',
-                    '星期五: 10:00 – 18:00',
-                    '星期六: 10:00 – 18:00',
-                    '星期日: 10:00 – 18:00',
-                ],
-            },
-            photos: [
-                {
-                    height: 3024,
-                    html_attributions: [
-                        '<a href="https://maps.google.com/maps/contrib/106000407157920353508">張芳榮</a>',
-                    ],
-                    photo_reference:
-                        'Aap_uEDcQgRz63bB6_mXEZYBfilcKzjl90yV1i2sO_--3rkiaZdcafGithhTpQqRvfEIsNgYB0lbwll4_GuxrLeYLuXZdCYqo4REp4C4WRIoxPjjpicSd9ay9B4QvJFK903Zfl8BKwU_WCTa-PA4t0IbNycC5F1_3bZsKql6qfPaW21VYJXy',
-                    width: 4032,
-                },
-            ],
-            place_id: 'ChIJbZ03BtZFaTQRVSahxk_O324',
-            rating: 4.4,
-        },
-        {
-            formatted_address: '507台灣彰化縣線西鄉草豐路501巷5號',
-            geometry: {
-                location: {
-                    lat: 24.1260409,
-                    lng: 120.4662116,
-                },
-                viewport: {
-                    northeast: {
-                        lat: 24.1273973302915,
-                        lng: 120.4675286302915,
-                    },
-                    southwest: {
-                        lat: 24.1246993697085,
-                        lng: 120.4648306697085,
-                    },
-                },
-            },
-            name: '台灣優格餅乾學院 【DIY手作/餅乾/喜餅/彰化美食/親子旅遊/彰化景點】',
-            opening_hours: {
-                open_now: false,
-                periods: [],
-                weekday_text: [
-                    '星期一: 09:00 – 18:00',
-                    '星期二: 09:00 – 18:00',
-                    '星期三: 09:00 – 18:00',
-                    '星期四: 09:00 – 18:00',
-                    '星期五: 09:00 – 18:00',
-                    '星期六: 09:00 – 18:00',
-                    '星期日: 09:00 – 18:00',
-                ],
-            },
-            photos: [
-                {
-                    height: 1366,
-                    html_attributions: [
-                        '<a href="https://maps.google.com/maps/contrib/106373788513238066235">台灣優格餅乾學院 【DIY手作/餅乾/喜餅/彰化美食/親子旅遊/彰化景點】</a>',
-                    ],
-                    photo_reference:
-                        'Aap_uEDzJQ3HOrFYVsSgghyuv64i86gzdiCSxYEp4_KfbUaPR_4exFxDdBIkAZBwUTRmwHPsLn1jFByeS101Cwk_7zgwgHMWwYxJy3ugpTCt6fR-85lW1U76O0hUNve3LNapS1CNWRAvRwyT2vjIbzlm0_lAkpcS7bcEGBEaDr8a564lSpED',
-                    width: 2048,
-                },
-            ],
-            place_id: 'ChIJbUfZ5SxBaTQRlP6jUJVdbMc',
-            rating: 4.2,
-        },
-    ];
-    const [carouselData, setCarouselData] = useState(initialState);
+    const [spots, setSpots] = useState(recommendSpots);
+    const [carouselData, setCarouselData] = useState(recommendSpots);
     const isCarousel = React.useRef(null);
 
     const renderCarouselItem = ({ item }) => {
-        const photoReference = item.photos[0] ? item.photos[0].photo_reference : null;
+        const image = item.Picture.PictureUrl1 ? item.Picture.PictureUrl1 : null;
+        const name = item.ScenicSpotName;
+        const city = item.City;
+        const town = item.Address ? item.Address.replace(/\s/g, '').replace(/[0-9]/g, '').slice(3, 6) : '';
 
         return (
             <Pressable style={styles.sightBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }} onPress={null}>
                 <Box style={styles.sightImageBox} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}>
-                    {photoReference ? (
-                        <Image
-                            source={{
-                                uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoReference}&key=${GOOGLE_PLACES_API}`,
-                            }}
-                            style={styles.sightImage}
-                            resizeMode="cover"
-                        />
+                    {image ? (
+                        <Image source={{ uri: image }} style={styles.sightImage} resizeMode="cover" />
                     ) : (
                         <MaterialCommunityIcons
                             name="image-remove"
@@ -216,10 +58,10 @@ const MapScreen = ({ navigation }) => {
                 </Box>
                 <Box style={styles.sightInfo}>
                     <Text style={styles.sightName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        {item.name.length > 10 ? `${item.name.slice(0, 10)}...` : item.name}
+                        {name.length > 10 ? `${name.slice(0, 10)}...` : name}
                     </Text>
                     <Text style={styles.sightLocation} color={colors.dark[300]}>
-                        {item.formatted_address.slice(5, 8)}・{item.formatted_address.slice(8, 11)}
+                        {city}・{town}
                     </Text>
                     <Rating
                         count={5}
@@ -238,74 +80,54 @@ const MapScreen = ({ navigation }) => {
         );
     };
 
-    const handleSearchResult = (details) => {
-        setCarouselData([details, ...carouselData]);
-        setRegion({
-            ...region,
-            latitude: details.geometry.location.lat,
-            longitude: details.geometry.location.lng,
-        });
-        setMarker({
-            coord: {
-                latitude: details.geometry.location.lat,
-                longitude: details.geometry.location.lng,
-            },
-            name: details.name,
-            address: details.formatted_address,
-        });
-    };
+    // const handleSearchResult = (details) => {
+    //     setCarouselData([details, ...carouselData]);
+    //     setRegion({
+    //         ...region,
+    //         latitude: details.geometry.location.lat,
+    //         longitude: details.geometry.location.lng,
+    //     });
+    //     setMarker({
+    //         coord: {
+    //             latitude: details.geometry.location.lat,
+    //             longitude: details.geometry.location.lng,
+    //         },
+    //         name: details.name,
+    //         address: details.formatted_address,
+    //     });
+    // };
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
-            <MapView style={styles.map} region={region} showsTraffic provider="google">
-                <Marker coordinate={marker.coord} title={marker.name} description={marker.address} />
-            </MapView>
-            <Box
-                style={[styles.searchBarWrapper, { width: Dimensions.get('window').width - 48 }]}
-                _dark={{ bg: colors.dark[200] }}
-                _light={{ bg: '#fff' }}
+            <MapView
+                style={styles.map}
+                region={region}
+                mapType="mutedStandard"
+                userInterfaceStyle={colorMode === 'dark' ? 'dark' : 'light'}
+                showsScale={true}
+                showsBuildings={true}
+                showsTraffic={true}
+                showsIndoors={true}
+                loadingEnabled={true}
             >
-                <Image
-                    source={require('../../assets/icons/ic_search.png')}
-                    style={styles.searchIcon}
-                    resizeMode="cover"
+                <Marker
+                    coordinate={marker.coord}
+                    title={marker.name}
+                    description={marker.address}
+                    pinColor={colors.primary[200]}
                 />
-                <GooglePlacesAutocomplete
-                    placeholder="搜尋景點"
-                    minLength={2}
-                    returnKeyType={'search'}
-                    enablePoweredByContainer={false}
-                    fetchDetails={true}
-                    onPress={(data, details = null) => {
-                        // 'details' is provided when fetchDetails = true
-                        handleSearchResult(details);
-                        console.log(details);
-                    }}
-                    query={{
-                        key: GOOGLE_PLACES_API,
-                        language: 'zh-TW',
-                        components: 'country:TW',
-                        types: 'establishment',
-                    }}
-                    GooglePlacesDetailsQuery={{
-                        fields: 'formatted_address,geometry,name,opening_hours,photos,place_id,rating',
-                    }}
-                    nearbyPlacesAPI="GooglePlacesSearch"
-                    GooglePlacesSearchQuery={{ rankby: 'distance' }}
-                    styles={{
-                        textInput: {
-                            height: 40,
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            marginLeft: 24,
-                        },
-                    }}
+            </MapView>
+            <Box style={styles.searchHeader}>
+                <SearchBar
+                    placeholder={'搜尋景點'}
+                    value={keyword}
+                    onChangeText={(text) => setKeyword(text)}
+                    onSubmitEditing={() => console.log('search')}
                 />
             </Box>
-            {/* <Carousel
+            <Carousel
                 ref={isCarousel}
-                data={carouselData}
+                data={spots}
                 containerCustomStyle={styles.carousel}
                 renderItem={renderCarouselItem}
                 sliderWidth={Dimensions.get('window').width}
@@ -313,19 +135,19 @@ const MapScreen = ({ navigation }) => {
                 onSnapToItem={(index) => {
                     setMarker({
                         coord: {
-                            latitude: carouselData[index].geometry.location.lat,
-                            longitude: carouselData[index].geometry.location.lng,
+                            latitude: carouselData[index].Position.PositionLat,
+                            longitude: carouselData[index].Position.PositionLon,
                         },
-                        name: carouselData[index].name,
-                        address: carouselData[index].formatted_address,
+                        name: carouselData[index].ScenicSpotName,
+                        address: carouselData[index].Address,
                     });
                     setRegion({
                         ...region,
-                        latitude: carouselData[index].geometry.location.lat,
-                        longitude: carouselData[index].geometry.location.lng,
+                        latitude: carouselData[index].Position.PositionLat,
+                        longitude: carouselData[index].Position.PositionLon,
                     });
                 }}
-            /> */}
+            />
             {loading && <Loading />}
         </Box>
     );
@@ -344,23 +166,14 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
     },
-    searchBarWrapper: {
+    searchHeader: {
         position: 'absolute',
-        top: 60,
+        width: '100%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 10,
-        borderRadius: 5,
+        top: 60,
     },
-    searchIcon: {
-        width: 24,
-        height: 24,
-        position: 'absolute',
-        top: 8,
-        left: 8,
-    },
-    searchGoogle: {},
     goBackBtn: {
         marginLeft: 20,
     },

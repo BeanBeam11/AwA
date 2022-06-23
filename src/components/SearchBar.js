@@ -3,7 +3,7 @@ import { StyleSheet, Image, TextInput, Dimensions } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 
 const SearchBar = (props) => {
-    const { navigation, style, placeholder, onChangeText, value, onPressIn } = props;
+    const { navigation, style, placeholder, onChangeText, value, onPressIn, onSubmitEditing } = props;
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
@@ -20,8 +20,9 @@ const SearchBar = (props) => {
                 onChangeText={onChangeText}
                 value={value}
                 returnKeyType="search"
-                style={{ width: '100%' }}
+                style={{ width: '100%', color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200] }}
                 onPressIn={onPressIn}
+                onSubmitEditing={onSubmitEditing}
             />
         </Box>
     );
