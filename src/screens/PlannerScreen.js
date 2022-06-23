@@ -14,6 +14,7 @@ import { useColorMode, useTheme, Box, Text, Pressable, Radio } from 'native-base
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import RNPickerSelect from 'react-native-picker-select';
+import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { AddButton } from '../components/AddButton';
 import { ActionButton } from '../components/ActionButton';
@@ -29,9 +30,11 @@ import {
     selectCreatedTrip,
     selectTripStatus,
     selectCreateTripStatus,
+    selectDeleteTripStatus,
     getUserTripsAsync,
     createUserTripAsync,
     updateUserTripInfoAsync,
+    deleteUserTripAsync,
 } from '../redux/tripSlice';
 
 const PlannerScreen = ({ navigation }) => {
@@ -61,6 +64,7 @@ const PlannerScreen = ({ navigation }) => {
     const createdTrip = useSelector(selectCreatedTrip);
     const tripStatus = useSelector(selectTripStatus);
     const createTripStatus = useSelector(selectCreateTripStatus);
+    const deleteTripStatus = useSelector(selectDeleteTripStatus);
 
     useEffect(() => {
         fetchUserTrips();
@@ -86,6 +90,14 @@ const PlannerScreen = ({ navigation }) => {
             fetchUserTrips();
         }
     }, [createTripStatus]);
+
+    useEffect(() => {
+        if (deleteTripStatus == 'idle') {
+            setLoading(false);
+            alert('刪除行程成功！');
+            fetchUserTrips();
+        }
+    }, [deleteTripStatus]);
 
     const fetchUserTrips = () => {
         dispatch(getUserTripsAsync({ token, userId: user._id }));
@@ -232,10 +244,15 @@ const PlannerScreen = ({ navigation }) => {
         }
     };
 
-    const handleEditTrip = (index) => {
-        setModalVisible(!modalVisible);
+    const showEditSheet = (index) => {
+        SheetManager.show('edit_sheet');
         setTripIndex(index);
-        const currentTrip = trips[index];
+    };
+
+    const handleEditTrip = async () => {
+        await SheetManager.hide('edit_sheet');
+        setModalVisible(!modalVisible);
+        const currentTrip = trips[tripIndex];
         setName(currentTrip.name);
         setCoverImage(currentTrip.cover_image);
         if (currentTrip.start_date) {
@@ -249,6 +266,14 @@ const PlannerScreen = ({ navigation }) => {
             setEndDate(new Date());
             setDuration(currentTrip.duration);
         }
+    };
+
+    const handleDeleteTrip = async () => {
+        const currentTrip = trips[tripIndex];
+        dispatch(deleteUserTripAsync({ token, tripId: currentTrip._id }));
+        fetchUserTrips();
+        await SheetManager.hide('edit_sheet');
+        setLoading(true);
     };
 
     const showStartDatePicker = () => {
@@ -298,7 +323,7 @@ const PlannerScreen = ({ navigation }) => {
                                         colorMode === 'dark' ? 'rgba(41, 41, 41, 0.7)' : 'rgba(72, 72, 72, 0.5)',
                                 },
                             ]}
-                            onPress={() => handleEditTrip(index)}
+                            onPress={() => showEditSheet(index)}
                         >
                             <Box
                                 style={styles.editBtn}
@@ -342,7 +367,7 @@ const PlannerScreen = ({ navigation }) => {
                     ListEmptyComponent={renderEmptyComponent}
                     refreshControl={
                         <RefreshControl
-                            refreshing={loading}
+                            refreshing={false}
                             tintColor={colorMode == 'dark' ? colors.dark[400] : colors.secondary[100]}
                             onRefresh={fetchUserTrips}
                         />
@@ -594,6 +619,27 @@ const PlannerScreen = ({ navigation }) => {
                     </View>
                 </Modal>
             </View>
+            <ActionSheet id="edit_sheet">
+                <Box style={styles.editSheet} _dark={{ bg: colors.dark[100] }} _light={{ bg: colors.dark[600] }}>
+                    <Pressable style={styles.actionBox} onPress={() => handleEditTrip()}>
+                        <Text style={styles.actionText} color={colors.primary[200]}>
+                            編輯
+                        </Text>
+                    </Pressable>
+                    <Box style={{ width: '80%', borderBottomWidth: 1, borderBottomColor: colors.dark[500] }}></Box>
+                    <Pressable style={styles.actionBox} onPress={() => handleDeleteTrip()}>
+                        <Text style={styles.actionText} color={'#DD9193'}>
+                            刪除
+                        </Text>
+                    </Pressable>
+                    <Box style={{ width: '80%', borderBottomWidth: 1, borderBottomColor: colors.dark[500] }}></Box>
+                    <Pressable style={styles.actionBox} onPress={async () => await SheetManager.hide('edit_sheet')}>
+                        <Text style={styles.actionText} color={colors.dark[400]}>
+                            取消
+                        </Text>
+                    </Pressable>
+                </Box>
+            </ActionSheet>
             {loading && <Loading />}
         </Box>
     );
@@ -746,5 +792,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-start',
         marginTop: 20,
+    },
+    editSheet: {
+        width: '100%',
+        alignItems: 'center',
+        paddingTop: 10,
+        paddingBottom: 40,
+        borderTopLeftRadius: 14,
+        borderTopRightRadius: 14,
+    },
+    actionBox: {
+        width: '80%',
+        paddingVertical: 18,
+        alignItems: 'center',
+    },
+    actionText: {
+        fontSize: 20,
     },
 });

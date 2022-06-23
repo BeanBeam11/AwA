@@ -1,5 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getAllTrips, getUserTrips, createUserTrip, updateUserTripInfo, updateUserTripDetail } from '../api';
+import {
+    getAllTrips,
+    getUserTrips,
+    createUserTrip,
+    updateUserTripInfo,
+    updateUserTripDetail,
+    deleteUserTrip,
+} from '../api';
 
 // Define async functions
 const getAllTripsAsync = createAsyncThunk('trip/getAllTrips', async () => {
@@ -98,6 +105,17 @@ const updateUserTripDetailAsync = createAsyncThunk(
     }
 );
 
+const deleteUserTripAsync = createAsyncThunk('trip/deleteUserTrip', async ({ token, tripId }) => {
+    try {
+        const { data } = await deleteUserTrip({ token, tripId });
+        // The value we return becomes the `fulfilled` action payload
+        return data;
+    } catch (err) {
+        // The value we return becomes the `rejected` action payload
+        return rejectWithValue(err);
+    }
+});
+
 // Part1: Define Slice (including reducers and actions)
 const initialState = {
     allTrips: [],
@@ -105,6 +123,7 @@ const initialState = {
     createdTrip: {},
     status: 'loading',
     createStatus: 'loading',
+    deleteStatus: 'loading',
 };
 
 const tripSlice = createSlice({
@@ -181,6 +200,15 @@ const tripSlice = createSlice({
             })
             .addCase(updateUserTripDetailAsync.rejected, (state, action) => {
                 state.status = 'error';
+            })
+            .addCase(deleteUserTripAsync.pending, (state) => {
+                state.deleteStatus = 'loading';
+            })
+            .addCase(deleteUserTripAsync.fulfilled, (state, action) => {
+                state.deleteStatus = 'idle';
+            })
+            .addCase(deleteUserTripAsync.rejected, (state, action) => {
+                state.deleteStatus = 'error';
             });
     },
 });
@@ -191,12 +219,20 @@ export const selectUserTrips = (state) => state.trip.userTrips;
 export const selectCreatedTrip = (state) => state.trip.createdTrip;
 export const selectTripStatus = (state) => state.trip.status;
 export const selectCreateTripStatus = (state) => state.trip.createStatus;
+export const selectDeleteTripStatus = (state) => state.trip.deleteStatus;
 
 // export actions to global
 export const { setAllTrips, setUserTrips, setCreatedTrip } = tripSlice.actions;
 
 // export async function to global
-export { getAllTripsAsync, getUserTripsAsync, createUserTripAsync, updateUserTripInfoAsync, updateUserTripDetailAsync };
+export {
+    getAllTripsAsync,
+    getUserTripsAsync,
+    createUserTripAsync,
+    updateUserTripInfoAsync,
+    updateUserTripDetailAsync,
+    deleteUserTripAsync,
+};
 
 // export reducer to global
 export default tripSlice.reducer;

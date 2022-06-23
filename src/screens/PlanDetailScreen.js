@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Image, Platform, Dimensions, FlatList } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -42,11 +41,6 @@ const PlanDetailScreen = ({ navigation, route }) => {
             setLoading(false);
         }
     }, [tripStatus]);
-
-    const handleGoToEdit = async () => {
-        await SheetManager.hide('edit_sheet');
-        navigation.navigate('PlanDetailEditScreen', { trip: tripData });
-    };
 
     const renderTabBar = (props) => (
         <ScrollableTabBar
@@ -172,7 +166,10 @@ const PlanDetailScreen = ({ navigation, route }) => {
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: '#fff' }}>
             <Box style={styles.topWrapper} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
                 {isOwner ? (
-                    <PlanDetailHeader navigation={navigation} onPress={() => SheetManager.show('edit_sheet')} />
+                    <PlanDetailHeader
+                        navigation={navigation}
+                        onPress={() => navigation.navigate('PlanDetailEditScreen', { trip: tripData })}
+                    />
                 ) : (
                     <PlanDetailSaveHeader navigation={navigation} onPress={null} />
                 )}
@@ -252,27 +249,6 @@ const PlanDetailScreen = ({ navigation, route }) => {
                     );
                 })}
             </ScrollableTabView>
-            <ActionSheet id="edit_sheet">
-                <Box style={styles.editSheet} _dark={{ bg: colors.dark[100] }} _light={{ bg: colors.dark[600] }}>
-                    <Pressable style={styles.actionBox} onPress={() => handleGoToEdit()}>
-                        <Text style={styles.actionText} color={colors.primary[200]}>
-                            編輯
-                        </Text>
-                    </Pressable>
-                    <Box style={{ width: '80%', borderBottomWidth: 1, borderBottomColor: colors.dark[500] }}></Box>
-                    <Pressable style={styles.actionBox} onPress={() => alert('現在還不能刪掉呦...')}>
-                        <Text style={styles.actionText} color={'#DD9193'}>
-                            刪除
-                        </Text>
-                    </Pressable>
-                    <Box style={{ width: '80%', borderBottomWidth: 1, borderBottomColor: colors.dark[500] }}></Box>
-                    <Pressable style={styles.actionBox} onPress={async () => await SheetManager.hide('edit_sheet')}>
-                        <Text style={styles.actionText} color={colors.dark[400]}>
-                            取消
-                        </Text>
-                    </Pressable>
-                </Box>
-            </ActionSheet>
             {loading && <Loading />}
         </Box>
     );
@@ -411,21 +387,5 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 5,
         marginLeft: 'auto',
-    },
-    editSheet: {
-        width: '100%',
-        alignItems: 'center',
-        paddingTop: 10,
-        paddingBottom: 40,
-        borderTopLeftRadius: 14,
-        borderTopRightRadius: 14,
-    },
-    actionBox: {
-        width: '80%',
-        paddingVertical: 18,
-        alignItems: 'center',
-    },
-    actionText: {
-        fontSize: 20,
     },
 });

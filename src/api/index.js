@@ -225,3 +225,14 @@ export const updateUserTripDetail = async ({ token, tripId, trips, days_start_ti
         console.log(err.response.data);
     }
 };
+
+export const deleteUserTrip = async ({ token, tripId }) => {
+    try {
+        const res = await axios.delete(`${baseUrl}api/v1/trips/${tripId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return res;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
