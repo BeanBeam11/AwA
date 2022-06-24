@@ -53,11 +53,13 @@ const ShareScreen = ({ navigation }) => {
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
-            <SearchBar
-                placeholder={'搜尋文章、評論'}
-                style={{ marginTop: 56 }}
-                onPressIn={() => navigation.navigate('ShareSearchScreen', { category: null })}
-            />
+            <Box style={{ marginTop: 56 }}>
+                <SearchBar
+                    placeholder={'搜尋文章、評論（上限20字）'}
+                    editable={false}
+                    onPressIn={() => navigation.navigate('ShareSearchScreen', { category: null })}
+                />
+            </Box>
             <Box style={styles.categoryWrapper}>
                 <FlatList
                     data={categories}

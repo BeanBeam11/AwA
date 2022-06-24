@@ -14,6 +14,8 @@ const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isEmailFocused, setIsEmailFocused] = useState(false);
+    const [isPassFocused, setIsPassFocused] = useState(false);
 
     const dispatch = useDispatch();
     const loginStatus = useSelector(selectStatus);
@@ -38,6 +40,12 @@ const LoginScreen = ({ navigation }) => {
         }
     }, [loginStatus]);
 
+    const inputStyle = {
+        width: Dimensions.get('window').width - 96,
+        color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
+        backgroundColor: colorMode === 'dark' ? colors.dark[100] : '#fff',
+    };
+
     return (
         <Box
             style={[
@@ -53,38 +61,50 @@ const LoginScreen = ({ navigation }) => {
             <Text style={styles.subTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                 立即登入來解鎖更多功能！
             </Text>
-            <Box style={styles.inputBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
+            <Box>
+                <TextInput
+                    placeholder="Email"
+                    placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
+                    value={email}
+                    onChangeText={(text) => setEmail(text)}
+                    returnKeyType="done"
+                    keyboardType="email-address"
+                    style={[
+                        styles.input,
+                        inputStyle,
+                        isEmailFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
+                    ]}
+                    onBlur={() => setIsEmailFocused(false)}
+                    onFocus={() => setIsEmailFocused(true)}
+                />
                 <MaterialCommunityIcons
                     name="email-outline"
                     size={24}
                     color={colors.dark[300]}
                     style={styles.inputIcon}
                 />
-                <TextInput
-                    placeholder="Email"
-                    placeholderTextColor={colors.dark[400]}
-                    value={email}
-                    onChangeText={(text) => setEmail(text)}
-                    returnKeyType="done"
-                    keyboardType="email-address"
-                    style={[styles.input, { color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200] }]}
-                />
             </Box>
-            <Box style={styles.inputBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
+            <Box>
+                <TextInput
+                    placeholder="Password"
+                    placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
+                    value={password}
+                    onChangeText={(text) => setPassword(text)}
+                    returnKeyType="done"
+                    secureTextEntry={true}
+                    style={[
+                        styles.input,
+                        inputStyle,
+                        isPassFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
+                    ]}
+                    onBlur={() => setIsPassFocused(false)}
+                    onFocus={() => setIsPassFocused(true)}
+                />
                 <MaterialCommunityIcons
                     name="lock-outline"
                     size={24}
                     color={colors.dark[300]}
                     style={styles.inputIcon}
-                />
-                <TextInput
-                    placeholder="Password"
-                    placeholderTextColor={colors.dark[400]}
-                    value={password}
-                    onChangeText={(text) => setPassword(text)}
-                    returnKeyType="done"
-                    secureTextEntry={true}
-                    style={styles.input}
                 />
             </Box>
             <Pressable style={styles.forgotPassword} onPress={() => alert('(´-ι_-｀) 現在還幫不了你')}>
@@ -156,22 +176,20 @@ const styles = StyleSheet.create({
         marginTop: 35,
         marginBottom: 45,
     },
-    inputBox: {
+    input: {
         width: '100%',
         height: 40,
         borderRadius: 5,
-        display: 'flex',
-        flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 12,
-        paddingHorizontal: 5,
+        paddingLeft: 40,
+        paddingRight: 12,
+        fontSize: 16,
     },
     inputIcon: {
-        marginHorizontal: 5,
-    },
-    input: {
-        width: '100%',
-        fontSize: 16,
+        position: 'absolute',
+        top: 8,
+        left: 8,
     },
     forgotPassword: {
         fontSize: 14,

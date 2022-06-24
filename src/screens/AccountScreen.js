@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 import { useColorMode, useTheme, Box, Text } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { GoBackHeader } from '../components/Header';
 import { ActionButton } from '../components/ActionButton';
@@ -16,6 +17,9 @@ const AccountScreen = ({ navigation }) => {
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [passwordChangedAt, setPasswordChangedAt] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isPassCurrentFocused, setIsPassCurrentFocused] = useState(false);
+    const [isPassFocused, setIsPassFocused] = useState(false);
+    const [isPassConfirmFocused, setIsPassConfirmFocused] = useState(false);
 
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
@@ -58,94 +62,119 @@ const AccountScreen = ({ navigation }) => {
         dispatch(updatePasswordAsync({ token, passwordCurrent, password, passwordConfirm }));
     };
 
+    const inputStyle = {
+        color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
+        backgroundColor: colorMode === 'dark' ? colors.dark[100] : '#fff',
+    };
+
     return (
-        <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
-            <GoBackHeader title={'帳號設定'} navigation={navigation} />
-            <Box style={styles.contentWrapper}>
-                <Box style={styles.optionWrapper}>
-                    <Text style={styles.optionTitle}>電子郵件</Text>
-                    <Box style={styles.inputBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
-                        <MaterialCommunityIcons
-                            name="email-outline"
-                            size={24}
-                            color={colors.dark[300]}
-                            style={styles.inputIcon}
-                        />
-                        <TextInput
-                            placeholder={email}
-                            placeholderTextColor={colors.dark[300]}
-                            editable={false}
-                            style={styles.input}
-                        />
+        <KeyboardAwareScrollView style={{ flex: 1 }}>
+            <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
+                <GoBackHeader title={'帳號設定'} navigation={navigation} />
+                <Box style={styles.contentWrapper}>
+                    <Box style={styles.optionWrapper}>
+                        <Text style={styles.optionTitle}>電子郵件</Text>
+                        <Box>
+                            <TextInput
+                                placeholder={email}
+                                placeholderTextColor={colors.dark[300]}
+                                editable={false}
+                                style={[styles.input, inputStyle]}
+                            />
+                            <MaterialCommunityIcons
+                                name="email-outline"
+                                size={24}
+                                color={colors.dark[300]}
+                                style={styles.inputIcon}
+                            />
+                        </Box>
+                    </Box>
+                    <Box style={styles.optionWrapper}>
+                        <Text style={styles.optionTitle}>目前密碼</Text>
+                        <Box>
+                            <TextInput
+                                placeholder="Current Password"
+                                placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
+                                value={passwordCurrent}
+                                onChangeText={(text) => setPasswordCurrent(text)}
+                                returnKeyType="done"
+                                secureTextEntry={true}
+                                maxLength={30}
+                                style={[
+                                    styles.input,
+                                    inputStyle,
+                                    isPassCurrentFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
+                                ]}
+                                onBlur={() => setIsPassCurrentFocused(false)}
+                                onFocus={() => setIsPassCurrentFocused(true)}
+                            />
+                            <MaterialCommunityIcons
+                                name="lock-outline"
+                                size={24}
+                                color={colors.dark[300]}
+                                style={styles.inputIcon}
+                            />
+                        </Box>
+                    </Box>
+                    <Box style={styles.optionWrapper}>
+                        <Text style={styles.optionTitle}>新密碼（最少8個字元）</Text>
+                        <Box>
+                            <TextInput
+                                placeholder="New Password"
+                                placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
+                                value={password}
+                                onChangeText={(text) => setPassword(text)}
+                                returnKeyType="done"
+                                secureTextEntry={true}
+                                maxLength={30}
+                                style={[
+                                    styles.input,
+                                    inputStyle,
+                                    isPassFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
+                                ]}
+                                onBlur={() => setIsPassFocused(false)}
+                                onFocus={() => setIsPassFocused(true)}
+                            />
+                            <MaterialCommunityIcons
+                                name="lock-outline"
+                                size={24}
+                                color={colors.dark[300]}
+                                style={styles.inputIcon}
+                            />
+                        </Box>
+                    </Box>
+                    <Box style={styles.optionWrapper}>
+                        <Text style={styles.optionTitle}>確認新密碼</Text>
+                        <Box>
+                            <TextInput
+                                placeholder="Confirm New Password"
+                                placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
+                                value={passwordConfirm}
+                                onChangeText={(text) => setPasswordConfirm(text)}
+                                returnKeyType="done"
+                                secureTextEntry={true}
+                                maxLength={30}
+                                style={[
+                                    styles.input,
+                                    inputStyle,
+                                    isPassConfirmFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
+                                ]}
+                                onBlur={() => setIsPassConfirmFocused(false)}
+                                onFocus={() => setIsPassConfirmFocused(true)}
+                            />
+                            <MaterialCommunityIcons
+                                name="lock-outline"
+                                size={24}
+                                color={colors.dark[300]}
+                                style={styles.inputIcon}
+                            />
+                        </Box>
                     </Box>
                 </Box>
-                <Box style={styles.optionWrapper}>
-                    <Text style={styles.optionTitle}>目前密碼</Text>
-                    <Box style={styles.inputBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
-                        <MaterialCommunityIcons
-                            name="lock-outline"
-                            size={24}
-                            color={colors.dark[300]}
-                            style={styles.inputIcon}
-                        />
-                        <TextInput
-                            placeholder="Current Password"
-                            placeholderTextColor={colors.dark[400]}
-                            value={passwordCurrent}
-                            onChangeText={(text) => setPasswordCurrent(text)}
-                            returnKeyType="done"
-                            secureTextEntry={true}
-                            maxLength={30}
-                            style={styles.input}
-                        />
-                    </Box>
-                </Box>
-                <Box style={styles.optionWrapper}>
-                    <Text style={styles.optionTitle}>新密碼（最少8個字元）</Text>
-                    <Box style={styles.inputBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
-                        <MaterialCommunityIcons
-                            name="lock-outline"
-                            size={24}
-                            color={colors.dark[300]}
-                            style={styles.inputIcon}
-                        />
-                        <TextInput
-                            placeholder="New Password"
-                            placeholderTextColor={colors.dark[400]}
-                            value={password}
-                            onChangeText={(text) => setPassword(text)}
-                            returnKeyType="done"
-                            secureTextEntry={true}
-                            maxLength={30}
-                            style={styles.input}
-                        />
-                    </Box>
-                </Box>
-                <Box style={styles.optionWrapper}>
-                    <Text style={styles.optionTitle}>確認新密碼</Text>
-                    <Box style={styles.inputBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
-                        <MaterialCommunityIcons
-                            name="lock-outline"
-                            size={24}
-                            color={colors.dark[300]}
-                            style={styles.inputIcon}
-                        />
-                        <TextInput
-                            placeholder="Confirm New Password"
-                            placeholderTextColor={colors.dark[400]}
-                            value={passwordConfirm}
-                            onChangeText={(text) => setPasswordConfirm(text)}
-                            returnKeyType="done"
-                            secureTextEntry={true}
-                            maxLength={30}
-                            style={styles.input}
-                        />
-                    </Box>
-                </Box>
+                <ActionButton text={'更新'} style={{ marginTop: 80 }} onPress={() => updatePassword()} />
+                {loading && <Loading />}
             </Box>
-            <ActionButton text={'更新'} style={{ marginTop: 80 }} onPress={() => updatePassword()} />
-            {loading && <Loading />}
-        </Box>
+        </KeyboardAwareScrollView>
     );
 };
 
@@ -168,21 +197,19 @@ const styles = StyleSheet.create({
         marginRight: 'auto',
         marginBottom: 10,
     },
-    inputBox: {
+    input: {
         width: '100%',
         height: 40,
         borderRadius: 5,
-        display: 'flex',
-        flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 12,
-        paddingHorizontal: 5,
+        paddingLeft: 40,
+        paddingRight: 12,
+        fontSize: 16,
     },
     inputIcon: {
-        marginHorizontal: 5,
-    },
-    input: {
-        width: '100%',
-        fontSize: 16,
+        position: 'absolute',
+        top: 8,
+        left: 8,
     },
 });

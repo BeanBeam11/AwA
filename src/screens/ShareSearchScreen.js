@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, FlatList, Image, ScrollView, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
-import { SearchGoBackHeader } from '../components/Header';
+import { SearchBar } from '../components/SearchBar';
 import { Post } from '../components/Post';
 import postData from '../json/post.json';
 
@@ -34,12 +34,25 @@ const ShareSearchScreen = ({ navigation, route }) => {
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
             <ScrollView>
-                <SearchGoBackHeader
-                    navigation={navigation}
-                    placeholder={'搜尋文章、評論'}
-                    onChangeText={(text) => handleSearch(text)}
-                    value={keyword}
-                />
+                <Box style={[styles.headerWrapper, { marginTop: 56 }]}>
+                    <Pressable style={styles.headerLeft} onPress={() => navigation.goBack()}>
+                        {colorMode === 'dark' ? (
+                            <Image
+                                source={require('../../assets/icons/ic_goback_dark.png')}
+                                style={styles.headerLeft}
+                            />
+                        ) : (
+                            <Image source={require('../../assets/icons/ic_goback.png')} style={styles.headerLeft} />
+                        )}
+                    </Pressable>
+                    <SearchBar
+                        style={{ width: '100%' }}
+                        placeholder={'搜尋文章、評論（上限20字）'}
+                        onChangeText={(text) => handleSearch(text)}
+                        value={keyword}
+                        autoFocus={true}
+                    />
+                </Box>
                 <Box style={styles.listWrapper}>
                     <Box>
                         {postResult.length !== 0 ? (
@@ -66,6 +79,20 @@ export default ShareSearchScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    headerWrapper: {
+        width: '100%',
+        height: 48,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 24,
+        marginTop: 44,
+    },
+    headerLeft: {
+        width: 24,
+        height: 24,
     },
     listWrapper: {
         paddingHorizontal: 24,

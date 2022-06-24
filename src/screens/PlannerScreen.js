@@ -54,6 +54,7 @@ const PlannerScreen = ({ navigation }) => {
     const [isEditable, setIsEditable] = useState(false);
     const [tripIndex, setTripIndex] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [isFocused, setIsFocused] = useState(false);
     const [trips, setTrips] = useState([]);
     const dayArray = [[]];
     const daysStartTimeArray = [''];
@@ -489,28 +490,33 @@ const PlannerScreen = ({ navigation }) => {
                             </Pressable>
                         </Box>
                         <Box style={styles.modalContent}>
-                            <Box style={styles.imageWrapper}>
+                            <Box
+                                style={styles.imageWrapper}
+                                _dark={{ bg: colors.dark[200] }}
+                                _light={{ bg: colors.dark[500] }}
+                            >
                                 <Image source={{ uri: coverImage }} style={styles.image} />
                             </Box>
                             <Text style={styles.modalLabel}>行程名稱</Text>
-                            <Box
+                            <TextInput
+                                placeholder="行程名稱（字數須介於2~20）"
+                                placeholderTextColor={colors.dark[400]}
+                                value={name}
+                                onChangeText={(text) => setName(text)}
+                                returnKeyType="done"
+                                maxLength={20}
+                                onBlur={() => setIsFocused(false)}
+                                onFocus={() => setIsFocused(true)}
                                 style={[
                                     styles.inputWrapper,
                                     {
                                         width: Dimensions.get('window').width - 48,
-                                        borderColor: colors.secondary[200],
+                                        color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
+                                        borderWidth: isFocused ? 1.2 : 1,
+                                        borderColor: isFocused ? colors.primary[100] : colors.secondary[200],
                                     },
                                 ]}
-                            >
-                                <TextInput
-                                    placeholder="行程名稱（字數須介於2~20）"
-                                    placeholderTextColor={colors.dark[400]}
-                                    value={name}
-                                    onChangeText={(text) => setName(text)}
-                                    returnKeyType="done"
-                                    maxLength={20}
-                                />
-                            </Box>
+                            />
                             <Radio.Group
                                 style={{ marginVertical: 20 }}
                                 colorScheme="gray"
@@ -613,6 +619,8 @@ const PlannerScreen = ({ navigation }) => {
                                 date={startDate}
                                 onConfirm={handleStartConfirm}
                                 onCancel={hideStartDatePicker}
+                                textColor={colorMode === 'dark' ? 'white' : 'dark'}
+                                isDarkModeEnabled={colorMode === 'dark' ? true : false}
                             />
                             <DateTimePickerModal
                                 isVisible={isEndDatePickerVisible}
@@ -620,6 +628,8 @@ const PlannerScreen = ({ navigation }) => {
                                 date={endDate}
                                 onConfirm={handleEndConfirm}
                                 onCancel={hideEndDatePicker}
+                                textColor={colorMode === 'dark' ? 'white' : 'dark'}
+                                isDarkModeEnabled={colorMode === 'dark' ? true : false}
                             />
                         </Box>
                         <ActionButton
@@ -728,7 +738,6 @@ const styles = StyleSheet.create({
         width: 340,
         height: 190,
         borderRadius: 5,
-        backgroundColor: '#C4C4C4',
         marginTop: 20,
         marginLeft: 'auto',
         marginRight: 'auto',
@@ -749,7 +758,6 @@ const styles = StyleSheet.create({
     },
     inputWrapper: {
         height: 36,
-        borderWidth: 1,
         borderRadius: 5,
         justifyContent: 'center',
         paddingLeft: 15,

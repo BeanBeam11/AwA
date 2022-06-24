@@ -170,31 +170,6 @@ const EditHeader = ({ navigation, title, onPressDone }) => {
     );
 };
 
-const SearchGoBackHeader = (props) => {
-    const { navigation, placeholder, onChangeText, value, onPressIn } = props;
-    const { colorMode } = useColorMode();
-    const { colors } = useTheme();
-
-    return (
-        <Box style={[styles.headerWrapper, { marginTop: 56 }]}>
-            <Pressable style={styles.headerLeft} onPress={() => navigation.goBack()}>
-                {colorMode === 'dark' ? (
-                    <Image source={require('../../assets/icons/ic_goback_dark.png')} style={styles.headerLeft} />
-                ) : (
-                    <Image source={require('../../assets/icons/ic_goback.png')} style={styles.headerLeft} />
-                )}
-            </Pressable>
-            <SearchBar
-                style={{ width: '80%' }}
-                placeholder={placeholder}
-                onChangeText={onChangeText}
-                value={value}
-                onPressIn={onPressIn}
-            />
-        </Box>
-    );
-};
-
 const ProfileSettingHeader = ({ navigation, onPress }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
@@ -225,7 +200,6 @@ export {
     SimpleHeader,
     GoBackHeader,
     EditHeader,
-    SearchGoBackHeader,
     ProfileSettingHeader,
 };
 

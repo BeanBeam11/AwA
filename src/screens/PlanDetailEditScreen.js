@@ -31,6 +31,8 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
     const [spotIndex, setSpotIndex] = useState(0);
     const [isAddingSpot, setIsAddingSpot] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [isSpotFocused, setIsSpotFocused] = useState(false);
+    const [isNoteFocused, setIsNoteFocused] = useState(false);
 
     const { trip } = route.params;
     const [tripData, setTripData] = useState(trip);
@@ -454,7 +456,8 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 style={[
                                     styles.optionRight,
                                     {
-                                        borderBottomColor: colors.dark[500],
+                                        borderBottomWidth: 1,
+                                        borderBottomColor: colorMode === 'dark' ? colors.dark[300] : colors.dark[500],
                                     },
                                 ]}
                             >
@@ -472,17 +475,25 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 style={[
                                     styles.optionRight,
                                     {
-                                        borderBottomColor: colors.dark[500],
+                                        borderBottomWidth: isSpotFocused ? 1.2 : 1,
+                                        borderBottomColor: isSpotFocused
+                                            ? colors.primary[100]
+                                            : colorMode === 'dark'
+                                            ? colors.dark[300]
+                                            : colors.dark[500],
                                     },
                                 ]}
                             >
                                 <TextInput
                                     placeholder="輸入景點名稱"
-                                    placeholderTextColor={colors.dark[400]}
+                                    placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
                                     style={{ color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200] }}
                                     value={spotName}
                                     onChangeText={(text) => setSpotName(text)}
                                     returnKeyType="done"
+                                    maxLength={20}
+                                    onBlur={() => setIsSpotFocused(false)}
+                                    onFocus={() => setIsSpotFocused(true)}
                                 />
                             </Box>
                         </Box>
@@ -497,17 +508,24 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 style={[
                                     styles.optionRight,
                                     {
-                                        borderBottomColor: colors.dark[500],
+                                        borderBottomWidth: isNoteFocused ? 1.2 : 1,
+                                        borderBottomColor: isNoteFocused
+                                            ? colors.primary[100]
+                                            : colorMode === 'dark'
+                                            ? colors.dark[300]
+                                            : colors.dark[500],
                                     },
                                 ]}
                             >
                                 <TextInput
                                     placeholder="輸入備註"
-                                    placeholderTextColor={colors.dark[400]}
+                                    placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
                                     style={{ color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200] }}
                                     value={spotNote}
                                     onChangeText={(text) => setSpotNote(text)}
                                     returnKeyType="done"
+                                    onBlur={() => setIsNoteFocused(false)}
+                                    onFocus={() => setIsNoteFocused(true)}
                                 />
                             </Box>
                         </Box>
@@ -599,6 +617,8 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                     mode="time"
                     onConfirm={handleStartTimeConfirm}
                     onCancel={hideStartTimePicker}
+                    textColor={colorMode === 'dark' ? 'white' : 'dark'}
+                    isDarkModeEnabled={colorMode === 'dark' ? true : false}
                 />
                 <Modal
                     animationType="slide"
@@ -782,7 +802,6 @@ const styles = StyleSheet.create({
     },
     optionRight: {
         width: 250,
-        borderBottomWidth: 1,
     },
     optionWrapper: {
         width: '100%',
