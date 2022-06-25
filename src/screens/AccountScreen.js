@@ -68,7 +68,9 @@ const AccountScreen = ({ navigation }) => {
     };
 
     return (
-        <KeyboardAwareScrollView style={{ flex: 1 }}>
+        <KeyboardAwareScrollView
+            style={{ flex: 1, backgroundColor: colorMode === 'dark' ? colors.dark[50] : colors.dark[600] }}
+        >
             <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
                 <GoBackHeader title={'帳號設定'} navigation={navigation} />
                 <Box style={styles.contentWrapper}>

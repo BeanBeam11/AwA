@@ -432,6 +432,7 @@ const PlannerScreen = ({ navigation }) => {
             <PlannerHeader
                 title={isEditable ? '編輯行程' : '行程'}
                 headerRight={isEditable ? '完成' : '編輯'}
+                headerRightStyle={isEditable && { color: colors.primary[200], fontWeight: '500', fontSize: 16 }}
                 navigation={navigation}
                 onPress={() => (isEditable ? setIsEditable(false) : setIsEditable(true))}
             />
@@ -633,8 +634,6 @@ const PlannerScreen = ({ navigation }) => {
                                 date={startDate}
                                 onConfirm={handleStartConfirm}
                                 onCancel={hideStartDatePicker}
-                                textColor={colorMode === 'dark' ? 'white' : 'dark'}
-                                isDarkModeEnabled={colorMode === 'dark' ? true : false}
                             />
                             <DateTimePickerModal
                                 isVisible={isEndDatePickerVisible}
@@ -642,8 +641,6 @@ const PlannerScreen = ({ navigation }) => {
                                 date={endDate}
                                 onConfirm={handleEndConfirm}
                                 onCancel={hideEndDatePicker}
-                                textColor={colorMode === 'dark' ? 'white' : 'dark'}
-                                isDarkModeEnabled={colorMode === 'dark' ? true : false}
                             />
                         </Box>
                         <ActionButton

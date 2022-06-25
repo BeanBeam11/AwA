@@ -5,7 +5,7 @@ import { SearchBar } from './SearchBar';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const PlannerHeader = ({ title, headerRight, onPress }) => {
+const PlannerHeader = ({ title, headerRight, headerRightStyle, onPress }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
@@ -13,14 +13,14 @@ const PlannerHeader = ({ title, headerRight, onPress }) => {
         <Box style={styles.headerWrapper}>
             <Pressable style={styles.headerLeft}></Pressable>
             <Box style={styles.headerCenter}>
-                <Text style={styles.headerTitle} ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                <Text style={styles.headerTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                     {title}
                 </Text>
             </Box>
             <Pressable style={styles.headerRight} onPress={onPress}>
                 <Text
-                    style={styles.headerRightText}
-                    ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                    style={[styles.headerRightText, headerRightStyle]}
+                    color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                 >
                     {headerRight}
                 </Text>
@@ -51,7 +51,7 @@ const PlanDetailHeader = ({ navigation, onPress }) => {
                 )}
             </Pressable>
             <Box style={styles.headerCenter}>
-                <Text style={styles.headerTitle} ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                <Text style={styles.headerTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                     行程細節
                 </Text>
             </Box>
@@ -84,7 +84,7 @@ const PlanDetailSaveHeader = ({ navigation, onPress }) => {
                 )}
             </Pressable>
             <Box style={styles.headerCenter}>
-                <Text style={styles.headerTitle} ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                <Text style={styles.headerTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                     行程細節
                 </Text>
             </Box>
@@ -106,7 +106,7 @@ const SimpleHeader = ({ navigation, title }) => {
     return (
         <Box style={styles.headerWrapper}>
             <Box style={styles.headerCenter}>
-                <Text style={styles.headerTitle} ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                <Text style={styles.headerTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                     {title}
                 </Text>
             </Box>
@@ -128,7 +128,7 @@ const GoBackHeader = ({ navigation, title }) => {
                 )}
             </Pressable>
             <Box style={styles.headerCenter}>
-                <Text style={styles.headerTitle} ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                <Text style={styles.headerTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                     {title}
                 </Text>
             </Box>
@@ -157,7 +157,7 @@ const EditHeader = ({ navigation, title, onPressDone }) => {
                 </Text>
             </Pressable>
             <Box style={styles.headerCenter}>
-                <Text style={styles.headerTitle} ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                <Text style={styles.headerTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                     {title}
                 </Text>
             </Box>
@@ -178,7 +178,7 @@ const ProfileSettingHeader = ({ navigation, onPress }) => {
         <Box style={styles.headerWrapper}>
             <Pressable style={{ width: 24 }}></Pressable>
             <Box style={styles.headerCenter}>
-                <Text style={styles.headerTitle} ccolor={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                <Text style={styles.headerTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                     個人檔案
                 </Text>
             </Box>

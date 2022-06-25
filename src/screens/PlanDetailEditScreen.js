@@ -619,8 +619,6 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                     mode="time"
                     onConfirm={handleStartTimeConfirm}
                     onCancel={hideStartTimePicker}
-                    textColor={colorMode === 'dark' ? 'white' : 'dark'}
-                    isDarkModeEnabled={colorMode === 'dark' ? true : false}
                 />
                 <Modal
                     animationType="slide"

@@ -112,37 +112,6 @@ const LoginScreen = ({ navigation }) => {
                     忘記密碼
                 </Text>
             </Pressable>
-            <Box style={styles.dividerWrapper}>
-                <Box style={styles.divider} _dark={{ bg: colors.dark[500] }} _light={{ bg: colors.dark[400] }}></Box>
-                <Text
-                    style={{ marginHorizontal: 15 }}
-                    color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                >
-                    或
-                </Text>
-                <Box style={styles.divider} _dark={{ bg: colors.dark[500] }} _light={{ bg: colors.dark[400] }}></Box>
-            </Box>
-            <Box style={styles.socialWrapper}>
-                <Pressable
-                    style={[styles.socialBox, { borderColor: colors.secondary[200] }]}
-                    _dark={{ bg: colors.dark[200] }}
-                    _light={{ bg: '#fff' }}
-                >
-                    <MaterialCommunityIcons
-                        name="facebook"
-                        size={42}
-                        color={colors.secondary[200]}
-                        style={{ paddingLeft: 1 }}
-                    />
-                </Pressable>
-                <Pressable
-                    style={[styles.socialBox, { borderColor: colors.secondary[200] }]}
-                    _dark={{ bg: colors.dark[200] }}
-                    _light={{ bg: '#fff' }}
-                >
-                    <MaterialCommunityIcons name="google" size={36} color={colors.secondary[200]} />
-                </Pressable>
-            </Box>
             <ActionButton text={'登入'} style={{ marginTop: 50 }} onPress={() => handleLogin()} />
             <Box style={styles.instruction}>
                 <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>還沒有帳號嗎？</Text>
