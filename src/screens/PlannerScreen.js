@@ -383,6 +383,8 @@ const PlannerScreen = ({ navigation }) => {
             );
         };
 
+        const renderFooterComponent = () => <Box style={{ height: 100 }}></Box>;
+
         return (
             <Box style={styles.planWrapper}>
                 <FlatList
@@ -393,8 +395,9 @@ const PlannerScreen = ({ navigation }) => {
                     numColumns={2}
                     columnWrapperStyle={{ justifyContent: 'space-between' }}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 280 }}
+                    contentContainerStyle={{ width: 360, paddingLeft: 10 }}
                     ListEmptyComponent={renderEmptyComponent}
+                    ListFooterComponent={renderFooterComponent}
                     refreshControl={
                         <RefreshControl
                             refreshing={false}
@@ -780,9 +783,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     planWrapper: {
-        width: '100%',
-        paddingRight: 12,
-        paddingLeft: 22,
+        alignItems: 'center',
     },
     planNullBox: {
         height: 300,
