@@ -48,6 +48,17 @@ export const getCurrentUser = async ({ token }) => {
     }
 };
 
+export const getUserByEmail = async ({ token, email }) => {
+    try {
+        const res = await axios.get(`${baseUrl}api/v1/users?email=${email}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
 export const updateCurrentUser = async ({ token, photo, name }) => {
     try {
         const res = await axios.patch(
@@ -218,6 +229,19 @@ export const updateUserTripDetail = async ({ token, tripId, trips, days_start_ti
         const res = await axios.patch(
             `${baseUrl}api/v1/trips/${tripId}`,
             { trips, days_start_time },
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
+export const updateUserTripShared = async ({ token, tripId, shared_users }) => {
+    try {
+        const res = await axios.patch(
+            `${baseUrl}api/v1/trips/${tripId}`,
+            { shared_users },
             { headers: { Authorization: `Bearer ${token}` } }
         );
         return res.data;

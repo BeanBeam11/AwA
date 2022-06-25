@@ -5,6 +5,7 @@ import {
     createUserTrip,
     updateUserTripInfo,
     updateUserTripDetail,
+    updateUserTripShared,
     deleteUserTrip,
 } from '../api';
 
@@ -96,6 +97,20 @@ const updateUserTripDetailAsync = createAsyncThunk(
     async ({ token, tripId, trips, days_start_time }) => {
         try {
             const { data } = await updateUserTripDetail({ token, tripId, trips, days_start_time });
+            // The value we return becomes the `fulfilled` action payload
+            return data.data;
+        } catch (err) {
+            // The value we return becomes the `rejected` action payload
+            return rejectWithValue(err);
+        }
+    }
+);
+
+const updateUserTripSharedAsync = createAsyncThunk(
+    'trip/updateUserTripShared',
+    async ({ token, tripId, shared_users }) => {
+        try {
+            const { data } = await updateUserTripShared({ token, tripId, shared_users });
             // The value we return becomes the `fulfilled` action payload
             return data.data;
         } catch (err) {
@@ -201,6 +216,20 @@ const tripSlice = createSlice({
             .addCase(updateUserTripDetailAsync.rejected, (state, action) => {
                 state.status = 'error';
             })
+            .addCase(updateUserTripSharedAsync.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(updateUserTripSharedAsync.fulfilled, (state, action) => {
+                state.status = 'idle';
+                state.userTrips = state.userTrips.map((item, index) => {
+                    if (item._id === action.payload._id) {
+                        return { ...item, ...action.payload };
+                    } else return item;
+                });
+            })
+            .addCase(updateUserTripSharedAsync.rejected, (state, action) => {
+                state.status = 'error';
+            })
             .addCase(deleteUserTripAsync.pending, (state) => {
                 state.deleteStatus = 'loading';
             })
@@ -232,6 +261,7 @@ export {
     updateUserTripInfoAsync,
     updateUserTripDetailAsync,
     deleteUserTripAsync,
+    updateUserTripSharedAsync,
 };
 
 // export reducer to global

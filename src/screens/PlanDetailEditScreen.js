@@ -23,6 +23,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
     const { colors } = useTheme();
     const [modalVisible, setModalVisible] = useState(false);
     const [stayTimeModalVisible, setStayTimeModalVisible] = useState(false);
+    const [spotId, setSpotId] = useState('');
     const [spotName, setSpotName] = useState('');
     const [spotImage, setSpotImage] = useState(null);
     const [spotNote, setSpotNote] = useState('');
@@ -106,6 +107,8 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
         setSpotName('');
         setSpotNote('');
         setStayTime({ hours: 0, minutes: 0 });
+        setSpotImage(null);
+        setSpotId('');
     };
 
     const handleAddSpot = () => {
@@ -159,6 +162,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
         setSpotNote(currentSpot.note);
         setStayTime({ hours: currentSpot.stay_time[0], minutes: currentSpot.stay_time[1] });
         setSpotImage(currentSpot.image);
+        setSpotId(currentSpot.spot_id);
     };
 
     const checkDeleteSpot = () => {
@@ -235,6 +239,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
             trips: [...newData],
             days_start_time: [...newStartTime],
         });
+        clearState();
         setModalVisible(!modalVisible);
     };
 
@@ -350,6 +355,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
             style={styles.addPlanBox}
             onPress={() => {
                 setIsAddingSpot(true);
+                clearState();
                 setModalVisible(!modalVisible);
             }}
         />
@@ -385,7 +391,26 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 {tripData.duration}天
                             </Text>
                         )}
-                        <Image source={{ uri: tripData.owner_image }} style={styles.ownerAvatar} resizeMode="cover" />
+                        <Box style={styles.groupWrapper}>
+                            <Image
+                                source={{ uri: tripData.owner_image }}
+                                style={styles.ownerAvatar}
+                                resizeMode="cover"
+                            />
+                            <Box style={styles.usersWrapper}>
+                                {tripData.shared_users.length !== 0 &&
+                                    tripData.shared_users.map((item, index) => {
+                                        return (
+                                            <Image
+                                                source={{ uri: item.user_image }}
+                                                style={styles.sharedAvatar}
+                                                resizeMode="cover"
+                                                key={item.user_id}
+                                            />
+                                        );
+                                    })}
+                            </Box>
+                        </Box>
                     </Box>
                 </Box>
             </Box>
@@ -519,13 +544,17 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 <TextInput
                                     placeholder="輸入景點名稱"
                                     placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
-                                    style={{ color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200] }}
+                                    style={[
+                                        { color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200] },
+                                        spotId && { color: colors.dark[300] },
+                                    ]}
                                     value={spotName}
                                     onChangeText={(text) => setSpotName(text)}
                                     returnKeyType="done"
                                     maxLength={20}
                                     onBlur={() => setIsSpotFocused(false)}
                                     onFocus={() => setIsSpotFocused(true)}
+                                    editable={spotId ? false : true}
                                 />
                             </Box>
                         </Box>
@@ -719,12 +748,30 @@ const styles = StyleSheet.create({
         fontSize: Platform.OS === 'ios' ? 14 : 12,
         color: '#969696',
     },
+    groupWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    usersWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginLeft: 13,
+    },
     ownerAvatar: {
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        backgroundColor: '#fff',
+    },
+    sharedAvatar: {
         width: 20,
         height: 20,
         borderRadius: 10,
-        marginTop: 10,
         backgroundColor: '#fff',
+        marginLeft: -10,
     },
     addDayBtn: {
         width: 36,

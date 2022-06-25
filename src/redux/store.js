@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 import accountReducer from './accountSlice';
 import spotReducer from './spotSlice';
 import tripReducer from './tripSlice';
+import userReducer from './userSlice';
 
 const persistConfig = {
     key: 'root',
@@ -17,6 +18,7 @@ export const store = configureStore({
         account: accountReducer,
         spot: spotReducer,
         trip: tripReducer,
+        user: userReducer,
     },
     devTools: process.env.NODE_ENV !== 'production',
     middleware: [thunk],

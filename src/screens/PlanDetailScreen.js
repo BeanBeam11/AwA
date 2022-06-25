@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Image, Platform, Dimensions, FlatList } from 'react-native';
+import { StyleSheet, Image, Platform, Dimensions, FlatList, Alert } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -9,22 +9,27 @@ import Loading from '../components/Loading';
 import { formatDate, formatTime, formatStayTime } from '../utils/formatter';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from '../redux/accountSlice';
-import { selectUserTrips, selectTripStatus } from '../redux/tripSlice';
+import { selectUser, selectToken } from '../redux/accountSlice';
+import { selectUserTrips, selectTripStatus, updateUserTripSharedAsync } from '../redux/tripSlice';
+import { selectSharedUser, selectUserStatus, getUserByEmailAsync } from '../redux/userSlice';
 
 const PlanDetailScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const { trip } = route.params;
-
+    const dispatch = useDispatch();
     const user = useSelector(selectUser);
+    const token = useSelector(selectToken);
     const userTrips = useSelector(selectUserTrips);
     const tripStatus = useSelector(selectTripStatus);
+    const sharedUser = useSelector(selectSharedUser);
+    const userStatus = useSelector(selectUserStatus);
     const isOwner = trip.owner_id === user._id ? true : false;
 
     const [tripData, setTripData] = useState(trip);
     const [loading, setLoading] = useState(true);
     const [dayIndex, setDayIndex] = useState(0);
+    const [sharedUserData, setSharedUserData] = useState(null);
 
     useEffect(() => {
         if (isOwner) {
@@ -41,6 +46,60 @@ const PlanDetailScreen = ({ navigation, route }) => {
             setLoading(false);
         }
     }, [tripStatus]);
+
+    useEffect(() => {
+        if (userStatus === 'idle') {
+            setSharedUserData(sharedUser);
+            if (sharedUserData) updateSharedUser();
+        } else if (userStatus === 'error') {
+            setLoading(false);
+            setSharedUserData(null);
+        }
+    }, [userStatus]);
+
+    const addSharedUser = () => {
+        Alert.prompt(
+            '與他人共享',
+            '請輸入要分享的使用者 Email',
+            [
+                {
+                    text: '取消',
+                    onPress: null,
+                    style: 'cancel',
+                },
+                {
+                    text: '新增',
+                    onPress: (email) => findUser(email),
+                },
+            ],
+            'plain-text',
+            '',
+            'email-address'
+        );
+    };
+
+    const findUser = (email) => {
+        if (email === user.email) {
+            alert('不能共用給自己呦！');
+            return;
+        }
+        dispatch(getUserByEmailAsync({ token, email }));
+        setLoading(true);
+    };
+
+    const updateSharedUser = () => {
+        const isExist = tripData.shared_users.find((item) => item.user_id === sharedUser._id) ? true : false;
+        if (isExist) {
+            alert('此使用者已經在共用名單中啦');
+            setLoading(false);
+            return;
+        } else {
+            let newData = [...tripData.shared_users, { user_id: sharedUser._id, user_image: sharedUser.photo }];
+            setTripData({ ...tripData, shared_users: [...newData] });
+            dispatch(updateUserTripSharedAsync({ token, tripId: tripData._id, shared_users: newData }));
+        }
+        setSharedUserData(null);
+    };
 
     const renderTabBar = (props) => (
         <ScrollableTabBar
@@ -205,10 +264,23 @@ const PlanDetailScreen = ({ navigation, route }) => {
                                 style={styles.ownerAvatar}
                                 resizeMode="cover"
                             />
+                            <Box style={styles.usersWrapper}>
+                                {tripData.shared_users.length !== 0 &&
+                                    tripData.shared_users.map((item, index) => {
+                                        return (
+                                            <Image
+                                                source={{ uri: item.user_image }}
+                                                style={styles.sharedAvatar}
+                                                resizeMode="cover"
+                                                key={item.user_id}
+                                            />
+                                        );
+                                    })}
+                            </Box>
                             {isOwner && (
                                 <Pressable
                                     style={[styles.shareBtn, { borderColor: colors.primary[200] }]}
-                                    onPress={() => alert('正在開發中...༼ ༎ຶ ෴ ༎ຶ༽')}
+                                    onPress={() => addSharedUser()}
                                 >
                                     <MaterialIcon name="add" size={14} color={colors.primary[200]} />
                                     <Text style={styles.shareText} color={colors.primary[200]}>
@@ -299,11 +371,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 10,
     },
+    usersWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginLeft: 13,
+    },
     ownerAvatar: {
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        backgroundColor: '#fff',
+    },
+    sharedAvatar: {
         width: 20,
         height: 20,
         borderRadius: 10,
         backgroundColor: '#fff',
+        marginLeft: -10,
     },
     shareBtn: {
         display: 'flex',
