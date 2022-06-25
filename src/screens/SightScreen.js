@@ -1,24 +1,111 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Image, ScrollView } from 'react-native';
+import { StyleSheet, Image, ScrollView, FlatList } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
+import Modal from 'react-native-modal';
 import { GoBackHeader } from '../components/Header';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ActionButton } from '../components/ActionButton';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { selectToken } from '../redux/accountSlice';
+import { selectUserTrips, updateUserTripDetailAsync } from '../redux/tripSlice';
 
 const SightScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const { spot } = route.params;
+
+    const dispatch = useDispatch();
+    const token = useSelector(selectToken);
+    const userTrips = useSelector(selectUserTrips);
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedTrip, setSelectedTrip] = useState(null);
+    const [selectedTripIndex, setSelectedTripIndex] = useState(null);
     const [saved, setSaved] = useState(false);
 
     const image = spot.Picture.PictureUrl1;
     const name = spot.ScenicSpotName;
     const city = spot.City;
     const town = spot.Address ? spot.Address.replace(/\s/g, '').replace(/[0-9]/g, '').slice(3, 6) : '';
-    const address = spot.Address ? spot.Address.replace(/\s/g, '') : null;
+    const address = spot.Address ? spot.Address.replace(/\s/g, '') : '';
     const open_time = spot.OpenTime;
     const description = spot.DescriptionDetail;
+    const spotId = spot.ScenicSpotID ? spot.ScenicSpotID : null;
+    const latitude = spot.Position.PositionLat;
+    const longitude = spot.Position.PositionLon;
+
+    const handleDone = () => {
+        let newData = selectedTrip.trips.map((val, index) => {
+            if (index === selectedTripIndex) {
+                return [
+                    ...val,
+                    {
+                        spot: name,
+                        spot_id: spotId,
+                        image: image,
+                        stay_time: [0, 0],
+                        note: '',
+                        location: [latitude, longitude],
+                        address: address,
+                    },
+                ];
+            } else {
+                return val;
+            }
+        });
+        dispatch(
+            updateUserTripDetailAsync({
+                token,
+                tripId: selectedTrip._id,
+                trips: newData,
+            })
+        );
+        setModalVisible(!modalVisible);
+    };
+
+    const renderItem = ({ item }) => {
+        return (
+            <Pressable
+                style={[
+                    styles.tripListBox,
+                    {
+                        borderColor: colors.primary[100],
+                        backgroundColor: selectedTrip === item ? colors.primary[100] : null,
+                    },
+                ]}
+                onPress={() => setSelectedTrip(item)}
+            >
+                <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                    {item.name.length > 12 ? `${item.name.slice(0, 12)}...` : item.name}
+                </Text>
+            </Pressable>
+        );
+    };
+
+    const renderDayItem = ({ item, index }) => {
+        return (
+            <Pressable
+                style={[
+                    styles.tripDayBox,
+                    {
+                        borderColor: colors.secondary[200],
+                        backgroundColor: selectedTripIndex === index ? colors.secondary[200] : null,
+                    },
+                ]}
+                onPress={() => setSelectedTripIndex(index)}
+            >
+                <Text
+                    style={{ fontSize: 18, fontWeight: '500' }}
+                    color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                >
+                    {index + 1}
+                </Text>
+            </Pressable>
+        );
+    };
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
@@ -92,7 +179,7 @@ const SightScreen = ({ navigation, route }) => {
                     </Pressable>
                     <Pressable
                         style={[styles.actionBtn, { borderColor: colors.primary[200] }]}
-                        onPress={() => alert('敬請期待！')}
+                        onPress={() => setModalVisible(!modalVisible)}
                     >
                         <MaterialCommunityIcons name="plus" size={20} color={colors.primary[200]} />
                         <Text style={styles.info} color={colors.primary[200]}>
@@ -104,6 +191,53 @@ const SightScreen = ({ navigation, route }) => {
                     {description}
                 </Text>
             </ScrollView>
+            <Modal
+                isVisible={modalVisible}
+                style={{ alignItems: 'center' }}
+                onBackdropPress={() => setModalVisible(!modalVisible)}
+            >
+                <Box style={styles.modal} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
+                    <Box>
+                        <Text
+                            style={styles.modalTitle}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            1. 請選擇想加入的行程
+                        </Text>
+                        <Box style={{ height: 240, paddingBottom: 15 }}>
+                            <FlatList
+                                data={userTrips}
+                                renderItem={renderItem}
+                                keyExtractor={(item, index) => index}
+                                horizontal={false}
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={{}}
+                            />
+                        </Box>
+                    </Box>
+                    <Box>
+                        <Text
+                            style={styles.modalTitle}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            2. 請選擇想加入第幾天
+                        </Text>
+                        <Box style={{ width: 240, height: 40, marginBottom: 20 }}>
+                            {selectedTrip && (
+                                <FlatList
+                                    data={selectedTrip.trips}
+                                    renderItem={renderDayItem}
+                                    keyExtractor={(item, index) => index}
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    contentContainerStyle={{}}
+                                />
+                            )}
+                        </Box>
+                    </Box>
+                    <ActionButton text={'完成'} onPress={() => handleDone()} />
+                </Box>
+            </Modal>
             <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />
         </Box>
     );
@@ -170,5 +304,37 @@ const styles = StyleSheet.create({
     description: {
         fontSize: 14,
         marginTop: 20,
+    },
+    modal: {
+        width: 300,
+        height: 460,
+        borderRadius: 10,
+        alignItems: 'center',
+        paddingTop: 20,
+        paddingBottom: 30,
+    },
+    modalTitle: {
+        fontSize: 16,
+        fontWeight: '500',
+        textAlign: 'center',
+        marginBottom: 15,
+    },
+    tripListBox: {
+        width: 240,
+        height: 40,
+        borderRadius: 5,
+        borderWidth: 1.5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 10,
+    },
+    tripDayBox: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        borderWidth: 1.5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 10,
     },
 });
