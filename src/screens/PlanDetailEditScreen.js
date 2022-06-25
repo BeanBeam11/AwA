@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Image, View, Modal, TouchableOpacity, TextInput, Platform, Dimensions } from 'react-native';
+import { StyleSheet, Image, View, Modal, TouchableOpacity, TextInput, Platform, Dimensions, Alert } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 import DraggableFlatList from 'react-native-draggable-flatlist';
@@ -159,6 +159,36 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
         setSpotNote(currentSpot.note);
         setStayTime({ hours: currentSpot.stay_time[0], minutes: currentSpot.stay_time[1] });
         setSpotImage(currentSpot.image);
+    };
+
+    const checkDeleteSpot = () => {
+        Alert.alert('刪除景點', '確定要刪除景點嗎？ (☍﹏⁰)', [
+            {
+                text: '我再想想...',
+                onPress: null,
+                style: 'default',
+            },
+            {
+                text: '刪除！',
+                onPress: () => handleDeleteSpot(),
+                style: 'destructive',
+            },
+        ]);
+    };
+
+    const handleDeleteSpot = () => {
+        let newData = tripData.trips.map((item, index) => {
+            if (index === dayIndex) {
+                return item.filter((val, index) => index !== spotIndex);
+            } else {
+                return item;
+            }
+        });
+        setTripData({
+            ...tripData,
+            trips: [...newData],
+        });
+        setModalVisible(!modalVisible);
     };
 
     const handleUpdateSpot = () => {
@@ -612,6 +642,17 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                         style={{ marginTop: Platform.OS === 'ios' ? 60 : 40 }}
                         onPress={() => (isAddingSpot ? handleAddSpot() : handleUpdateSpot())}
                     />
+                    {!isAddingSpot && (
+                        <Pressable
+                            style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 20 }}
+                            onPress={() => checkDeleteSpot()}
+                        >
+                            <MaterialCommunityIcons name="delete-outline" size={24} color={'#DD9193'} />
+                            <Text style={{ marginLeft: 5, fontSize: 16 }} color={'#DD9193'}>
+                                刪除
+                            </Text>
+                        </Pressable>
+                    )}
                 </View>
                 <DateTimePickerModal
                     date={startTime}
