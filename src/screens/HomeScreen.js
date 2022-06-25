@@ -11,9 +11,9 @@ import { News } from '../components/News';
 import Loading from '../components/Loading';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { readUserAsync, selectToken } from '../redux/accountSlice';
+import { selectToken, selectUser } from '../redux/accountSlice';
 import { selectAccessToken, selectRecommendSpots, selectSpotStatus, getRecommendSpotsAsync } from '../redux/spotSlice';
-import { selectAllTrips, selectTripStatus, getAllTripsAsync } from '../redux/tripSlice';
+import { selectAllTrips, selectTripStatus, getAllTripsAsync, getUserTripsAsync } from '../redux/tripSlice';
 
 const HomeScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
@@ -24,6 +24,7 @@ const HomeScreen = ({ navigation }) => {
 
     const dispatch = useDispatch();
     const token = useSelector(selectToken);
+    const user = useSelector(selectUser);
     const accessToken = useSelector(selectAccessToken);
     const recommendSpots = useSelector(selectRecommendSpots);
     const spotStatus = useSelector(selectSpotStatus);
@@ -33,7 +34,7 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         dispatch(getRecommendSpotsAsync({ accessToken }));
         dispatch(getAllTripsAsync());
-        dispatch(readUserAsync({ token }));
+        dispatch(getUserTripsAsync({ token, userId: user._id }));
     }, []);
 
     useEffect(() => {

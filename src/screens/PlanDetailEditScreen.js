@@ -24,6 +24,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [stayTimeModalVisible, setStayTimeModalVisible] = useState(false);
     const [spotName, setSpotName] = useState('');
+    const [spotImage, setSpotImage] = useState(null);
     const [spotNote, setSpotNote] = useState('');
     const [isStartTimePickerVisible, setStartTimePickerVisibility] = useState(false);
     const [stayTime, setStayTime] = useState({ hours: 0, minutes: 0 });
@@ -157,6 +158,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
         setSpotName(currentSpot.spot);
         setSpotNote(currentSpot.note);
         setStayTime({ hours: currentSpot.stay_time[0], minutes: currentSpot.stay_time[1] });
+        setSpotImage(currentSpot.image);
     };
 
     const handleUpdateSpot = () => {
@@ -442,7 +444,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                         </TouchableOpacity>
                     </Box>
                     <Box style={styles.imageWrapper} _dark={{ bg: colors.dark[200] }} _light={{ bg: colors.dark[500] }}>
-                        <Image source={null} style={styles.image} />
+                        {spotImage && <Image source={{ uri: spotImage }} style={styles.image} />}
                     </Box>
                     <Box style={styles.modalContent}>
                         <Box style={styles.optionWrapper}>
@@ -799,6 +801,11 @@ const styles = StyleSheet.create({
         height: 190,
         borderRadius: 5,
         marginTop: 10,
+    },
+    image: {
+        width: 340,
+        height: 190,
+        borderRadius: 5,
     },
     optionRight: {
         width: 250,

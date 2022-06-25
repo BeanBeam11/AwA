@@ -120,6 +120,7 @@ const accountSlice = createSlice({
                 state.status = 'idle';
                 state.login.hasLogin = true;
                 state.token = action.payload.token;
+                state.user = { ...action.payload.data.user };
             })
             .addCase(loginAsync.rejected, (state, action) => {
                 state.status = 'error';
@@ -133,6 +134,7 @@ const accountSlice = createSlice({
                 state.status = 'idle';
                 state.login.hasLogin = true;
                 state.token = action.payload.token;
+                state.user = { ...action.payload.data.user };
             })
             .addCase(signupAsync.rejected, (state, action) => {
                 state.status = 'error';
