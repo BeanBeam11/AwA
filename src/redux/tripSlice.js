@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
     getAllTrips,
     getUserTrips,
+    getUserSharedTrips,
     createUserTrip,
     updateUserTripInfo,
     updateUserTripDetail,
@@ -24,6 +25,17 @@ const getAllTripsAsync = createAsyncThunk('trip/getAllTrips', async () => {
 const getUserTripsAsync = createAsyncThunk('trip/getUserTrips', async ({ token, userId }) => {
     try {
         const { data } = await getUserTrips({ token, userId });
+        // The value we return becomes the `fulfilled` action payload
+        return data.data;
+    } catch (err) {
+        // The value we return becomes the `rejected` action payload
+        return rejectWithValue(err);
+    }
+});
+
+const getUserSharedTripsAsync = createAsyncThunk('trip/getUserSharedTrips', async ({ token, userId }) => {
+    try {
+        const { data } = await getUserSharedTrips({ token, userId });
         // The value we return becomes the `fulfilled` action payload
         return data.data;
     } catch (err) {
@@ -135,8 +147,10 @@ const deleteUserTripAsync = createAsyncThunk('trip/deleteUserTrip', async ({ tok
 const initialState = {
     allTrips: [],
     userTrips: [],
+    userSharedTrips: [],
     createdTrip: {},
     status: 'loading',
+    sharedStatus: 'loading',
     createStatus: 'loading',
     deleteStatus: 'loading',
 };
@@ -177,6 +191,16 @@ const tripSlice = createSlice({
             })
             .addCase(getUserTripsAsync.rejected, (state, action) => {
                 state.status = 'error';
+            })
+            .addCase(getUserSharedTripsAsync.pending, (state) => {
+                state.sharedStatus = 'loading';
+            })
+            .addCase(getUserSharedTripsAsync.fulfilled, (state, action) => {
+                state.sharedStatus = 'idle';
+                state.userSharedTrips = action.payload;
+            })
+            .addCase(getUserSharedTripsAsync.rejected, (state, action) => {
+                state.sharedStatus = 'error';
             })
             .addCase(createUserTripAsync.pending, (state) => {
                 state.createStatus = 'loading';
@@ -245,8 +269,10 @@ const tripSlice = createSlice({
 // export state to global
 export const selectAllTrips = (state) => state.trip.allTrips;
 export const selectUserTrips = (state) => state.trip.userTrips;
+export const selectUserSharedTrips = (state) => state.trip.userSharedTrips;
 export const selectCreatedTrip = (state) => state.trip.createdTrip;
 export const selectTripStatus = (state) => state.trip.status;
+export const selectSharedTripStatus = (state) => state.trip.sharedStatus;
 export const selectCreateTripStatus = (state) => state.trip.createStatus;
 export const selectDeleteTripStatus = (state) => state.trip.deleteStatus;
 
@@ -257,6 +283,7 @@ export const { setAllTrips, setUserTrips, setCreatedTrip } = tripSlice.actions;
 export {
     getAllTripsAsync,
     getUserTripsAsync,
+    getUserSharedTripsAsync,
     createUserTripAsync,
     updateUserTripInfoAsync,
     updateUserTripDetailAsync,

@@ -41,6 +41,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                 setLoading(false);
                 const currentTrip = userTrips.find((el) => el._id === trip._id);
                 setTripData(currentTrip);
+                setSharedUserData(null);
             }
         } else {
             setLoading(false);
@@ -98,7 +99,6 @@ const PlanDetailScreen = ({ navigation, route }) => {
             setTripData({ ...tripData, shared_users: [...newData] });
             dispatch(updateUserTripSharedAsync({ token, tripId: tripData._id, shared_users: newData }));
         }
-        setSharedUserData(null);
     };
 
     const renderTabBar = (props) => (

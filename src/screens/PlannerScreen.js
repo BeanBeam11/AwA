@@ -28,11 +28,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectToken, selectUser } from '../redux/accountSlice';
 import {
     selectUserTrips,
+    selectUserSharedTrips,
     selectCreatedTrip,
     selectTripStatus,
+    selectSharedTripStatus,
     selectCreateTripStatus,
     selectDeleteTripStatus,
     getUserTripsAsync,
+    getUserSharedTripsAsync,
     createUserTripAsync,
     updateUserTripInfoAsync,
     deleteUserTripAsync,
@@ -56,6 +59,7 @@ const PlannerScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(true);
     const [isFocused, setIsFocused] = useState(false);
     const [trips, setTrips] = useState([]);
+    const [sharedTrips, setSharedTrips] = useState([]);
     const dayArray = [[]];
     const daysStartTimeArray = [''];
 
@@ -63,13 +67,16 @@ const PlannerScreen = ({ navigation }) => {
     const user = useSelector(selectUser);
     const token = useSelector(selectToken);
     const userTrips = useSelector(selectUserTrips);
+    const userSharedTrips = useSelector(selectUserSharedTrips);
     const createdTrip = useSelector(selectCreatedTrip);
     const tripStatus = useSelector(selectTripStatus);
+    const sharedTripStatus = useSelector(selectSharedTripStatus);
     const createTripStatus = useSelector(selectCreateTripStatus);
     const deleteTripStatus = useSelector(selectDeleteTripStatus);
 
     useEffect(() => {
         fetchUserTrips();
+        fetchUserSharedTrips();
     }, []);
 
     useEffect(() => {
@@ -77,9 +84,18 @@ const PlannerScreen = ({ navigation }) => {
             setLoading(false);
         } else if (tripStatus == 'idle') {
             setTrips(userTrips);
-            if (trips) setLoading(false);
+            if (tripStatus) setLoading(false);
         }
     }, [tripStatus]);
+
+    useEffect(() => {
+        if (sharedTripStatus == 'error') {
+            setLoading(false);
+        } else if (sharedTripStatus == 'idle') {
+            setSharedTrips(userSharedTrips);
+            if (sharedTrips) setLoading(false);
+        }
+    }, [sharedTripStatus]);
 
     useEffect(() => {
         if (createTripStatus == 'idle') {
@@ -103,6 +119,10 @@ const PlannerScreen = ({ navigation }) => {
 
     const fetchUserTrips = () => {
         dispatch(getUserTripsAsync({ token, userId: user._id }));
+    };
+
+    const fetchUserSharedTrips = () => {
+        dispatch(getUserSharedTripsAsync({ token, userId: user._id }));
     };
 
     const handleCreateTrip = () => {
@@ -411,11 +431,48 @@ const PlannerScreen = ({ navigation }) => {
     };
 
     const SharedPlan = () => {
+        const renderItem = ({ item, index }) => {
+            return (
+                <Box>
+                    <Plan item={item} navigation={navigation} />
+                </Box>
+            );
+        };
+
+        const renderEmptyComponent = () => {
+            return (
+                <Box style={styles.planNullBox}>
+                    <Text style={styles.planNullText} color={colors.dark[400]}>{`(´Ａ｀。)`}</Text>
+                    <Text style={styles.planNullText} color={colors.dark[400]}>
+                        目前還沒有共用的行程呦
+                    </Text>
+                </Box>
+            );
+        };
+
+        const renderFooterComponent = () => <Box style={{ height: 100 }}></Box>;
+
         return (
             <Box style={styles.planWrapper}>
-                <Box style={styles.planNullBox}>
-                    <Text style={styles.planNullText}>目前無共用行程</Text>
-                </Box>
+                <FlatList
+                    data={sharedTrips}
+                    renderItem={renderItem}
+                    keyExtractor={(item, index) => index}
+                    horizontal={false}
+                    numColumns={2}
+                    columnWrapperStyle={{ justifyContent: 'space-between' }}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ width: 360, paddingLeft: 10 }}
+                    ListEmptyComponent={renderEmptyComponent}
+                    ListFooterComponent={renderFooterComponent}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={false}
+                            tintColor={colorMode == 'dark' ? colors.dark[400] : colors.secondary[100]}
+                            onRefresh={fetchUserSharedTrips}
+                        />
+                    }
+                />
             </Box>
         );
     };

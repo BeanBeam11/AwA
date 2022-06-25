@@ -177,6 +177,17 @@ export const getUserTrips = async ({ token, userId }) => {
     }
 };
 
+export const getUserSharedTrips = async ({ token, userId }) => {
+    try {
+        const res = await axios.get(`${baseUrl}api/v1/trips/sharedTrips/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
 export const createUserTrip = async ({
     token,
     name,
