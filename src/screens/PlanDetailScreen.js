@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Image, Platform, Dimensions, FlatList, Alert } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
+import Modal from 'react-native-modal';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,6 +31,8 @@ const PlanDetailScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(true);
     const [dayIndex, setDayIndex] = useState(0);
     const [sharedUserData, setSharedUserData] = useState(null);
+    const [spotModalVisible, setSpotModalVisible] = useState(false);
+    const [selectedSpot, setSelectedSpot] = useState({});
 
     useEffect(() => {
         if (isOwner) {
@@ -156,7 +159,13 @@ const PlanDetailScreen = ({ navigation, route }) => {
         }
 
         return (
-            <Box style={styles.detailContent}>
+            <Pressable
+                style={styles.detailContent}
+                onPress={() => {
+                    setSpotModalVisible(!spotModalVisible);
+                    setSelectedSpot(item);
+                }}
+            >
                 {time && (
                     <Box style={styles.detailTime}>
                         <Text color={colors.dark[300]}>{formatTime(time)}</Text>
@@ -217,7 +226,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                 ) : (
                     <Box style={styles.detailImage} />
                 )}
-            </Box>
+            </Pressable>
         );
     };
 
@@ -321,6 +330,82 @@ const PlanDetailScreen = ({ navigation, route }) => {
                     );
                 })}
             </ScrollableTabView>
+            <Modal
+                isVisible={spotModalVisible}
+                style={{ alignItems: 'center' }}
+                onBackdropPress={() => setSpotModalVisible(!spotModalVisible)}
+            >
+                <Box style={styles.modal} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
+                    <Pressable style={styles.modalHeader} onPress={() => setSpotModalVisible(!spotModalVisible)}>
+                        <MaterialIcon
+                            name="close"
+                            size={24}
+                            color={colorMode === 'dark' ? '#fff' : '#484848'}
+                            style={styles.modalClose}
+                        />
+                    </Pressable>
+                    {selectedSpot.image && (
+                        <Image source={{ uri: selectedSpot.image }} style={styles.modalImage} resizeMode="cover" />
+                    )}
+                    <Text style={styles.modalName}>{selectedSpot.spot}</Text>
+                    {selectedSpot.address && (
+                        <Box style={{ display: 'flex', flexDirection: 'row' }}>
+                            <MaterialCommunityIcons
+                                name="map-marker-outline"
+                                size={20}
+                                color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
+                                style={{ marginTop: 2 }}
+                            />
+                            <Text
+                                style={styles.info}
+                                color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
+                            >
+                                {selectedSpot.address}
+                            </Text>
+                        </Box>
+                    )}
+                    {selectedSpot.open_time && (
+                        <Box style={{ display: 'flex', flexDirection: 'row' }}>
+                            <MaterialCommunityIcons
+                                name="clock-outline"
+                                size={18}
+                                color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
+                                style={{ paddingHorizontal: 1, marginTop: 2 }}
+                            />
+                            <Text
+                                style={styles.info}
+                                color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
+                            >
+                                {selectedSpot.open_time}
+                            </Text>
+                        </Box>
+                    )}
+                    {selectedSpot.phone && (
+                        <Box style={{ display: 'flex', flexDirection: 'row' }}>
+                            <MaterialCommunityIcons
+                                name="phone-outline"
+                                size={16}
+                                color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
+                                style={{ paddingHorizontal: 2, marginTop: 3 }}
+                            />
+                            <Text
+                                style={styles.info}
+                                color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
+                            >
+                                {selectedSpot.phone}
+                            </Text>
+                        </Box>
+                    )}
+                    {!selectedSpot.spot_id && (
+                        <Text
+                            style={{ fontSize: 14 }}
+                            color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
+                        >
+                            沒有更多資訊囉！
+                        </Text>
+                    )}
+                </Box>
+            </Modal>
             {loading && <Loading />}
         </Box>
     );
@@ -472,5 +557,37 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 5,
         marginLeft: 'auto',
+    },
+    modal: {
+        width: 300,
+        minHeight: 100,
+        borderRadius: 10,
+        alignItems: 'center',
+        paddingHorizontal: 24,
+        paddingBottom: 30,
+    },
+    modalHeader: {
+        width: '100%',
+        height: 40,
+    },
+    modalClose: {
+        position: 'absolute',
+        top: 8,
+        right: -16,
+    },
+    modalName: {
+        fontSize: 16,
+        fontWeight: '500',
+        marginTop: 12,
+        marginBottom: 12,
+    },
+    modalImage: {
+        width: 250,
+        height: 150,
+        borderRadius: 5,
+    },
+    info: {
+        fontSize: 14,
+        marginLeft: 3,
     },
 });

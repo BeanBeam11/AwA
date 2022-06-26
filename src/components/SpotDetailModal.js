@@ -26,16 +26,17 @@ const SpotDetailModal = (props) => {
     const [selectedTripIndex, setSelectedTripIndex] = useState(null);
     const [saved, setSaved] = useState(false);
 
-    const image = spot.Picture.PictureUrl1;
+    const image = spot.Picture.PictureUrl1 ? spot.Picture.PictureUrl1 : null;
     const name = spot.ScenicSpotName;
-    const city = spot.City;
+    const city = spot.City ? spot.City : null;
     const town = spot.Address ? spot.Address.replace(/\s/g, '').replace(/[0-9]/g, '').slice(3, 6) : '';
     const address = spot.Address ? spot.Address.replace(/\s/g, '') : '';
-    const open_time = spot.OpenTime;
-    const description = spot.DescriptionDetail;
+    const open_time = spot.OpenTime ? spot.OpenTime : null;
+    const phone = spot.Phone ? spot.Phone : null;
+    const description = spot.DescriptionDetail ? spot.DescriptionDetail : null;
     const spotId = spot.ScenicSpotID ? spot.ScenicSpotID : null;
-    const latitude = spot.Position.PositionLat;
-    const longitude = spot.Position.PositionLon;
+    const latitude = spot.Position ? spot.Position.PositionLat : null;
+    const longitude = spot.Position ? spot.Position.PositionLon : null;
 
     const handleDone = () => {
         let newData = selectedTrip.trips.map((val, index) => {
@@ -50,6 +51,9 @@ const SpotDetailModal = (props) => {
                         note: '',
                         location: [latitude, longitude],
                         address: address,
+                        open_time: open_time,
+                        phone: phone,
+                        city: city ? city.slice(0, 2) : null,
                     },
                 ];
             } else {

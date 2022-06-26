@@ -24,10 +24,12 @@ const Sight_H = ({ navigation, item, style, onPress }) => {
 
     const image = item.Picture.PictureUrl1 ? item.Picture.PictureUrl1 : null;
     const name = item.ScenicSpotName;
-    const city = item.City;
+    const city = item.City ? item.City : null;
     const town = item.Address ? item.Address.replace(/\s/g, '').replace(/[0-9]/g, '').slice(3, 6) : '';
-    const description = item.DescriptionDetail;
     const address = item.Address ? item.Address.replace(/\s/g, '') : '';
+    const open_time = item.OpenTime ? item.OpenTime : null;
+    const phone = item.Phone ? item.Phone : null;
+    const description = item.DescriptionDetail ? item.DescriptionDetail : null;
     const spotId = item.ScenicSpotID ? item.ScenicSpotID : null;
     const latitude = item.Position ? item.Position.PositionLat : null;
     const longitude = item.Position ? item.Position.PositionLon : null;
@@ -63,6 +65,9 @@ const Sight_H = ({ navigation, item, style, onPress }) => {
                         note: '',
                         location: [latitude, longitude],
                         address: address,
+                        open_time: open_time,
+                        phone: phone,
+                        city: city ? city.slice(0, 2) : null,
                     },
                 ];
             } else {
