@@ -774,7 +774,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderBottomWidth: 1,
-        borderBottomColor: '#E5E5E5',
     },
     modalHeaderText: {
         fontSize: 18,

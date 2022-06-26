@@ -6,6 +6,7 @@ import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { GoBackHeader } from '../components/Header';
 import { Sight_H } from '../components/Sight_H';
+import { SpotDetailModal } from '../components/SpotDetailModal';
 import { formatDate } from '../utils/formatter';
 import postData from '../json/post';
 import sightData from '../json/recommendSight';
@@ -14,12 +15,14 @@ const PostDetailScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const { postId } = route.params;
+    const post = postData.find((el) => el.title === postId);
+    const sight = sightData.find((el) => el.ScenicSpotName === postId);
+
     const [isLike, setIsLike] = useState(false);
     const [isDislike, setIsDislike] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
-
-    const post = postData.find((el) => el.title === postId);
-    const sight = sightData.find((el) => el.ScenicSpotName === postId);
+    const [spotModalVisible, setSpotModalVisible] = useState(false);
+    const [selectedSpot, setSelectedSpot] = useState(sight);
 
     return (
         <KeyboardAwareScrollView style={{ flex: 1 }}>
@@ -71,7 +74,16 @@ const PostDetailScreen = ({ navigation, route }) => {
                         >
                             相關景點
                         </Text>
-                        {sight && <Sight_H item={sight} navigation={navigation} />}
+                        {sight && (
+                            <Sight_H
+                                item={sight}
+                                navigation={navigation}
+                                onPress={() => {
+                                    setSpotModalVisible(!spotModalVisible);
+                                    setSelectedSpot(sight);
+                                }}
+                            />
+                        )}
                     </Box>
                     <Box _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }} style={styles.reactionWrapper}>
                         <Box
@@ -216,6 +228,12 @@ const PostDetailScreen = ({ navigation, route }) => {
                 </ScrollView>
                 <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />
             </Box>
+            <SpotDetailModal
+                isVisible={spotModalVisible}
+                spot={selectedSpot}
+                onBackdropPress={() => setSpotModalVisible(!spotModalVisible)}
+                onSwipeComplete={() => setSpotModalVisible(false)}
+            />
         </KeyboardAwareScrollView>
     );
 };

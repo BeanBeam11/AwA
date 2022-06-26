@@ -14,6 +14,11 @@
             "PictureUrl1": "https://cc.tvbs.com.tw/img/program/upload/2018/10/24/20181024175823-d2b36e8d.jpg",
             "Picdescribe1": "空氣圖書館"
         },
+        "Position": {
+            "PositionLon": 120.60174429744632,
+            "PositionLat": 23.560444012168357,
+            "GeoHash": ""
+        },
         "Map": "",
         "Gov": "",
         "Px": null,

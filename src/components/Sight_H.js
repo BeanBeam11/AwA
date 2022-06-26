@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectToken } from '../redux/accountSlice';
 import { selectUserTrips, updateUserTripDetailAsync } from '../redux/tripSlice';
 
-const Sight_H = ({ navigation, item, style }) => {
+const Sight_H = ({ navigation, item, style, onPress }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const dispatch = useDispatch();
@@ -29,8 +29,8 @@ const Sight_H = ({ navigation, item, style }) => {
     const description = item.DescriptionDetail;
     const address = item.Address ? item.Address.replace(/\s/g, '') : '';
     const spotId = item.ScenicSpotID ? item.ScenicSpotID : null;
-    const latitude = item.Position.PositionLat;
-    const longitude = item.Position.PositionLon;
+    const latitude = item.Position ? item.Position.PositionLat : null;
+    const longitude = item.Position ? item.Position.PositionLon : null;
 
     const showActionSheet = () =>
         ActionSheetIOS.showActionSheetWithOptions(
@@ -125,7 +125,7 @@ const Sight_H = ({ navigation, item, style }) => {
             style={[styles.sightBox, style]}
             _dark={{ bg: colors.dark[100] }}
             _light={{ bg: '#fff' }}
-            onPress={() => navigation.navigate('SightScreen', { spot: item })}
+            onPress={onPress}
         >
             <Box style={styles.infoWrapper}>
                 <Box style={styles.sightImageBox} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}>

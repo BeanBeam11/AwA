@@ -67,6 +67,13 @@ const SightScreen = ({ navigation, route }) => {
     };
 
     const renderItem = ({ item }) => {
+        let textColor = colors.dark[200];
+        if (colorMode === 'dark' && selectedTrip !== item) {
+            textColor = colors.dark[600];
+        } else {
+            textColor = colors.dark[200];
+        }
+
         return (
             <Pressable
                 style={[
@@ -78,14 +85,19 @@ const SightScreen = ({ navigation, route }) => {
                 ]}
                 onPress={() => setSelectedTrip(item)}
             >
-                <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                    {item.name.length > 12 ? `${item.name.slice(0, 12)}...` : item.name}
-                </Text>
+                <Text color={textColor}>{item.name.length > 12 ? `${item.name.slice(0, 12)}...` : item.name}</Text>
             </Pressable>
         );
     };
 
     const renderDayItem = ({ item, index }) => {
+        let textColor = colors.dark[200];
+        if (colorMode === 'dark' && selectedTripIndex !== index) {
+            textColor = colors.dark[600];
+        } else {
+            textColor = colors.dark[200];
+        }
+
         return (
             <Pressable
                 style={[
@@ -97,10 +109,7 @@ const SightScreen = ({ navigation, route }) => {
                 ]}
                 onPress={() => setSelectedTripIndex(index)}
             >
-                <Text
-                    style={{ fontSize: 18, fontWeight: '500' }}
-                    color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                >
+                <Text style={{ fontSize: 18, fontWeight: '500' }} color={textColor}>
                     {index + 1}
                 </Text>
             </Pressable>

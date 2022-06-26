@@ -5,7 +5,13 @@ import { Sight_H } from './Sight_H';
 
 const SightList = ({ navigation, data }) => {
     const renderItem = ({ item }) => {
-        return <Sight item={item} navigation={navigation} />;
+        return (
+            <Sight
+                item={item}
+                navigation={navigation}
+                onPress={() => navigation.navigate('SightScreen', { spot: item })}
+            />
+        );
     };
 
     return (
@@ -23,7 +29,14 @@ const SightList = ({ navigation, data }) => {
 
 const SightList_V = ({ navigation, data }) => {
     const renderItem = ({ item }) => {
-        return <Sight_H item={item} navigation={navigation} style={{ marginBottom: 10 }} />;
+        return (
+            <Sight_H
+                item={item}
+                navigation={navigation}
+                style={{ marginBottom: 10 }}
+                onPress={() => navigation.navigate('SightScreen', { spot: item })}
+            />
+        );
     };
 
     return (

@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectToken } from '../redux/accountSlice';
 import { selectUserTrips, updateUserTripDetailAsync } from '../redux/tripSlice';
 
-const Sight = ({ navigation, item }) => {
+const Sight = ({ navigation, item, onPress }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const dispatch = useDispatch();
@@ -120,12 +120,7 @@ const Sight = ({ navigation, item }) => {
     };
 
     return (
-        <Pressable
-            style={styles.sightBox}
-            _dark={{ bg: colors.dark[100] }}
-            _light={{ bg: '#fff' }}
-            onPress={() => navigation.navigate('SightScreen', { spot: item })}
-        >
+        <Pressable style={styles.sightBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }} onPress={onPress}>
             <Box style={styles.sightImageBox} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}>
                 {image ? (
                     <Image source={{ uri: image }} style={styles.sightImage} resizeMode="cover" />

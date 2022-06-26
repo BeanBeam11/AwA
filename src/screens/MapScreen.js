@@ -5,9 +5,9 @@ import MapView, { Marker } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Loading from '../components/Loading';
-import { Rating, AirbnbRating } from 'react-native-ratings';
-import { AddButton } from '../components/AddButton';
 import { SearchBar } from '../components/SearchBar';
+import { Sight } from '../components/Sight';
+import { SpotDetailModal } from '../components/SpotDetailModal';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectRecommendSpots } from '../redux/spotSlice';
@@ -36,47 +36,19 @@ const MapScreen = ({ navigation }) => {
     const [spots, setSpots] = useState(recommendSpots);
     const [carouselData, setCarouselData] = useState(recommendSpots);
     const isCarousel = React.useRef(null);
+    const [spotModalVisible, setSpotModalVisible] = useState(false);
+    const [selectedSpot, setSelectedSpot] = useState(spots[0]);
 
     const renderCarouselItem = ({ item }) => {
-        const image = item.Picture.PictureUrl1 ? item.Picture.PictureUrl1 : null;
-        const name = item.ScenicSpotName;
-        const city = item.City;
-        const town = item.Address ? item.Address.replace(/\s/g, '').replace(/[0-9]/g, '').slice(3, 6) : '';
-
         return (
-            <Pressable style={styles.sightBox} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }} onPress={null}>
-                <Box style={styles.sightImageBox} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[500] }}>
-                    {image ? (
-                        <Image source={{ uri: image }} style={styles.sightImage} resizeMode="cover" />
-                    ) : (
-                        <MaterialCommunityIcons
-                            name="image-remove"
-                            size={45}
-                            color={colorMode === 'dark' ? colors.dark[100] : colors.dark[400]}
-                        />
-                    )}
-                </Box>
-                <Box style={styles.sightInfo}>
-                    <Text style={styles.sightName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        {name.length > 10 ? `${name.slice(0, 10)}...` : name}
-                    </Text>
-                    <Text style={styles.sightLocation} color={colors.dark[300]}>
-                        {city}・{town}
-                    </Text>
-                    <Rating
-                        count={5}
-                        startingValue={item.rating}
-                        type="custom"
-                        imageSize={14}
-                        ratingColor={colors.secondary[200]}
-                        ratingBackgroundColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[600]}
-                        tintColor={colorMode === 'dark' ? colors.dark[100] : '#fff'}
-                        readonly={true}
-                        style={styles.rating}
-                    />
-                    <AddButton size={'small'} style={styles.addSightBtn} onPress={null} />
-                </Box>
-            </Pressable>
+            <Sight
+                item={item}
+                navigation={navigation}
+                onPress={() => {
+                    setSpotModalVisible(!spotModalVisible);
+                    setSelectedSpot(item);
+                }}
+            />
         );
     };
 
@@ -147,6 +119,12 @@ const MapScreen = ({ navigation }) => {
                         longitude: carouselData[index].Position.PositionLon,
                     });
                 }}
+            />
+            <SpotDetailModal
+                isVisible={spotModalVisible}
+                spot={selectedSpot}
+                onBackdropPress={() => setSpotModalVisible(!spotModalVisible)}
+                onSwipeComplete={() => setSpotModalVisible(false)}
             />
             {loading && <Loading />}
         </Box>
