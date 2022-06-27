@@ -24,6 +24,7 @@ import { Plan } from '../components/Plan';
 import { PlannerHeader } from '../components/Header';
 import Loading from '../components/Loading';
 import { formatDate } from '../utils/formatter';
+import { coverImagesData } from '../data/coverImages';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectToken, selectUser } from '../redux/accountSlice';
@@ -48,6 +49,7 @@ const PlannerScreen = ({ navigation }) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
     const [coverModalVisible, setCoverModalVisible] = useState(false);
+    const [coverImage, setCoverImage] = useState(coverImagesData[0].image);
     const [name, setName] = useState('');
     const [isAsigned, setIsAssigned] = useState(true);
     const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
@@ -74,26 +76,6 @@ const PlannerScreen = ({ navigation }) => {
     const sharedTripStatus = useSelector(selectSharedTripStatus);
     const createTripStatus = useSelector(selectCreateTripStatus);
     const deleteTripStatus = useSelector(selectDeleteTripStatus);
-
-    const coverData = [
-        {
-            name: 'cover_01',
-            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_01.png?alt=media&token=7f500577-095b-449b-a286-ceccae6a56db',
-        },
-        {
-            name: 'cover_02',
-            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_02.png?alt=media&token=8da687d4-4612-4c0c-a7f2-0da95c2c6e58',
-        },
-        {
-            name: 'cover_03',
-            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_03.png?alt=media&token=2d52bce8-f26f-426d-ba55-e1d5b26a629b',
-        },
-        {
-            name: 'cover_04',
-            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_04.png?alt=media&token=9624b299-9ceb-45b9-96fb-1641ca3fb2d4',
-        },
-    ];
-    const [coverImage, setCoverImage] = useState(coverData[0].image);
 
     useEffect(() => {
         fetchUserTrips();
@@ -770,7 +752,7 @@ const PlannerScreen = ({ navigation }) => {
                                 - 請從下列選項選擇 -
                             </Text>
                             <FlatList
-                                data={coverData}
+                                data={coverImagesData}
                                 renderItem={renderCoverImageItem}
                                 keyExtractor={(item, index) => index}
                                 horizontal={false}

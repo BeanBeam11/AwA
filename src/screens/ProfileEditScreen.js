@@ -6,6 +6,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
 import { EditHeader } from '../components/Header';
 import Loading from '../components/Loading';
+import { profileImagesData } from '../data/profileImage';
 
 import { setUserInfo, selectToken, selectUser, updateUserAsync } from '../redux/accountSlice';
 
@@ -42,25 +43,6 @@ const ProfileEditScreen = ({ navigation }) => {
     const chooseAvatar = () => {
         setModalVisible(!modalVisible);
     };
-
-    const avatarData = [
-        {
-            name: 'avatar_01',
-            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_01.png?alt=media&token=7f500577-095b-449b-a286-ceccae6a56db',
-        },
-        {
-            name: 'avatar_02',
-            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_02.png?alt=media&token=8da687d4-4612-4c0c-a7f2-0da95c2c6e58',
-        },
-        {
-            name: 'avatar_03',
-            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_03.png?alt=media&token=2d52bce8-f26f-426d-ba55-e1d5b26a629b',
-        },
-        {
-            name: 'avatar_04',
-            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_04.png?alt=media&token=9624b299-9ceb-45b9-96fb-1641ca3fb2d4',
-        },
-    ];
 
     const renderItem = ({ item }) => {
         return (
@@ -358,7 +340,7 @@ const ProfileEditScreen = ({ navigation }) => {
                             - 請從下列選項選擇 -
                         </Text>
                         <FlatList
-                            data={avatarData}
+                            data={profileImagesData}
                             renderItem={renderItem}
                             keyExtractor={(item, index) => index}
                             horizontal={false}
