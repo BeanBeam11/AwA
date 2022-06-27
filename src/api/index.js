@@ -168,7 +168,7 @@ export const getAllTrips = async () => {
 
 export const getUserTrips = async ({ token, userId }) => {
     try {
-        const res = await axios.get(`${baseUrl}api/v1/trips?owner_id=${userId}`, {
+        const res = await axios.get(`${baseUrl}api/v1/trips/userTrips/${userId}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         return res.data;
