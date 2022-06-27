@@ -4,29 +4,26 @@ import { StyleSheet, Image, Dimensions, Platform, ScrollView } from 'react-nativ
 import { useColorMode, useTheme, Box, Text } from 'native-base';
 import { ProfileSettingHeader } from '../components/Header';
 import { ActionButton } from '../components/ActionButton';
-import { selectUser, selectProfile } from '../redux/accountSlice';
+import { selectUser } from '../redux/accountSlice';
 
 const ProfileScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const user = useSelector(selectUser);
-    const profile = useSelector(selectProfile);
     const { photo, name } = user;
-    const { interest, type, transportation, gender, age } = profile;
+    const { interest, type, transportation, gender, age } = user.profile;
+
+    const contentTextStyle = {
+        fontSize: 14,
+        width: Dimensions.get('window').width - 188,
+    };
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
             <ProfileSettingHeader navigation={navigation} onPress={() => navigation.navigate('SettingScreen')} />
             <ScrollView contentContainerStyle={{ alignItems: 'center' }} showsVerticalScrollIndicator={false}>
                 <Image source={{ uri: photo }} style={styles.avatarBox} />
-                <Text
-                    style={[
-                        styles.name,
-                        {
-                            color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                        },
-                    ]}
-                >
+                <Text style={styles.name} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                     {name}
                 </Text>
                 <Box
@@ -44,26 +41,24 @@ const ProfileScreen = ({ navigation }) => {
                             ]}
                         >
                             <Text
-                                style={[
-                                    styles.text,
-                                    {
-                                        color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                                    },
-                                ]}
+                                style={styles.text}
+                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                             >
                                 旅遊類型
                             </Text>
                         </Box>
-                        <Text
-                            style={[
-                                styles.text,
-                                {
-                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                                },
-                            ]}
-                        >
-                            {type}
-                        </Text>
+                        {type ? (
+                            <Text
+                                style={contentTextStyle}
+                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                            >
+                                {type}
+                            </Text>
+                        ) : (
+                            <Text style={contentTextStyle} color={colors.dark[300]}>
+                                尚未設定
+                            </Text>
+                        )}
                     </Box>
                     <Box style={styles.contentWrapper}>
                         <Box
@@ -75,26 +70,24 @@ const ProfileScreen = ({ navigation }) => {
                             ]}
                         >
                             <Text
-                                style={[
-                                    styles.text,
-                                    {
-                                        color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                                    },
-                                ]}
+                                style={styles.text}
+                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                             >
                                 交通方式
                             </Text>
                         </Box>
-                        <Text
-                            style={[
-                                styles.text,
-                                {
-                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                                },
-                            ]}
-                        >
-                            {transportation}
-                        </Text>
+                        {transportation ? (
+                            <Text
+                                style={contentTextStyle}
+                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                            >
+                                {transportation}
+                            </Text>
+                        ) : (
+                            <Text style={contentTextStyle} color={colors.dark[300]}>
+                                尚未設定
+                            </Text>
+                        )}
                     </Box>
                     <Box style={styles.contentWrapper}>
                         <Box
@@ -106,26 +99,24 @@ const ProfileScreen = ({ navigation }) => {
                             ]}
                         >
                             <Text
-                                style={[
-                                    styles.text,
-                                    {
-                                        color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                                    },
-                                ]}
+                                style={styles.text}
+                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                             >
                                 性別
                             </Text>
                         </Box>
-                        <Text
-                            style={[
-                                styles.text,
-                                {
-                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                                },
-                            ]}
-                        >
-                            {gender}
-                        </Text>
+                        {gender ? (
+                            <Text
+                                style={contentTextStyle}
+                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                            >
+                                {gender}
+                            </Text>
+                        ) : (
+                            <Text style={contentTextStyle} color={colors.dark[300]}>
+                                尚未設定
+                            </Text>
+                        )}
                     </Box>
                     <Box style={styles.contentWrapper}>
                         <Box
@@ -137,26 +128,24 @@ const ProfileScreen = ({ navigation }) => {
                             ]}
                         >
                             <Text
-                                style={[
-                                    styles.text,
-                                    {
-                                        color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                                    },
-                                ]}
+                                style={styles.text}
+                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                             >
                                 年齡
                             </Text>
                         </Box>
-                        <Text
-                            style={[
-                                styles.text,
-                                {
-                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                                },
-                            ]}
-                        >
-                            {age}
-                        </Text>
+                        {age ? (
+                            <Text
+                                style={contentTextStyle}
+                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                            >
+                                {age}
+                            </Text>
+                        ) : (
+                            <Text style={contentTextStyle} color={colors.dark[300]}>
+                                尚未設定
+                            </Text>
+                        )}
                     </Box>
                     <Box style={styles.contentWrapper}>
                         <Box
@@ -168,26 +157,24 @@ const ProfileScreen = ({ navigation }) => {
                             ]}
                         >
                             <Text
-                                style={[
-                                    styles.text,
-                                    {
-                                        color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                                    },
-                                ]}
+                                style={styles.text}
+                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                             >
                                 興趣
                             </Text>
                         </Box>
-                        <Text
-                            style={[
-                                styles.text,
-                                {
-                                    color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
-                                },
-                            ]}
-                        >
-                            {interest}
-                        </Text>
+                        {interest ? (
+                            <Text
+                                style={contentTextStyle}
+                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                            >
+                                {interest}
+                            </Text>
+                        ) : (
+                            <Text style={contentTextStyle} color={colors.dark[300]}>
+                                尚未設定
+                            </Text>
+                        )}
                     </Box>
                 </Box>
                 <ActionButton
@@ -220,10 +207,9 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     profileWrapper: {
-        width: '100%',
         marginTop: 50,
         paddingLeft: 15,
-        paddingVertical: 45,
+        paddingVertical: 35,
         borderRadius: 10,
     },
     contentWrapper: {

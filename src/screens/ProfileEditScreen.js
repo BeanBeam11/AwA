@@ -7,38 +7,33 @@ import RNPickerSelect from 'react-native-picker-select';
 import { EditHeader } from '../components/Header';
 import Loading from '../components/Loading';
 
-import {
-    setUserInfo,
-    setUserProfile,
-    selectToken,
-    selectUser,
-    selectProfile,
-    updateUserAsync,
-} from '../redux/accountSlice';
+import { setUserInfo, selectToken, selectUser, updateUserAsync } from '../redux/accountSlice';
 
 const ProfileEditScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const user = useSelector(selectUser);
-    const profile = useSelector(selectProfile);
     const token = useSelector(selectToken);
 
     const [photo, setPhoto] = useState(user.photo);
     const [name, setName] = useState(user.name);
-    const [interest, setInterest] = useState(profile.interest);
-    const [type, setType] = useState(profile.type);
-    const [transportation, setTransportation] = useState(profile.transportation);
-    const [gender, setGender] = useState(profile.gender);
-    const [age, setAge] = useState(profile.age);
+    const [interest, setInterest] = useState(user.profile.interest);
+    const [type, setType] = useState(user.profile.type);
+    const [transportation, setTransportation] = useState(user.profile.transportation);
+    const [gender, setGender] = useState(user.profile.gender);
+    const [age, setAge] = useState(user.profile.age);
     const [modalVisible, setModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
 
     const handleDone = () => {
-        dispatch(setUserInfo({ photo, name }));
-        dispatch(setUserProfile({ interest, type, transportation, gender, age }));
-        dispatch(updateUserAsync({ token, photo, name }));
+        if (name.length < 1) {
+            alert('暱稱不可少於一個字呦！');
+            return;
+        }
+        dispatch(setUserInfo({ photo, name, profile: { interest, type, transportation, gender, age } }));
+        dispatch(updateUserAsync({ token, photo, name, profile: { interest, type, transportation, gender, age } }));
         navigation.goBack();
     };
 

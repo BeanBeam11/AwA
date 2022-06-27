@@ -59,11 +59,11 @@ export const getUserByEmail = async ({ token, email }) => {
     }
 };
 
-export const updateCurrentUser = async ({ token, photo, name }) => {
+export const updateCurrentUser = async ({ token, photo, name, profile }) => {
     try {
         const res = await axios.patch(
             `${baseUrl}api/v1/users/updateMe`,
-            { photo, name },
+            { photo, name, profile },
             { headers: { Authorization: `Bearer ${token}` } }
         );
         return res.data;

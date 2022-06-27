@@ -49,9 +49,9 @@ const readUserAsync = createAsyncThunk('account/readUser', async ({ token }) => 
     }
 });
 
-const updateUserAsync = createAsyncThunk('account/updateUser', async ({ token, photo, name }) => {
+const updateUserAsync = createAsyncThunk('account/updateUser', async ({ token, photo, name, profile }) => {
     try {
-        const { data } = await updateCurrentUser({ token, photo, name });
+        const { data } = await updateCurrentUser({ token, photo, name, profile });
         // The value we return becomes the `fulfilled` action payload
         return data.data;
     } catch (err) {
@@ -67,14 +67,14 @@ const initialState = {
         email: '',
         name: '',
         photo: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_01.png?alt=media&token=7f500577-095b-449b-a286-ceccae6a56db',
+        profile: {
+            interest: '',
+            type: '',
+            transportation: '',
+            gender: '',
+            age: '',
+        },
         passwordChangedAt: '',
-    },
-    profile: {
-        interest: '未填寫',
-        type: '未設定',
-        transportation: '未設定',
-        gender: '未設定',
-        age: '未設定',
     },
     login: {
         hasLogin: false,
@@ -92,9 +92,6 @@ const accountSlice = createSlice({
     reducers: {
         setUserInfo: (state, action) => {
             state.user = action.payload;
-        },
-        setUserProfile: (state, action) => {
-            state.profile = action.payload;
         },
         setToken: (state, action) => {
             state.token = action.payload;
@@ -161,21 +158,19 @@ const accountSlice = createSlice({
             .addCase(updateUserAsync.fulfilled, (state, action) => {
                 state.status = 'idle';
                 state.user = { ...state.user, ...action.payload };
-                state.profile = { ...state.profile, ...action.payload };
             });
     },
 });
 
 // export state to global
 export const selectUser = (state) => state.account.user;
-export const selectProfile = (state) => state.account.profile;
 export const selectLogin = (state) => state.account.login;
 export const selectToken = (state) => state.account.token;
 export const selectErrorMsg = (state) => state.account.errMsg;
 export const selectStatus = (state) => state.account.status;
 
 // export actions to global
-export const { setUserInfo, setUserProfile, goToSignup, goToLogin, signOut } = accountSlice.actions;
+export const { setUserInfo, goToSignup, goToLogin, signOut } = accountSlice.actions;
 
 // export async function to global
 export { loginAsync, signupAsync, updatePasswordAsync, readUserAsync, updateUserAsync };
