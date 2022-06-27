@@ -12,7 +12,7 @@ import { formatDate, formatTime, formatStayTime } from '../utils/formatter';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, selectToken } from '../redux/accountSlice';
 import { selectUserTrips, selectTripStatus, updateUserTripSharedAsync } from '../redux/tripSlice';
-import { selectSharedUser, selectUserStatus, getUserByEmailAsync } from '../redux/userSlice';
+import { selectSharedUser, selectUserStatus, setSharedUser, getUserByEmailAsync } from '../redux/userSlice';
 
 const PlanDetailScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
@@ -45,6 +45,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                 const currentTrip = userTrips.find((el) => el._id === trip._id);
                 setTripData(currentTrip);
                 setSharedUserData(null);
+                dispatch(setSharedUser(null));
             }
         } else {
             setLoading(false);
@@ -52,12 +53,12 @@ const PlanDetailScreen = ({ navigation, route }) => {
     }, [tripStatus]);
 
     useEffect(() => {
-        if (userStatus === 'idle') {
-            setSharedUserData(sharedUser);
-            if (sharedUserData) updateSharedUser();
-        } else if (userStatus === 'error') {
+        if (userStatus === 'error') {
             setLoading(false);
             setSharedUserData(null);
+        } else if (userStatus === 'idle') {
+            setLoading(false);
+            updateSharedUser(sharedUser);
         }
     }, [userStatus]);
 
@@ -91,14 +92,15 @@ const PlanDetailScreen = ({ navigation, route }) => {
         setLoading(true);
     };
 
-    const updateSharedUser = () => {
-        const isExist = tripData.shared_users.find((item) => item.user_id === sharedUser._id) ? true : false;
+    const updateSharedUser = (userData) => {
+        if (!userData) return;
+        const isExist = tripData.shared_users.find((item) => item.user_id === userData._id) ? true : false;
         if (isExist) {
             alert('此使用者已經在共用名單中啦');
             setLoading(false);
             return;
         } else {
-            let newData = [...tripData.shared_users, { user_id: sharedUser._id, user_image: sharedUser.photo }];
+            let newData = [...tripData.shared_users, { user_id: userData._id, user_image: userData.photo }];
             setTripData({ ...tripData, shared_users: [...newData] });
             dispatch(updateUserTripSharedAsync({ token, tripId: tripData._id, shared_users: newData }));
         }

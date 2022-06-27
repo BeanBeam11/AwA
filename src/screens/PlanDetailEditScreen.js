@@ -667,7 +667,13 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                     />
                     {!isAddingSpot && (
                         <Pressable
-                            style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 20 }}
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                marginTop: 20,
+                                paddingRight: 5,
+                            }}
                             onPress={() => checkDeleteSpot()}
                         >
                             <MaterialCommunityIcons name="delete-outline" size={24} color={'#DD9193'} />

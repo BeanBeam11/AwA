@@ -38,6 +38,7 @@ const AccountScreen = ({ navigation }) => {
                 setLoading(false);
                 alert('密碼更新成功(*‘ v`*)');
                 clearState();
+                navigation.goBack();
             }
         }
     }, [updateStatus]);

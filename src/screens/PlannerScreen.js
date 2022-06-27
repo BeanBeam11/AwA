@@ -267,6 +267,7 @@ const PlannerScreen = ({ navigation }) => {
     };
 
     const showEditSheet = (index) => {
+        setTripIndex(index);
         ActionSheetIOS.showActionSheetWithOptions(
             {
                 options: ['取消', '編輯', '刪除'],
@@ -278,18 +279,17 @@ const PlannerScreen = ({ navigation }) => {
                 if (buttonIndex === 0) {
                     // cancel action
                 } else if (buttonIndex === 1) {
-                    handleEditTrip();
+                    handleEditTrip(index);
                 } else if (buttonIndex === 2) {
-                    checkDeleteTrip();
+                    checkDeleteTrip(index);
                 }
             }
         );
-        setTripIndex(index);
     };
 
-    const handleEditTrip = async () => {
+    const handleEditTrip = async (index) => {
         setModalVisible(!modalVisible);
-        const currentTrip = trips[tripIndex];
+        const currentTrip = trips[index];
         setName(currentTrip.name);
         setCoverImage(currentTrip.cover_image);
         if (currentTrip.start_date) {
@@ -305,7 +305,7 @@ const PlannerScreen = ({ navigation }) => {
         }
     };
 
-    const checkDeleteTrip = () => {
+    const checkDeleteTrip = (index) => {
         Alert.alert('刪除行程', '確定要刪除行程嗎？ (☍﹏⁰)', [
             {
                 text: '我再想想...',
@@ -314,14 +314,14 @@ const PlannerScreen = ({ navigation }) => {
             },
             {
                 text: '刪除！',
-                onPress: () => handleDeleteTrip(),
+                onPress: () => handleDeleteTrip(index),
                 style: 'destructive',
             },
         ]);
     };
 
-    const handleDeleteTrip = async () => {
-        const currentTrip = trips[tripIndex];
+    const handleDeleteTrip = async (index) => {
+        const currentTrip = trips[index];
         dispatch(deleteUserTripAsync({ token, tripId: currentTrip._id }));
         setLoading(true);
     };

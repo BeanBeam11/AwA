@@ -15,7 +15,7 @@ const getUserByEmailAsync = createAsyncThunk('user/getUserByEmail', async ({ tok
 
 // Part1: Define Slice (including reducers and actions)
 const initialState = {
-    shared_user: {},
+    shared_user: null,
     status: 'loading',
 };
 

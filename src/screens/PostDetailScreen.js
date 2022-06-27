@@ -16,7 +16,9 @@ const PostDetailScreen = ({ navigation, route }) => {
     const { colors } = useTheme();
     const { postId } = route.params;
     const post = postData.find((el) => el.title === postId);
-    const sight = sightData.find((el) => el.ScenicSpotName === postId);
+    const sight = sightData.find((el) => el.ScenicSpotName === postId)
+        ? sightData.find((el) => el.ScenicSpotName === postId)
+        : null;
 
     const [isLike, setIsLike] = useState(false);
     const [isDislike, setIsDislike] = useState(false);
@@ -228,12 +230,14 @@ const PostDetailScreen = ({ navigation, route }) => {
                 </ScrollView>
                 <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />
             </Box>
-            <SpotDetailModal
-                isVisible={spotModalVisible}
-                spot={selectedSpot}
-                onBackdropPress={() => setSpotModalVisible(!spotModalVisible)}
-                onSwipeComplete={() => setSpotModalVisible(false)}
-            />
+            {selectedSpot && (
+                <SpotDetailModal
+                    isVisible={spotModalVisible}
+                    spot={selectedSpot}
+                    onBackdropPress={() => setSpotModalVisible(!spotModalVisible)}
+                    onSwipeComplete={() => setSpotModalVisible(false)}
+                />
+            )}
         </KeyboardAwareScrollView>
     );
 };
