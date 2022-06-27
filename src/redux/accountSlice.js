@@ -53,7 +53,7 @@ const updateUserAsync = createAsyncThunk('account/updateUser', async ({ token, p
     try {
         const { data } = await updateCurrentUser({ token, photo, name, profile });
         // The value we return becomes the `fulfilled` action payload
-        return data.data;
+        return data;
     } catch (err) {
         // The value we return becomes the `rejected` action payload
         return rejectWithValue(err);
@@ -153,7 +153,6 @@ const accountSlice = createSlice({
             .addCase(readUserAsync.fulfilled, (state, action) => {
                 state.status = 'idle';
                 state.user = { ...state.user, ...action.payload };
-                state.profile = { ...state.profile, ...action.payload };
             })
             .addCase(updateUserAsync.fulfilled, (state, action) => {
                 state.status = 'idle';

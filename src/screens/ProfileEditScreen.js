@@ -34,7 +34,7 @@ const ProfileEditScreen = ({ navigation }) => {
             alert('暱稱不可少於一個字呦！');
             return;
         }
-        dispatch(setUserInfo({ photo, name, profile: { interest, type, transportation, gender, age } }));
+        dispatch(setUserInfo({ ...user, photo, name, profile: { interest, type, transportation, gender, age } }));
         dispatch(updateUserAsync({ token, photo, name, profile: { interest, type, transportation, gender, age } }));
         navigation.goBack();
     };
