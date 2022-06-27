@@ -13,6 +13,7 @@ import {
     Alert,
 } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable, Radio } from 'native-base';
+import RNModal from 'react-native-modal';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import RNPickerSelect from 'react-native-picker-select';
@@ -46,8 +47,8 @@ const PlannerScreen = ({ navigation }) => {
     const { colors } = useTheme();
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
+    const [coverModalVisible, setCoverModalVisible] = useState(false);
     const [name, setName] = useState('');
-    const [coverImage, setCoverImage] = useState(null);
     const [isAsigned, setIsAssigned] = useState(true);
     const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
@@ -73,6 +74,26 @@ const PlannerScreen = ({ navigation }) => {
     const sharedTripStatus = useSelector(selectSharedTripStatus);
     const createTripStatus = useSelector(selectCreateTripStatus);
     const deleteTripStatus = useSelector(selectDeleteTripStatus);
+
+    const coverData = [
+        {
+            name: 'cover_01',
+            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_01.png?alt=media&token=7f500577-095b-449b-a286-ceccae6a56db',
+        },
+        {
+            name: 'cover_02',
+            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_02.png?alt=media&token=8da687d4-4612-4c0c-a7f2-0da95c2c6e58',
+        },
+        {
+            name: 'cover_03',
+            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_03.png?alt=media&token=2d52bce8-f26f-426d-ba55-e1d5b26a629b',
+        },
+        {
+            name: 'cover_04',
+            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_04.png?alt=media&token=9624b299-9ceb-45b9-96fb-1641ca3fb2d4',
+        },
+    ];
+    const [coverImage, setCoverImage] = useState(coverData[0].image);
 
     useEffect(() => {
         fetchUserTrips();
@@ -359,6 +380,19 @@ const PlannerScreen = ({ navigation }) => {
         }
     };
 
+    const renderCoverImageItem = ({ item }) => {
+        return (
+            <Pressable style={styles.coverImageBox} onPress={() => setCoverImage(item.image)}>
+                <Image style={styles.avatar} source={{ uri: item.image }} />
+                {item.image === coverImage && (
+                    <Box style={styles.avatarMask}>
+                        <MaterialIcon name="check-circle-outline" size={45} color="#fff" />
+                    </Box>
+                )}
+            </Pressable>
+        );
+    };
+
     const MyPlanList = () => {
         const renderItem = ({ item, index }) => {
             return (
@@ -403,8 +437,6 @@ const PlannerScreen = ({ navigation }) => {
             );
         };
 
-        const renderFooterComponent = () => <Box style={{ height: 100 }}></Box>;
-
         return (
             <Box style={styles.planWrapper}>
                 <FlatList
@@ -415,9 +447,8 @@ const PlannerScreen = ({ navigation }) => {
                     numColumns={2}
                     columnWrapperStyle={{ justifyContent: 'space-between' }}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ width: 360, paddingLeft: 10 }}
+                    contentContainerStyle={{ width: 360, paddingLeft: 10, paddingBottom: 280 }}
                     ListEmptyComponent={renderEmptyComponent}
-                    ListFooterComponent={renderFooterComponent}
                     refreshControl={
                         <RefreshControl
                             refreshing={false}
@@ -450,8 +481,6 @@ const PlannerScreen = ({ navigation }) => {
             );
         };
 
-        const renderFooterComponent = () => <Box style={{ height: 100 }}></Box>;
-
         return (
             <Box style={styles.planWrapper}>
                 <FlatList
@@ -462,7 +491,7 @@ const PlannerScreen = ({ navigation }) => {
                     numColumns={2}
                     columnWrapperStyle={{ justifyContent: 'space-between' }}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ width: 360, paddingLeft: 10 }}
+                    contentContainerStyle={{ width: 360, paddingLeft: 10, paddingBottom: 280 }}
                     ListEmptyComponent={renderEmptyComponent}
                     ListFooterComponent={renderFooterComponent}
                     refreshControl={
@@ -571,6 +600,12 @@ const PlannerScreen = ({ navigation }) => {
                                 _light={{ bg: colors.dark[500] }}
                             >
                                 <Image source={{ uri: coverImage }} style={styles.image} />
+                                <Pressable
+                                    style={styles.imageMask}
+                                    onPress={() => setCoverModalVisible(!coverModalVisible)}
+                                >
+                                    <MaterialIcon name="edit" size={60} color={colors.dark[600]} />
+                                </Pressable>
                             </Box>
                             <Text style={styles.modalLabel}>行程名稱</Text>
                             <TextInput
@@ -723,6 +758,45 @@ const PlannerScreen = ({ navigation }) => {
                             </Box>
                         )}
                     </View>
+                    <RNModal
+                        isVisible={coverModalVisible}
+                        style={{ alignItems: 'center' }}
+                        onBackdropPress={() => setCoverModalVisible(!coverModalVisible)}
+                    >
+                        <Box style={styles.coverModalView} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
+                            <Text
+                                style={{ fontSize: 16, fontWeight: '500', paddingBottom: 10 }}
+                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                            >
+                                - 請從下列選項選擇 -
+                            </Text>
+                            <FlatList
+                                data={coverData}
+                                renderItem={renderCoverImageItem}
+                                keyExtractor={(item, index) => index}
+                                horizontal={false}
+                                numColumns={2}
+                                columnWrapperStyle={{ justifyContent: 'space-between' }}
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={{ marginTop: 30 }}
+                            />
+                            <Box style={styles.coverModalActionWrapper}>
+                                <Pressable onPress={() => setCoverModalVisible(!coverModalVisible)}>
+                                    <Text
+                                        style={styles.coverModalActionText}
+                                        color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
+                                    >
+                                        取消
+                                    </Text>
+                                </Pressable>
+                                <Pressable onPress={() => setCoverModalVisible(!coverModalVisible)}>
+                                    <Text style={styles.coverModalActionText} color={colors.primary[200]}>
+                                        完成
+                                    </Text>
+                                </Pressable>
+                            </Box>
+                        </Box>
+                    </RNModal>
                 </Modal>
             </View>
             {loading && <Loading />}
@@ -790,6 +864,20 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginLeft: 'auto',
         marginRight: 'auto',
+    },
+    image: {
+        width: 340,
+        height: 190,
+        borderRadius: 5,
+    },
+    imageMask: {
+        position: 'absolute',
+        width: 340,
+        height: 190,
+        borderRadius: 5,
+        backgroundColor: 'rgba(72, 72, 72, 0.5)',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     radioOption: {
         marginTop: 5,
@@ -873,20 +961,40 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         marginTop: 20,
     },
-    editSheet: {
-        width: '100%',
+    coverModalView: {
+        width: 340,
+        height: 395,
+        borderRadius: 10,
+        paddingVertical: 30,
         alignItems: 'center',
+    },
+    coverModalActionWrapper: {
+        width: 220,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 'auto',
         paddingTop: 10,
-        paddingBottom: 40,
-        borderTopLeftRadius: 14,
-        borderTopRightRadius: 14,
     },
-    actionBox: {
-        width: '80%',
-        paddingVertical: 18,
+    coverModalActionText: {
+        fontSize: 16,
+        fontWeight: '500',
+    },
+    coverImageBox: {
+        margin: 8,
+    },
+    avatar: {
+        width: 145,
+        height: 92,
+        borderRadius: 5,
+    },
+    avatarMask: {
+        position: 'absolute',
+        width: 145,
+        height: 92,
+        borderRadius: 5,
+        backgroundColor: 'rgba(72, 72, 72, 0.5)',
         alignItems: 'center',
-    },
-    actionText: {
-        fontSize: 20,
+        justifyContent: 'center',
     },
 });

@@ -1,6 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Image, View, Modal, TouchableOpacity, TextInput, Platform, Dimensions, Alert } from 'react-native';
+import {
+    StyleSheet,
+    Image,
+    View,
+    Modal,
+    TouchableOpacity,
+    TextInput,
+    Platform,
+    Dimensions,
+    Alert,
+    FlatList,
+} from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
+import RNModal from 'react-native-modal';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -22,10 +34,10 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const [modalVisible, setModalVisible] = useState(false);
+    const [spotModalVisible, setSpotModalVisible] = useState(false);
     const [stayTimeModalVisible, setStayTimeModalVisible] = useState(false);
     const [spotId, setSpotId] = useState('');
     const [spotName, setSpotName] = useState('');
-    const [spotImage, setSpotImage] = useState(null);
     const [spotNote, setSpotNote] = useState('');
     const [isStartTimePickerVisible, setStartTimePickerVisibility] = useState(false);
     const [stayTime, setStayTime] = useState({ hours: 0, minutes: 0 });
@@ -61,6 +73,26 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
         };
     });
     const [dragData, setDragData] = useState(initialData);
+
+    const spotImageData = [
+        {
+            name: 'spotImage_01',
+            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_01.png?alt=media&token=7f500577-095b-449b-a286-ceccae6a56db',
+        },
+        {
+            name: 'spotImage_02',
+            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_02.png?alt=media&token=8da687d4-4612-4c0c-a7f2-0da95c2c6e58',
+        },
+        {
+            name: 'spotImage_03',
+            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_03.png?alt=media&token=2d52bce8-f26f-426d-ba55-e1d5b26a629b',
+        },
+        {
+            name: 'spotImage_04',
+            image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_04.png?alt=media&token=9624b299-9ceb-45b9-96fb-1641ca3fb2d4',
+        },
+    ];
+    const [spotImage, setSpotImage] = useState(spotImageData[0].image);
 
     const showStartTimePicker = () => {
         setStartTimePickerVisibility(true);
@@ -123,7 +155,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                     {
                         spot: spotName,
                         spot_id: '',
-                        image: '',
+                        image: spotImage,
                         stay_time: [stayTime.hours, stayTime.minutes],
                         note: spotNote,
                         location: [],
@@ -208,7 +240,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                             ...val,
                             spot: spotName,
                             spot_id: '',
-                            image: '',
+                            image: spotImage,
                             stay_time: [stayTime.hours, stayTime.minutes],
                             note: spotNote,
                             location: [],
@@ -287,6 +319,19 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                     address: item.address,
                 };
             })
+        );
+    };
+
+    const renderSpotImageItem = ({ item }) => {
+        return (
+            <Pressable style={styles.coverImageBox} onPress={() => setSpotImage(item.image)}>
+                <Image style={styles.avatar} source={{ uri: item.image }} />
+                {item.image === spotImage && (
+                    <Box style={styles.avatarMask}>
+                        <MaterialIcon name="check-circle-outline" size={45} color="#fff" />
+                    </Box>
+                )}
+            </Pressable>
         );
     };
 
@@ -499,7 +544,12 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                         </TouchableOpacity>
                     </Box>
                     <Box style={styles.imageWrapper} _dark={{ bg: colors.dark[200] }} _light={{ bg: colors.dark[500] }}>
-                        {spotImage && <Image source={{ uri: spotImage }} style={styles.image} />}
+                        {spotImage !== '' && <Image source={{ uri: spotImage }} style={styles.image} />}
+                        {spotId === '' && (
+                            <Pressable style={styles.imageMask} onPress={() => setSpotModalVisible(!spotModalVisible)}>
+                                <MaterialIcon name="edit" size={60} color={colors.dark[600]} />
+                            </Pressable>
+                        )}
                     </Box>
                     <Box style={styles.modalContent}>
                         <Box style={styles.optionWrapper}>
@@ -713,6 +763,45 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                         />
                     </Box>
                 </ActionSheet>
+                <RNModal
+                    isVisible={spotModalVisible}
+                    style={{ alignItems: 'center' }}
+                    onBackdropPress={() => setSpotModalVisible(!spotModalVisible)}
+                >
+                    <Box style={styles.coverModalView} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
+                        <Text
+                            style={{ fontSize: 16, fontWeight: '500', paddingBottom: 10 }}
+                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                        >
+                            - 請從下列選項選擇 -
+                        </Text>
+                        <FlatList
+                            data={spotImageData}
+                            renderItem={renderSpotImageItem}
+                            keyExtractor={(item, index) => index}
+                            horizontal={false}
+                            numColumns={2}
+                            columnWrapperStyle={{ justifyContent: 'space-between' }}
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={{ marginTop: 30 }}
+                        />
+                        <Box style={styles.coverModalActionWrapper}>
+                            <Pressable onPress={() => setSpotModalVisible(!spotModalVisible)}>
+                                <Text
+                                    style={styles.coverModalActionText}
+                                    color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
+                                >
+                                    取消
+                                </Text>
+                            </Pressable>
+                            <Pressable onPress={() => setSpotModalVisible(!spotModalVisible)}>
+                                <Text style={styles.coverModalActionText} color={colors.primary[200]}>
+                                    完成
+                                </Text>
+                            </Pressable>
+                        </Box>
+                    </Box>
+                </RNModal>
             </Modal>
             {loading && <Loading />}
         </Box>
@@ -893,6 +982,15 @@ const styles = StyleSheet.create({
         height: 190,
         borderRadius: 5,
     },
+    imageMask: {
+        position: 'absolute',
+        width: 340,
+        height: 190,
+        borderRadius: 5,
+        backgroundColor: 'rgba(72, 72, 72, 0.5)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     optionWrapper: {
         height: 30,
         display: 'flex',
@@ -942,6 +1040,42 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 50,
         fontSize: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    coverModalView: {
+        width: 340,
+        height: 395,
+        borderRadius: 10,
+        paddingVertical: 30,
+        alignItems: 'center',
+    },
+    coverModalActionWrapper: {
+        width: 220,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 'auto',
+        paddingTop: 10,
+    },
+    coverModalActionText: {
+        fontSize: 16,
+        fontWeight: '500',
+    },
+    coverImageBox: {
+        margin: 8,
+    },
+    avatar: {
+        width: 145,
+        height: 92,
+        borderRadius: 5,
+    },
+    avatarMask: {
+        position: 'absolute',
+        width: 145,
+        height: 92,
+        borderRadius: 5,
+        backgroundColor: 'rgba(72, 72, 72, 0.5)',
         alignItems: 'center',
         justifyContent: 'center',
     },
