@@ -76,11 +76,12 @@ const MapScreen = ({ navigation }) => {
                 region={region}
                 mapType="mutedStandard"
                 userInterfaceStyle={colorMode === 'dark' ? 'dark' : 'light'}
-                showsScale={true}
+                showsScale={false}
                 showsBuildings={true}
                 showsTraffic={true}
                 showsIndoors={true}
                 loadingEnabled={true}
+                compassOffset={{ x: -10, y: 60 }}
             >
                 <Marker
                     coordinate={marker.coord}
