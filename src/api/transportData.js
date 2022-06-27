@@ -57,3 +57,18 @@ export const getCityScenicSpots = async ({ accessToken, city }) => {
         console.log(err.response.data);
     }
 };
+
+export const searchScenicSpots = async ({ accessToken, keyword }) => {
+    const orderby = encodeURIComponent(`Picture/PictureUrl1 desc`);
+    const filter = encodeURIComponent(`contains(ScenicSpotName,'${keyword}')`);
+
+    try {
+        const res = await axios.get(
+            `${baseUrl}/v2/Tourism/ScenicSpot?%24filter=${filter}&%24orderby=${orderby}&%24top=6&%24format=JSON`,
+            { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};

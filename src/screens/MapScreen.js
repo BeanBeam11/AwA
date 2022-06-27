@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Dimensions, Image } from 'react-native';
+import { StyleSheet, View, Dimensions, Image, FlatList } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import MapView, { Marker } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
@@ -8,16 +8,20 @@ import Loading from '../components/Loading';
 import { SearchBar } from '../components/SearchBar';
 import { Sight } from '../components/Sight';
 import { SpotDetailModal } from '../components/SpotDetailModal';
+import { searchScenicSpots } from '../api/transportData';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { selectRecommendSpots } from '../redux/spotSlice';
+import { selectAccessToken, selectRecommendSpots } from '../redux/spotSlice';
 
 const MapScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const recommendSpots = useSelector(selectRecommendSpots);
+    const accessToken = useSelector(selectAccessToken);
 
     const [keyword, setKeyword] = useState('');
+    const [results, setResults] = useState([]);
+    const [searchResult, setSearchResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const [region, setRegion] = useState({
         latitude: recommendSpots[0].Position.PositionLat,
@@ -39,6 +43,23 @@ const MapScreen = ({ navigation }) => {
     const [spotModalVisible, setSpotModalVisible] = useState(false);
     const [selectedSpot, setSelectedSpot] = useState(spots[0]);
 
+    useEffect(() => {
+        getSearchResults();
+    }, [keyword]);
+
+    useEffect(() => {
+        if (searchResult !== null) {
+            let newData = [searchResult, ...carouselData];
+            newData.pop();
+            setCarouselData([...newData]);
+        }
+    }, [searchResult]);
+
+    const getSearchResults = async () => {
+        const res = await searchScenicSpots({ accessToken, keyword });
+        setResults(res);
+    };
+
     const renderCarouselItem = ({ item }) => {
         return (
             <Sight
@@ -49,6 +70,39 @@ const MapScreen = ({ navigation }) => {
                     setSelectedSpot(item);
                 }}
             />
+        );
+    };
+
+    const renderSearchResult = ({ item }) => {
+        return (
+            <Pressable
+                style={[
+                    styles.resultBox,
+                    { borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500] },
+                ]}
+                _dark={{ bg: colors.dark[50] }}
+                _light={{ bg: '#fff' }}
+                onPress={() => {
+                    setSearchResult(item);
+                }}
+            >
+                <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>{item.ScenicSpotName}</Text>
+            </Pressable>
+        );
+    };
+
+    const renderListEmpty = () => {
+        return (
+            <Box
+                style={[
+                    styles.resultBox,
+                    { borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500] },
+                ]}
+                _dark={{ bg: colors.dark[50] }}
+                _light={{ bg: '#fff' }}
+            >
+                <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>沒有符合的結果 ( ×ω× )</Text>
+            </Box>
         );
     };
 
@@ -91,16 +145,20 @@ const MapScreen = ({ navigation }) => {
                 />
             </MapView>
             <Box style={styles.searchHeader}>
-                <SearchBar
-                    placeholder={'搜尋景點'}
-                    value={keyword}
-                    onChangeText={(text) => setKeyword(text)}
-                    onSubmitEditing={() => console.log('search')}
+                <SearchBar placeholder={'搜尋景點'} value={keyword} onChangeText={(text) => setKeyword(text)} />
+                <FlatList
+                    data={results}
+                    renderItem={renderSearchResult}
+                    keyExtractor={(item, index) => index}
+                    horizontal={false}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ alignItems: 'center' }}
+                    ListEmptyComponent={renderListEmpty}
                 />
             </Box>
             <Carousel
                 ref={isCarousel}
-                data={spots}
+                data={carouselData}
                 containerCustomStyle={styles.carousel}
                 renderItem={renderCarouselItem}
                 sliderWidth={Dimensions.get('window').width}
@@ -147,11 +205,8 @@ const styles = StyleSheet.create({
     },
     searchHeader: {
         position: 'absolute',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
         top: 60,
+        alignItems: 'center',
     },
     goBackBtn: {
         marginLeft: 20,
@@ -199,5 +254,11 @@ const styles = StyleSheet.create({
     },
     rating: {
         width: 70,
+    },
+    resultBox: {
+        width: Dimensions.get('window').width - 48,
+        paddingHorizontal: 20,
+        paddingVertical: 8,
+        borderBottomWidth: 1,
     },
 });
