@@ -493,7 +493,6 @@ const PlannerScreen = ({ navigation }) => {
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ width: 360, paddingLeft: 10, paddingBottom: 280 }}
                     ListEmptyComponent={renderEmptyComponent}
-                    ListFooterComponent={renderFooterComponent}
                     refreshControl={
                         <RefreshControl
                             refreshing={false}
