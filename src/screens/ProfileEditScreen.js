@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { StyleSheet, Image, Modal, View, Dimensions, FlatList } from 'react-native';
-import { useColorMode, useTheme, Box, Text, Input, Pressable } from 'native-base';
+import { StyleSheet, Image, Modal, View, Dimensions, FlatList, TextInput } from 'react-native';
+import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
 import { EditHeader } from '../components/Header';
@@ -24,6 +24,8 @@ const ProfileEditScreen = ({ navigation }) => {
     const [age, setAge] = useState(user.profile.age);
     const [modalVisible, setModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [isNameFocused, setIsNameFocused] = useState(false);
+    const [isInterestFocused, setIsInterestFocused] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -90,14 +92,33 @@ const ProfileEditScreen = ({ navigation }) => {
                     >
                         暱稱
                     </Text>
-                    <Input
-                        variant="underlined"
-                        placeholder="未設定暱稱"
-                        size="md"
-                        minWidth="85%"
-                        value={name}
-                        onChangeText={(text) => setName(text)}
-                    />
+                    <Box
+                        style={{
+                            width: Dimensions.get('window').width - 110,
+                            borderBottomWidth: isNameFocused ? 1.2 : 1,
+                            borderBottomColor: isNameFocused
+                                ? colors.primary[100]
+                                : colorMode === 'dark'
+                                ? colors.dark[300]
+                                : colors.dark[500],
+                        }}
+                    >
+                        <TextInput
+                            placeholder="暱稱"
+                            placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
+                            style={{
+                                fontSize: 14,
+                                paddingVertical: 6,
+                                color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
+                            }}
+                            value={name}
+                            onChangeText={(text) => setName(text)}
+                            returnKeyType="done"
+                            maxLength={20}
+                            onBlur={() => setIsNameFocused(false)}
+                            onFocus={() => setIsNameFocused(true)}
+                        />
+                    </Box>
                 </Box>
                 <Box style={styles.contentInputWrapper}>
                     <Text
@@ -106,14 +127,33 @@ const ProfileEditScreen = ({ navigation }) => {
                     >
                         興趣
                     </Text>
-                    <Input
-                        variant="underlined"
-                        placeholder="興趣"
-                        size="md"
-                        minWidth="85%"
-                        value={interest}
-                        onChangeText={(text) => setInterest(text)}
-                    />
+                    <Box
+                        style={{
+                            width: Dimensions.get('window').width - 110,
+                            borderBottomWidth: isInterestFocused ? 1.2 : 1,
+                            borderBottomColor: isInterestFocused
+                                ? colors.primary[100]
+                                : colorMode === 'dark'
+                                ? colors.dark[300]
+                                : colors.dark[500],
+                        }}
+                    >
+                        <TextInput
+                            placeholder="興趣"
+                            placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
+                            style={{
+                                fontSize: 14,
+                                paddingVertical: 6,
+                                color: colorMode === 'dark' ? colors.dark[600] : colors.dark[200],
+                            }}
+                            value={interest}
+                            onChangeText={(text) => setInterest(text)}
+                            returnKeyType="done"
+                            maxLength={20}
+                            onBlur={() => setIsInterestFocused(false)}
+                            onFocus={() => setIsInterestFocused(true)}
+                        />
+                    </Box>
                 </Box>
                 <Box style={[styles.contentWrapper, { marginTop: 20 }]}>
                     <Text

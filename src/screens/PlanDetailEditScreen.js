@@ -510,13 +510,11 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 行程名稱
                             </Text>
                             <Box
-                                style={[
-                                    styles.optionRight,
-                                    {
-                                        borderBottomWidth: 1,
-                                        borderBottomColor: colorMode === 'dark' ? colors.dark[300] : colors.dark[500],
-                                    },
-                                ]}
+                                style={{
+                                    width: Dimensions.get('window').width - 130,
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: colorMode === 'dark' ? colors.dark[300] : colors.dark[500],
+                                }}
                             >
                                 <Text color={colors.dark[300]}>{tripData.name}</Text>
                             </Box>
@@ -529,17 +527,15 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 景點名稱
                             </Text>
                             <Box
-                                style={[
-                                    styles.optionRight,
-                                    {
-                                        borderBottomWidth: isSpotFocused ? 1.2 : 1,
-                                        borderBottomColor: isSpotFocused
-                                            ? colors.primary[100]
-                                            : colorMode === 'dark'
-                                            ? colors.dark[300]
-                                            : colors.dark[500],
-                                    },
-                                ]}
+                                style={{
+                                    width: Dimensions.get('window').width - 130,
+                                    borderBottomWidth: isSpotFocused ? 1.2 : 1,
+                                    borderBottomColor: isSpotFocused
+                                        ? colors.primary[100]
+                                        : colorMode === 'dark'
+                                        ? colors.dark[300]
+                                        : colors.dark[500],
+                                }}
                             >
                                 <TextInput
                                     placeholder="輸入景點名稱"
@@ -566,17 +562,15 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                 備註(選填)
                             </Text>
                             <Box
-                                style={[
-                                    styles.optionRight,
-                                    {
-                                        borderBottomWidth: isNoteFocused ? 1.2 : 1,
-                                        borderBottomColor: isNoteFocused
-                                            ? colors.primary[100]
-                                            : colorMode === 'dark'
-                                            ? colors.dark[300]
-                                            : colors.dark[500],
-                                    },
-                                ]}
+                                style={{
+                                    width: Dimensions.get('window').width - 140,
+                                    borderBottomWidth: isNoteFocused ? 1.2 : 1,
+                                    borderBottomColor: isNoteFocused
+                                        ? colors.primary[100]
+                                        : colorMode === 'dark'
+                                        ? colors.dark[300]
+                                        : colors.dark[500],
+                                }}
                             >
                                 <TextInput
                                     placeholder="輸入備註"
@@ -893,11 +887,7 @@ const styles = StyleSheet.create({
         height: 190,
         borderRadius: 5,
     },
-    optionRight: {
-        width: 250,
-    },
     optionWrapper: {
-        width: '100%',
         height: 30,
         display: 'flex',
         flexDirection: 'row',
