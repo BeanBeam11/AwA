@@ -39,6 +39,10 @@ const SpotDetailModal = (props) => {
     const longitude = spot.Position ? spot.Position.PositionLon : null;
 
     const handleDone = () => {
+        if (selectedTrip === null || selectedTripIndex === null) {
+            alert('要記得選擇行程及天數呦！');
+            return;
+        }
         let newData = selectedTrip.trips.map((val, index) => {
             if (index === selectedTripIndex) {
                 return [
