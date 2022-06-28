@@ -63,6 +63,7 @@ const PlannerScreen = ({ navigation }) => {
     const [isFocused, setIsFocused] = useState(false);
     const [trips, setTrips] = useState([]);
     const [sharedTrips, setSharedTrips] = useState([]);
+    const [spotImages, setSpotImages] = useState([]);
     const dayArray = [[]];
     const daysStartTimeArray = [''];
 
@@ -295,6 +296,11 @@ const PlannerScreen = ({ navigation }) => {
         const currentTrip = trips[index];
         setName(currentTrip.name);
         setCoverImage(currentTrip.cover_image);
+        let spotImagesData = currentTrip.trips[0].map((item, index) => {
+            if (item.image !== null) return item.image;
+        });
+        spotImagesData = spotImagesData.filter((el) => el !== undefined);
+        setSpotImages(spotImagesData);
         if (currentTrip.start_date) {
             setIsAssigned(true);
             setStartDate(new Date(currentTrip.start_date));
@@ -364,9 +370,9 @@ const PlannerScreen = ({ navigation }) => {
 
     const renderCoverImageItem = ({ item }) => {
         return (
-            <Pressable style={styles.coverImageBox} onPress={() => setCoverImage(item.image)}>
-                <Image style={styles.avatar} source={{ uri: item.image }} />
-                {item.image === coverImage && (
+            <Pressable style={styles.coverImageBox} onPress={() => setCoverImage(item)}>
+                <Image style={styles.avatar} source={{ uri: item }} />
+                {item === coverImage && (
                     <Box style={styles.avatarMask}>
                         <MaterialIcon name="check-circle-outline" size={45} color="#fff" />
                     </Box>
@@ -749,18 +755,24 @@ const PlannerScreen = ({ navigation }) => {
                                 style={{ fontSize: 16, fontWeight: '500', paddingBottom: 10 }}
                                 color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                             >
-                                - 請從下列選項選擇 -
+                                - 請從第一天的景點中選擇 -
                             </Text>
-                            <FlatList
-                                data={coverImagesData}
-                                renderItem={renderCoverImageItem}
-                                keyExtractor={(item, index) => index}
-                                horizontal={false}
-                                numColumns={2}
-                                columnWrapperStyle={{ justifyContent: 'space-between' }}
-                                showsVerticalScrollIndicator={false}
-                                contentContainerStyle={{ marginTop: 30 }}
-                            />
+                            {spotImages.length !== 0 ? (
+                                <FlatList
+                                    data={spotImages}
+                                    renderItem={renderCoverImageItem}
+                                    keyExtractor={(item, index) => index}
+                                    horizontal={false}
+                                    numColumns={2}
+                                    columnWrapperStyle={{ justifyContent: 'space-between' }}
+                                    showsVerticalScrollIndicator={false}
+                                    contentContainerStyle={{ marginTop: 10, paddingBottom: 50 }}
+                                />
+                            ) : (
+                                <Text style={[styles.planNullText, { marginTop: 50 }]} color={colors.dark[400]}>
+                                    沒有可以選擇的圖片QQ
+                                </Text>
+                            )}
                             <Box style={styles.coverModalActionWrapper}>
                                 <Pressable onPress={() => setCoverModalVisible(!coverModalVisible)}>
                                     <Text
@@ -917,7 +929,6 @@ const styles = StyleSheet.create({
     },
     planNullText: {
         fontSize: 16,
-        color: '#969696',
         marginBottom: 6,
     },
     editMask: {
@@ -944,7 +955,7 @@ const styles = StyleSheet.create({
     },
     coverModalView: {
         width: 340,
-        height: 395,
+        height: 410,
         borderRadius: 10,
         paddingVertical: 30,
         alignItems: 'center',

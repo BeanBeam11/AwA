@@ -598,6 +598,7 @@ const styles = StyleSheet.create({
         marginVertical: 2,
     },
     info: {
+        width: 228,
         fontSize: 14,
         marginLeft: 3,
     },
