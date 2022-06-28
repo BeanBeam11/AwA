@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Image, Platform, Dimensions, FlatList, Alert } from 'react-native';
+import { StyleSheet, Image, Platform, Dimensions, FlatList, Alert, TextInput } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import Modal from 'react-native-modal';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
@@ -350,51 +350,54 @@ const PlanDetailScreen = ({ navigation, route }) => {
                         <Image source={{ uri: selectedSpot.image }} style={styles.modalImage} resizeMode="cover" />
                     )}
                     <Text style={styles.modalName}>{selectedSpot.spot}</Text>
-                    {selectedSpot.address && (
-                        <Box style={{ display: 'flex', flexDirection: 'row' }}>
+                    {selectedSpot.spot_id && (
+                        <Box style={styles.infoBox}>
                             <MaterialCommunityIcons
                                 name="map-marker-outline"
                                 size={20}
                                 color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                                style={{ marginTop: 2 }}
+                                style={{}}
                             />
                             <Text
                                 style={styles.info}
                                 color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
                             >
-                                {selectedSpot.address}
+                                {selectedSpot.address ? selectedSpot.address : '尚無資訊'}
                             </Text>
                         </Box>
                     )}
-                    {selectedSpot.open_time && (
-                        <Box style={{ display: 'flex', flexDirection: 'row' }}>
+                    {selectedSpot.spot_id && (
+                        <Box style={styles.infoBox}>
                             <MaterialCommunityIcons
                                 name="clock-outline"
                                 size={18}
                                 color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                                style={{ paddingHorizontal: 1, marginTop: 2 }}
+                                style={{ paddingHorizontal: 1, paddingTop: 4 }}
                             />
-                            <Text
-                                style={styles.info}
-                                color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                            >
-                                {selectedSpot.open_time}
-                            </Text>
+                            <TextInput
+                                multiline={true}
+                                value={selectedSpot.open_time ? selectedSpot.open_time : '尚無資訊'}
+                                editable={false}
+                                style={[
+                                    styles.info,
+                                    { color: colorMode === 'dark' ? colors.dark[400] : colors.dark[300] },
+                                ]}
+                            />
                         </Box>
                     )}
-                    {selectedSpot.phone && (
-                        <Box style={{ display: 'flex', flexDirection: 'row' }}>
+                    {selectedSpot.spot_id && (
+                        <Box style={styles.infoBox}>
                             <MaterialCommunityIcons
                                 name="phone-outline"
                                 size={16}
                                 color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                                style={{ paddingHorizontal: 2, marginTop: 3 }}
+                                style={{ paddingHorizontal: 2, paddingTop: 4 }}
                             />
                             <Text
                                 style={styles.info}
                                 color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
                             >
-                                {selectedSpot.phone}
+                                {selectedSpot.phone ? selectedSpot.phone : '尚無資訊'}
                             </Text>
                         </Box>
                     )}
@@ -587,6 +590,12 @@ const styles = StyleSheet.create({
         width: 250,
         height: 150,
         borderRadius: 5,
+    },
+    infoBox: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginRight: 'auto',
+        marginVertical: 2,
     },
     info: {
         fontSize: 14,

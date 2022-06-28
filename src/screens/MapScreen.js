@@ -1,64 +1,71 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Dimensions, Image, FlatList } from 'react-native';
+import { StyleSheet, Dimensions, Image } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import MapView, { Marker } from 'react-native-maps';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { GOOGLE_PLACES_API } from '@env';
 import Carousel from 'react-native-snap-carousel';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Loading from '../components/Loading';
-import { SearchBar } from '../components/SearchBar';
 import { Sight } from '../components/Sight';
 import { SpotDetailModal } from '../components/SpotDetailModal';
-import { searchScenicSpots } from '../api/transportData';
+import { googlePlaceInitial } from '../data/googlePlaceInitial';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { selectAccessToken, selectRecommendSpots } from '../redux/spotSlice';
-
+// Google
 const MapScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    const recommendSpots = useSelector(selectRecommendSpots);
-    const accessToken = useSelector(selectAccessToken);
 
-    const [keyword, setKeyword] = useState('');
-    const [results, setResults] = useState([]);
-    const [searchResult, setSearchResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const [region, setRegion] = useState({
-        latitude: recommendSpots[0].Position.PositionLat,
-        longitude: recommendSpots[0].Position.PositionLon,
+        latitude: 24.08594819999999,
+        longitude: 120.540171,
         latitudeDelta: 0.003,
         longitudeDelta: 0.002,
     });
     const [marker, setMarker] = useState({
         coord: {
-            latitude: recommendSpots[0].Position.PositionLat,
-            longitude: recommendSpots[0].Position.PositionLon,
+            latitude: 24.08594819999999,
+            longitude: 120.540171,
         },
-        name: recommendSpots[0].ScenicSpotName,
-        address: recommendSpots[0].Address,
+        name: '彰化扇形車庫',
+        address: '500台灣彰化縣彰化市彰美路一段1號',
     });
-    const [spots, setSpots] = useState(recommendSpots);
-    const [carouselData, setCarouselData] = useState(recommendSpots);
+    const [originalData, setOriginalData] = useState(googlePlaceInitial);
+    const [carouselData, setCarouselData] = useState(null);
     const isCarousel = React.useRef(null);
     const [spotModalVisible, setSpotModalVisible] = useState(false);
-    const [selectedSpot, setSelectedSpot] = useState(spots[0]);
+    const [selectedSpot, setSelectedSpot] = useState(null);
 
     useEffect(() => {
-        getSearchResults();
-    }, [keyword]);
+        let newCarouselData = originalData.map((item, index) => {
+            const photoUrl = item.photos[0]
+                ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${item.photos[0].photo_reference}&key=${GOOGLE_PLACES_API}`
+                : null;
+            const phoneFormatted = item.international_phone_number
+                ? item.international_phone_number.replace('+', '').split(' ').join('-')
+                : null;
+            const openTimeFormatted = item.opening_hours ? item.opening_hours.weekday_text.join('\n') : null;
 
-    useEffect(() => {
-        if (searchResult !== null) {
-            let newData = [searchResult, ...carouselData];
-            newData.pop();
-            setCarouselData([...newData]);
-        }
-    }, [searchResult]);
-
-    const getSearchResults = async () => {
-        const res = await searchScenicSpots({ accessToken, keyword });
-        setResults(res);
-    };
+            return {
+                ScenicSpotID: item.place_id,
+                ScenicSpotName: item.name,
+                Phone: phoneFormatted,
+                Address: item.formatted_address.split('台灣')[1],
+                OpenTime: openTimeFormatted,
+                Picture: {
+                    PictureUrl1: photoUrl,
+                },
+                Position: {
+                    PositionLon: item.geometry.location.lng,
+                    PositionLat: item.geometry.location.lat,
+                },
+                City: item.formatted_address.slice(5, 8),
+            };
+        });
+        if (newCarouselData.length > 3) newCarouselData.pop();
+        setCarouselData([...newCarouselData]);
+    }, [originalData]);
 
     const renderCarouselItem = ({ item }) => {
         return (
@@ -73,60 +80,28 @@ const MapScreen = ({ navigation }) => {
         );
     };
 
-    const renderSearchResult = ({ item }) => {
-        return (
-            <Pressable
-                style={[
-                    styles.resultBox,
-                    { borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500] },
-                ]}
-                _dark={{ bg: colors.dark[50] }}
-                _light={{ bg: '#fff' }}
-                onPress={() => {
-                    setSearchResult(item);
-                }}
-            >
-                <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>{item.ScenicSpotName}</Text>
-            </Pressable>
-        );
+    const handleSearchResult = (details) => {
+        setOriginalData([details, ...originalData]);
+        setRegion({
+            ...region,
+            latitude: details.geometry.location.lat,
+            longitude: details.geometry.location.lng,
+        });
+        setMarker({
+            coord: {
+                latitude: details.geometry.location.lat,
+                longitude: details.geometry.location.lng,
+            },
+            name: details.ScenicSpotName,
+            address: details.Address,
+        });
     };
-
-    const renderListEmpty = () => {
-        return (
-            <Box
-                style={[
-                    styles.resultBox,
-                    { borderBottomColor: colorMode === 'dark' ? colors.dark[200] : colors.dark[500] },
-                ]}
-                _dark={{ bg: colors.dark[50] }}
-                _light={{ bg: '#fff' }}
-            >
-                <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>沒有符合的結果 ( ×ω× )</Text>
-            </Box>
-        );
-    };
-
-    // const handleSearchResult = (details) => {
-    //     setCarouselData([details, ...carouselData]);
-    //     setRegion({
-    //         ...region,
-    //         latitude: details.geometry.location.lat,
-    //         longitude: details.geometry.location.lng,
-    //     });
-    //     setMarker({
-    //         coord: {
-    //             latitude: details.geometry.location.lat,
-    //             longitude: details.geometry.location.lng,
-    //         },
-    //         name: details.name,
-    //         address: details.formatted_address,
-    //     });
-    // };
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
             <MapView
                 style={styles.map}
+                provider={null}
                 region={region}
                 mapType="mutedStandard"
                 userInterfaceStyle={colorMode === 'dark' ? 'dark' : 'light'}
@@ -144,52 +119,89 @@ const MapScreen = ({ navigation }) => {
                     pinColor={colors.primary[200]}
                 />
             </MapView>
-            <Box style={styles.searchHeader}>
-                <SearchBar placeholder={'搜尋景點'} value={keyword} onChangeText={(text) => setKeyword(text)} />
-                <FlatList
-                    data={results}
-                    renderItem={renderSearchResult}
-                    keyExtractor={(item, index) => index}
-                    horizontal={false}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ alignItems: 'center' }}
-                    ListEmptyComponent={renderListEmpty}
+            <Box style={styles.searchBarWrapper} _dark={{ bg: colors.dark[200] }} _light={{ bg: '#fff' }}>
+                <Image
+                    source={require('../../assets/icons/ic_search.png')}
+                    style={styles.searchIcon}
+                    resizeMode="cover"
+                />
+                <GooglePlacesAutocomplete
+                    placeholder="搜尋景點"
+                    textInputProps={{
+                        placeholderTextColor: colors.dark[400],
+                        returnKeyType: 'search',
+                    }}
+                    minLength={2}
+                    returnKeyType={'search'}
+                    enablePoweredByContainer={false}
+                    fetchDetails={true}
+                    onPress={(data, details = null) => {
+                        // 'details' is provided when fetchDetails = true
+                        handleSearchResult(details);
+                    }}
+                    query={{
+                        key: GOOGLE_PLACES_API,
+                        language: 'zh-TW',
+                        components: 'country:TW',
+                        types: 'establishment',
+                    }}
+                    GooglePlacesDetailsQuery={{
+                        fields: 'formatted_address,geometry,name,opening_hours,photos,place_id,rating,international_phone_number',
+                    }}
+                    nearbyPlacesAPI="GooglePlacesSearch"
+                    GooglePlacesSearchQuery={{ rankby: 'distance' }}
+                    styles={{
+                        textInput: {
+                            height: 40,
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginLeft: 24,
+                            marginTop: 2,
+                            color: colorMode === 'dark' ? '#fff' : colors.dark[200],
+                            backgroundColor: colorMode === 'dark' ? colors.dark[200] : '#fff',
+                        },
+                    }}
                 />
             </Box>
-            <Carousel
-                ref={isCarousel}
-                data={carouselData}
-                containerCustomStyle={styles.carousel}
-                renderItem={renderCarouselItem}
-                sliderWidth={Dimensions.get('window').width}
-                itemWidth={200}
-                onSnapToItem={(index) => {
-                    setMarker({
-                        coord: {
+            {carouselData && (
+                <Carousel
+                    ref={isCarousel}
+                    data={carouselData}
+                    containerCustomStyle={styles.carousel}
+                    renderItem={renderCarouselItem}
+                    sliderWidth={Dimensions.get('window').width}
+                    itemWidth={200}
+                    onSnapToItem={(index) => {
+                        setRegion({
+                            ...region,
                             latitude: carouselData[index].Position.PositionLat,
                             longitude: carouselData[index].Position.PositionLon,
-                        },
-                        name: carouselData[index].ScenicSpotName,
-                        address: carouselData[index].Address,
-                    });
-                    setRegion({
-                        ...region,
-                        latitude: carouselData[index].Position.PositionLat,
-                        longitude: carouselData[index].Position.PositionLon,
-                    });
-                }}
-            />
-            <SpotDetailModal
-                isVisible={spotModalVisible}
-                spot={selectedSpot}
-                onBackdropPress={() => setSpotModalVisible(!spotModalVisible)}
-                onSwipeComplete={() => setSpotModalVisible(false)}
-            />
+                        });
+                        setMarker({
+                            coord: {
+                                latitude: carouselData[index].Position.PositionLat,
+                                longitude: carouselData[index].Position.PositionLon,
+                            },
+                            name: carouselData[index].ScenicSpotName,
+                            address: carouselData[index].Address,
+                        });
+                    }}
+                />
+            )}
+            {selectedSpot && (
+                <SpotDetailModal
+                    isVisible={spotModalVisible}
+                    spot={selectedSpot}
+                    onBackdropPress={() => setSpotModalVisible(!spotModalVisible)}
+                    onSwipeComplete={() => setSpotModalVisible(false)}
+                />
+            )}
             {loading && <Loading />}
         </Box>
     );
 };
-
 export default MapScreen;
 
 const styles = StyleSheet.create({
@@ -203,62 +215,29 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
     },
-    searchHeader: {
+    searchBarWrapper: {
+        width: Dimensions.get('window').width - 48,
         position: 'absolute',
         top: 60,
+        display: 'flex',
+        flexDirection: 'row',
         alignItems: 'center',
+        paddingHorizontal: 10,
+        borderRadius: 5,
     },
+    searchIcon: {
+        width: 24,
+        height: 24,
+        position: 'absolute',
+        top: 10,
+        left: 10,
+    },
+    searchGoogle: {},
     goBackBtn: {
         marginLeft: 20,
     },
     carousel: {
         position: 'absolute',
         bottom: 100,
-    },
-    sightBox: {
-        width: 188,
-        height: Platform.OS === 'ios' ? 210 : 220,
-        borderRadius: 5,
-        marginRight: 10,
-    },
-    sightImageBox: {
-        width: 188,
-        height: 125,
-        borderTopLeftRadius: 5,
-        borderTopRightRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    sightImage: {
-        width: 188,
-        height: 125,
-        borderTopLeftRadius: 5,
-        borderTopRightRadius: 5,
-    },
-    sightInfo: {
-        width: 188,
-        height: Platform.OS === 'ios' ? 85 : 95,
-        padding: 12,
-    },
-    sightName: {
-        fontSize: 14,
-        fontWeight: '500',
-    },
-    sightLocation: {
-        fontSize: 11,
-    },
-    addSightBtn: {
-        position: 'absolute',
-        bottom: 12,
-        right: 12,
-    },
-    rating: {
-        width: 70,
-    },
-    resultBox: {
-        width: Dimensions.get('window').width - 48,
-        paddingHorizontal: 20,
-        paddingVertical: 8,
-        borderBottomWidth: 1,
     },
 });

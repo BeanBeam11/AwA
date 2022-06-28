@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Image, ScrollView, FlatList, Dimensions } from 'react-native';
+import { StyleSheet, Image, ScrollView, FlatList, Dimensions, TextInput } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import Modal from 'react-native-modal';
 import { Rating, AirbnbRating } from 'react-native-ratings';
@@ -199,8 +199,22 @@ const SpotDetailModal = (props) => {
                             color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
                             style={{ paddingHorizontal: 1, marginTop: 2 }}
                         />
+                        <TextInput
+                            multiline={true}
+                            value={open_time ? open_time : `尚無資訊`}
+                            editable={false}
+                            style={[styles.info, { color: colorMode === 'dark' ? colors.dark[400] : colors.dark[300] }]}
+                        />
+                    </Box>
+                    <Box style={styles.infoWrapper}>
+                        <MaterialCommunityIcons
+                            name="phone-outline"
+                            size={16}
+                            color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
+                            style={{ paddingHorizontal: 2, marginTop: 3 }}
+                        />
                         <Text style={styles.info} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
-                            {open_time ? open_time : `尚無資訊`}
+                            {phone ? phone : `尚無資訊`}
                         </Text>
                     </Box>
                     <Box style={styles.actionWrapper}>
