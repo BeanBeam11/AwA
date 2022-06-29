@@ -43,13 +43,13 @@ export const getRecommendScenicSpots = async ({ accessToken }) => {
     }
 };
 
-export const getCityScenicSpots = async ({ accessToken, city }) => {
+export const getCityScenicSpots = async ({ accessToken, city, top, skip }) => {
     const orderby = encodeURIComponent(`Picture/PictureUrl1 desc`);
     const filter = encodeURIComponent(`contains(City,'${city}')`);
 
     try {
         const res = await axios.get(
-            `${baseUrl}/v2/Tourism/ScenicSpot?%24filter=${filter}&%24orderby=${orderby}&%24top=10&%24format=JSON`,
+            `${baseUrl}/v2/Tourism/ScenicSpot?%24filter=${filter}&%24orderby=${orderby}&%24top=${top}&%24skip=${skip}&%24format=JSON`,
             { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         return res;

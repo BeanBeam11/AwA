@@ -25,9 +25,9 @@ const getRecommendSpotsAsync = createAsyncThunk('spot/getRecommendSpots', async 
     }
 });
 
-const getCitySpotsAsync = createAsyncThunk('spot/getCitySpots', async ({ accessToken, city }) => {
+const getCitySpotsAsync = createAsyncThunk('spot/getCitySpots', async ({ accessToken, city, top, skip }) => {
     try {
-        const { data } = await getCityScenicSpots({ accessToken, city });
+        const { data } = await getCityScenicSpots({ accessToken, city, top, skip });
         // The value we return becomes the `fulfilled` action payload
         return data;
     } catch (err) {

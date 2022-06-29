@@ -10,6 +10,7 @@ import Loading from '../components/Loading';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAccessToken, selectCitySpots, selectSpotStatus, getCitySpotsAsync } from '../redux/spotSlice';
+import { getCityScenicSpots } from '../api/transportData';
 
 const RegionScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
@@ -26,19 +27,20 @@ const RegionScreen = ({ navigation, route }) => {
     const region = cities.find((el) => el.city === city);
 
     useEffect(() => {
-        dispatch(getCitySpotsAsync({ accessToken, city }));
+        setLoading(true);
+        fetchCitySpots();
     }, []);
 
+    const fetchCitySpots = async () => {
+        const res = await getCityScenicSpots({ accessToken, city, top: 10, skip: 0 });
+        setSpots(res.data);
+    };
+
     useEffect(() => {
-        if (spotStatus == 'loading') {
-            setLoading(true);
-        } else if (spotStatus == 'error') {
+        if (spots.length !== 0) {
             setLoading(false);
-        } else if (spotStatus == 'idle') {
-            setSpots(citySpots);
-            if (spots) setLoading(false);
         }
-    }, [spotStatus]);
+    }, [spots]);
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
@@ -71,7 +73,7 @@ const RegionScreen = ({ navigation, route }) => {
                         </Text>
                         <Pressable
                             style={styles.sectionRightBox}
-                            onPress={() => navigation.navigate('CitySightScreen')}
+                            onPress={() => navigation.navigate('CitySightScreen', { city, spotsData: spots })}
                         >
                             <Text
                                 style={styles.sectionTitleRight}
