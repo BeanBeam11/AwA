@@ -188,6 +188,17 @@ export const getUserSharedTrips = async ({ token, userId }) => {
     }
 };
 
+export const getUserSavedTrips = async ({ token, userId }) => {
+    try {
+        const res = await axios.get(`${baseUrl}api/v1/trips/savedTrips/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
 export const createUserTrip = async ({
     token,
     name,
@@ -253,6 +264,19 @@ export const updateUserTripShared = async ({ token, tripId, shared_users }) => {
         const res = await axios.patch(
             `${baseUrl}api/v1/trips/${tripId}`,
             { shared_users },
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
+export const updateUserTripSaved = async ({ token, tripId, saved_by }) => {
+    try {
+        const res = await axios.patch(
+            `${baseUrl}api/v1/trips/${tripId}`,
+            { saved_by },
             { headers: { Authorization: `Bearer ${token}` } }
         );
         return res.data;

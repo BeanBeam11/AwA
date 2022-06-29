@@ -34,13 +34,16 @@ import {
     selectCreatedTrip,
     selectTripStatus,
     selectSharedTripStatus,
+    selectSavedTripStatus,
     selectCreateTripStatus,
     selectDeleteTripStatus,
     getUserTripsAsync,
     getUserSharedTripsAsync,
+    getUserSavedTripsAsync,
     createUserTripAsync,
     updateUserTripInfoAsync,
     deleteUserTripAsync,
+    selectUserSavedTrips,
 } from '../redux/tripSlice';
 
 const PlannerScreen = ({ navigation }) => {
@@ -63,6 +66,7 @@ const PlannerScreen = ({ navigation }) => {
     const [isFocused, setIsFocused] = useState(false);
     const [trips, setTrips] = useState([]);
     const [sharedTrips, setSharedTrips] = useState([]);
+    const [savedTrips, setSavedTrips] = useState([]);
     const [spotImages, setSpotImages] = useState([]);
     const dayArray = [[]];
     const daysStartTimeArray = [''];
@@ -72,16 +76,13 @@ const PlannerScreen = ({ navigation }) => {
     const token = useSelector(selectToken);
     const userTrips = useSelector(selectUserTrips);
     const userSharedTrips = useSelector(selectUserSharedTrips);
+    const userSavedTrips = useSelector(selectUserSavedTrips);
     const createdTrip = useSelector(selectCreatedTrip);
     const tripStatus = useSelector(selectTripStatus);
     const sharedTripStatus = useSelector(selectSharedTripStatus);
+    const savedTripStatus = useSelector(selectSavedTripStatus);
     const createTripStatus = useSelector(selectCreateTripStatus);
     const deleteTripStatus = useSelector(selectDeleteTripStatus);
-
-    useEffect(() => {
-        fetchUserTrips();
-        fetchUserSharedTrips();
-    }, []);
 
     useEffect(() => {
         if (tripStatus == 'error') {
@@ -100,6 +101,15 @@ const PlannerScreen = ({ navigation }) => {
             if (sharedTrips) setLoading(false);
         }
     }, [sharedTripStatus]);
+
+    useEffect(() => {
+        if (savedTripStatus == 'error') {
+            setLoading(false);
+        } else if (savedTripStatus == 'idle') {
+            setSavedTrips(userSavedTrips);
+            if (savedTrips) setLoading(false);
+        }
+    }, [savedTripStatus]);
 
     useEffect(() => {
         if (createTripStatus == 'idle') {
@@ -127,6 +137,10 @@ const PlannerScreen = ({ navigation }) => {
 
     const fetchUserSharedTrips = () => {
         dispatch(getUserSharedTripsAsync({ token, userId: user._id }));
+    };
+
+    const fetchUserSavedTrips = () => {
+        dispatch(getUserSavedTripsAsync({ token, userId: user._id }));
     };
 
     const handleCreateTrip = () => {
@@ -297,9 +311,9 @@ const PlannerScreen = ({ navigation }) => {
         setName(currentTrip.name);
         setCoverImage(currentTrip.cover_image);
         let spotImagesData = currentTrip.trips[0].map((item, index) => {
-            if (item.image !== null) return item.image;
+            return item.image;
         });
-        spotImagesData = spotImagesData.filter((el) => el !== undefined);
+        spotImagesData = spotImagesData.filter((el) => el !== '');
         setSpotImages(spotImagesData);
         if (currentTrip.start_date) {
             setIsAssigned(true);
@@ -463,7 +477,7 @@ const PlannerScreen = ({ navigation }) => {
                 <Box style={styles.planNullBox}>
                     <Text style={styles.planNullText} color={colors.dark[400]}>{`(´Ａ｀。)`}</Text>
                     <Text style={styles.planNullText} color={colors.dark[400]}>
-                        目前還沒有共用的行程呦
+                        目前還沒有共用的行程
                     </Text>
                 </Box>
             );
@@ -494,11 +508,45 @@ const PlannerScreen = ({ navigation }) => {
     };
 
     const SavedPlan = () => {
+        const renderItem = ({ item, index }) => {
+            return (
+                <Box>
+                    <Plan item={item} navigation={navigation} />
+                </Box>
+            );
+        };
+
+        const renderEmptyComponent = () => {
+            return (
+                <Box style={styles.planNullBox}>
+                    <Text style={styles.planNullText} color={colors.dark[400]}>{`(｡ŏ_ŏ)`}</Text>
+                    <Text style={styles.planNullText} color={colors.dark[400]}>
+                        目前還沒有收藏行程
+                    </Text>
+                </Box>
+            );
+        };
+
         return (
             <Box style={styles.planWrapper}>
-                <Box style={styles.planNullBox}>
-                    <Text style={styles.planNullText}>目前無收藏行程</Text>
-                </Box>
+                <FlatList
+                    data={savedTrips}
+                    renderItem={renderItem}
+                    keyExtractor={(item, index) => index}
+                    horizontal={false}
+                    numColumns={2}
+                    columnWrapperStyle={{ justifyContent: 'space-between' }}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ width: 360, paddingLeft: 10, paddingBottom: 280 }}
+                    ListEmptyComponent={renderEmptyComponent}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={false}
+                            tintColor={colorMode == 'dark' ? colors.dark[400] : colors.secondary[100]}
+                            onRefresh={fetchUserSavedTrips}
+                        />
+                    }
+                />
             </Box>
         );
     };

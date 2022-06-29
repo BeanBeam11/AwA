@@ -3,10 +3,12 @@ import {
     getAllTrips,
     getUserTrips,
     getUserSharedTrips,
+    getUserSavedTrips,
     createUserTrip,
     updateUserTripInfo,
     updateUserTripDetail,
     updateUserTripShared,
+    updateUserTripSaved,
     deleteUserTrip,
 } from '../api';
 
@@ -36,6 +38,17 @@ const getUserTripsAsync = createAsyncThunk('trip/getUserTrips', async ({ token, 
 const getUserSharedTripsAsync = createAsyncThunk('trip/getUserSharedTrips', async ({ token, userId }) => {
     try {
         const { data } = await getUserSharedTrips({ token, userId });
+        // The value we return becomes the `fulfilled` action payload
+        return data.data;
+    } catch (err) {
+        // The value we return becomes the `rejected` action payload
+        return rejectWithValue(err);
+    }
+});
+
+const getUserSavedTripsAsync = createAsyncThunk('trip/getUserSavedTrips', async ({ token, userId }) => {
+    try {
+        const { data } = await getUserSavedTrips({ token, userId });
         // The value we return becomes the `fulfilled` action payload
         return data.data;
     } catch (err) {
@@ -132,6 +145,17 @@ const updateUserTripSharedAsync = createAsyncThunk(
     }
 );
 
+const updateUserTripSavedAsync = createAsyncThunk('trip/updateUserTripSaved', async ({ token, tripId, saved_by }) => {
+    try {
+        const { data } = await updateUserTripSaved({ token, tripId, saved_by });
+        // The value we return becomes the `fulfilled` action payload
+        return data.data;
+    } catch (err) {
+        // The value we return becomes the `rejected` action payload
+        return rejectWithValue(err);
+    }
+});
+
 const deleteUserTripAsync = createAsyncThunk('trip/deleteUserTrip', async ({ token, tripId }) => {
     try {
         const { data } = await deleteUserTrip({ token, tripId });
@@ -148,9 +172,11 @@ const initialState = {
     allTrips: [],
     userTrips: [],
     userSharedTrips: [],
+    userSavedTrips: [],
     createdTrip: {},
     status: 'loading',
     sharedStatus: 'loading',
+    savedStatus: 'loading',
     createStatus: 'loading',
     deleteStatus: 'loading',
 };
@@ -165,6 +191,9 @@ const tripSlice = createSlice({
         },
         setUserTrips: (state, action) => {
             state.userTrips = action.payload;
+        },
+        setUserSavedTrips: (state, action) => {
+            state.userSavedTrips = action.payload;
         },
         setCreatedTrip: (state, action) => {
             state.createdTrip = action.payload;
@@ -201,6 +230,16 @@ const tripSlice = createSlice({
             })
             .addCase(getUserSharedTripsAsync.rejected, (state, action) => {
                 state.sharedStatus = 'error';
+            })
+            .addCase(getUserSavedTripsAsync.pending, (state) => {
+                state.savedStatus = 'loading';
+            })
+            .addCase(getUserSavedTripsAsync.fulfilled, (state, action) => {
+                state.savedStatus = 'idle';
+                state.userSavedTrips = action.payload;
+            })
+            .addCase(getUserSavedTripsAsync.rejected, (state, action) => {
+                state.savedStatus = 'error';
             })
             .addCase(createUserTripAsync.pending, (state) => {
                 state.createStatus = 'loading';
@@ -254,6 +293,15 @@ const tripSlice = createSlice({
             .addCase(updateUserTripSharedAsync.rejected, (state, action) => {
                 state.status = 'error';
             })
+            .addCase(updateUserTripSavedAsync.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(updateUserTripSavedAsync.fulfilled, (state, action) => {
+                state.status = 'idle';
+            })
+            .addCase(updateUserTripSavedAsync.rejected, (state, action) => {
+                state.status = 'error';
+            })
             .addCase(deleteUserTripAsync.pending, (state) => {
                 state.deleteStatus = 'loading';
             })
@@ -270,23 +318,27 @@ const tripSlice = createSlice({
 export const selectAllTrips = (state) => state.trip.allTrips;
 export const selectUserTrips = (state) => state.trip.userTrips;
 export const selectUserSharedTrips = (state) => state.trip.userSharedTrips;
+export const selectUserSavedTrips = (state) => state.trip.userSavedTrips;
 export const selectCreatedTrip = (state) => state.trip.createdTrip;
 export const selectTripStatus = (state) => state.trip.status;
 export const selectSharedTripStatus = (state) => state.trip.sharedStatus;
+export const selectSavedTripStatus = (state) => state.trip.savedStatus;
 export const selectCreateTripStatus = (state) => state.trip.createStatus;
 export const selectDeleteTripStatus = (state) => state.trip.deleteStatus;
 
 // export actions to global
-export const { setAllTrips, setUserTrips, setCreatedTrip } = tripSlice.actions;
+export const { setAllTrips, setUserTrips, setCreatedTrip, setUserSavedTrips } = tripSlice.actions;
 
 // export async function to global
 export {
     getAllTripsAsync,
     getUserTripsAsync,
     getUserSharedTripsAsync,
+    getUserSavedTripsAsync,
     createUserTripAsync,
     updateUserTripInfoAsync,
     updateUserTripDetailAsync,
+    updateUserTripSavedAsync,
     deleteUserTripAsync,
     updateUserTripSharedAsync,
 };

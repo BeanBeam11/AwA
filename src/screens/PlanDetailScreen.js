@@ -11,7 +11,12 @@ import { formatDate, formatTime, formatStayTime } from '../utils/formatter';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, selectToken } from '../redux/accountSlice';
-import { selectUserTrips, selectTripStatus, updateUserTripSharedAsync } from '../redux/tripSlice';
+import {
+    selectUserTrips,
+    selectTripStatus,
+    updateUserTripSharedAsync,
+    updateUserTripSavedAsync,
+} from '../redux/tripSlice';
 import { selectSharedUser, selectUserStatus, setSharedUser, getUserByEmailAsync } from '../redux/userSlice';
 
 const PlanDetailScreen = ({ navigation, route }) => {
@@ -33,6 +38,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
     const [sharedUserData, setSharedUserData] = useState(null);
     const [spotModalVisible, setSpotModalVisible] = useState(false);
     const [selectedSpot, setSelectedSpot] = useState({});
+    const [isSaved, setIsSaved] = useState(trip.saved_by.find((el) => el === user._id) ? true : false);
 
     useEffect(() => {
         if (isOwner) {
@@ -104,6 +110,20 @@ const PlanDetailScreen = ({ navigation, route }) => {
             setTripData({ ...tripData, shared_users: [...newData] });
             dispatch(updateUserTripSharedAsync({ token, tripId: tripData._id, shared_users: newData }));
         }
+    };
+
+    const handleSaveTrip = () => {
+        const isSavedBefore = tripData.saved_by.find((el) => el === user._id) ? true : false;
+        let newData;
+
+        if (isSavedBefore) {
+            newData = tripData.saved_by.filter((el) => el !== user._id);
+        } else {
+            newData = [...tripData.saved_by, user._id];
+        }
+
+        dispatch(updateUserTripSavedAsync({ token, tripId: tripData._id, saved_by: [...newData] }));
+        setIsSaved(!isSaved);
     };
 
     const renderTabBar = (props) => (
@@ -241,7 +261,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                         onPress={() => navigation.navigate('PlanDetailEditScreen', { trip: tripData })}
                     />
                 ) : (
-                    <PlanDetailSaveHeader navigation={navigation} onPress={null} />
+                    <PlanDetailSaveHeader navigation={navigation} onPress={() => handleSaveTrip()} isSaved={isSaved} />
                 )}
                 <Box style={styles.infoWrapper}>
                     {tripData.cover_image ? (

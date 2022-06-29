@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
-import { SearchBar } from './SearchBar';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -62,7 +61,7 @@ const PlanDetailHeader = ({ navigation, onPress }) => {
     );
 };
 
-const PlanDetailSaveHeader = ({ navigation, onPress }) => {
+const PlanDetailSaveHeader = ({ navigation, onPress, isSaved }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
@@ -89,11 +88,15 @@ const PlanDetailSaveHeader = ({ navigation, onPress }) => {
                 </Text>
             </Box>
             <Pressable style={styles.headerRight} onPress={onPress}>
-                <MaterialIcon
-                    name="bookmark"
-                    size={24}
-                    color={colorMode == 'dark' ? colors.dark[600] : colors.dark[400]}
-                />
+                {isSaved ? (
+                    <MaterialCommunityIcons name="bookmark" size={24} color={colors.primary[100]} />
+                ) : (
+                    <MaterialCommunityIcons
+                        name="bookmark-outline"
+                        size={24}
+                        color={colorMode == 'dark' ? colors.dark[600] : colors.dark[400]}
+                    />
+                )}
             </Pressable>
         </Box>
     );

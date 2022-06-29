@@ -13,7 +13,14 @@ import Loading from '../components/Loading';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectToken, selectUser } from '../redux/accountSlice';
 import { selectAccessToken, selectRecommendSpots, selectSpotStatus, getRecommendSpotsAsync } from '../redux/spotSlice';
-import { selectAllTrips, selectTripStatus, getAllTripsAsync, getUserTripsAsync } from '../redux/tripSlice';
+import {
+    selectAllTrips,
+    selectTripStatus,
+    getAllTripsAsync,
+    getUserTripsAsync,
+    getUserSharedTripsAsync,
+    getUserSavedTripsAsync,
+} from '../redux/tripSlice';
 
 const HomeScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
@@ -35,6 +42,8 @@ const HomeScreen = ({ navigation }) => {
         dispatch(getRecommendSpotsAsync({ accessToken }));
         dispatch(getAllTripsAsync());
         dispatch(getUserTripsAsync({ token, userId: user._id }));
+        dispatch(getUserSharedTripsAsync({ token, userId: user._id }));
+        dispatch(getUserSavedTripsAsync({ token, userId: user._id }));
     }, []);
 
     useEffect(() => {
