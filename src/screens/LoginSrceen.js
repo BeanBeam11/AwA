@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, TextInput, Dimensions } from 'react-native';
+import { StyleSheet, TextInput, Dimensions, Image, Keyboard } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { goToSignup, loginAsync, selectStatus } from '../redux/accountSlice';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ActionButton } from '../components/ActionButton';
@@ -21,6 +22,7 @@ const LoginScreen = ({ navigation }) => {
     const loginStatus = useSelector(selectStatus);
 
     const handleLogin = () => {
+        Keyboard.dismiss();
         if (email !== '' && password !== '') {
             dispatch(loginAsync({ email, password }));
         } else {
@@ -47,83 +49,85 @@ const LoginScreen = ({ navigation }) => {
     };
 
     return (
-        <Box
-            style={[
-                styles.container,
-                { width: Dimensions.get('window').width, height: Dimensions.get('window').height },
-            ]}
-            _dark={{ bg: colors.dark[50] }}
-            _light={{ bg: colors.dark[600] }}
+        <KeyboardAwareScrollView
+            style={{ flex: 1, backgroundColor: colorMode === 'dark' ? colors.dark[50] : colors.dark[600] }}
         >
-            <Text style={styles.title} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                登入
-            </Text>
-            <Text style={styles.subTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                立即登入來解鎖更多功能！
-            </Text>
-            <Box>
-                <TextInput
-                    placeholder="Email"
-                    placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
-                    value={email}
-                    onChangeText={(text) => setEmail(text)}
-                    returnKeyType="done"
-                    keyboardType="email-address"
-                    style={[
-                        styles.input,
-                        inputStyle,
-                        isEmailFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
-                    ]}
-                    onBlur={() => setIsEmailFocused(false)}
-                    onFocus={() => setIsEmailFocused(true)}
-                />
-                <MaterialCommunityIcons
-                    name="email-outline"
-                    size={24}
-                    color={colors.dark[300]}
-                    style={styles.inputIcon}
-                />
-            </Box>
-            <Box>
-                <TextInput
-                    placeholder="Password"
-                    placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
-                    value={password}
-                    onChangeText={(text) => setPassword(text)}
-                    returnKeyType="done"
-                    secureTextEntry={true}
-                    style={[
-                        styles.input,
-                        inputStyle,
-                        isPassFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
-                    ]}
-                    onBlur={() => setIsPassFocused(false)}
-                    onFocus={() => setIsPassFocused(true)}
-                />
-                <MaterialCommunityIcons
-                    name="lock-outline"
-                    size={24}
-                    color={colors.dark[300]}
-                    style={styles.inputIcon}
-                />
-            </Box>
-            <Pressable style={styles.forgotPassword} onPress={() => alert('(´-ι_-｀) 現在還幫不了你')}>
-                <Text style={styles.text} color={colors.dark[300]}>
-                    忘記密碼
+            <Box
+                style={[
+                    styles.container,
+                    { width: Dimensions.get('window').width, height: Dimensions.get('window').height },
+                ]}
+                _dark={{ bg: colors.dark[50] }}
+                _light={{ bg: colors.dark[600] }}
+            >
+                <Image source={require('../../assets/logo/logo_auth.png')} style={styles.logo} />
+                <Text style={styles.subTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                    立即登入 - 開始你的旅程！
                 </Text>
-            </Pressable>
-            <ActionButton text={'登入'} style={{ marginTop: 50 }} onPress={() => handleLogin()} />
-            <Box style={styles.instruction}>
-                <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>還沒有帳號嗎？</Text>
-                <Pressable onPress={() => handleGoToSignup()}>
-                    <Text style={styles.instructionText} color={colors.primary[200]}>
-                        立即註冊
+                <Box>
+                    <TextInput
+                        placeholder="Email"
+                        placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
+                        value={email}
+                        onChangeText={(text) => setEmail(text)}
+                        returnKeyType="done"
+                        keyboardType="email-address"
+                        style={[
+                            styles.input,
+                            inputStyle,
+                            isEmailFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
+                        ]}
+                        onBlur={() => setIsEmailFocused(false)}
+                        onFocus={() => setIsEmailFocused(true)}
+                    />
+                    <MaterialCommunityIcons
+                        name="email-outline"
+                        size={24}
+                        color={colors.dark[300]}
+                        style={styles.inputIcon}
+                    />
+                </Box>
+                <Box>
+                    <TextInput
+                        placeholder="Password"
+                        placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
+                        value={password}
+                        onChangeText={(text) => setPassword(text)}
+                        returnKeyType="done"
+                        secureTextEntry={true}
+                        style={[
+                            styles.input,
+                            inputStyle,
+                            isPassFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
+                        ]}
+                        onBlur={() => setIsPassFocused(false)}
+                        onFocus={() => setIsPassFocused(true)}
+                    />
+                    <MaterialCommunityIcons
+                        name="lock-outline"
+                        size={24}
+                        color={colors.dark[300]}
+                        style={styles.inputIcon}
+                    />
+                </Box>
+                <Pressable style={styles.forgotPassword} onPress={() => alert('(´-ι_-｀) 現在還幫不了你')}>
+                    <Text style={styles.text} color={colors.dark[300]}>
+                        忘記密碼
                     </Text>
                 </Pressable>
+                <ActionButton text={'登入'} style={{ marginTop: 50 }} onPress={() => handleLogin()} />
+                <Box style={styles.instruction}>
+                    <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>還沒有帳號嗎？</Text>
+                    <Pressable onPress={() => handleGoToSignup()}>
+                        <Text style={styles.instructionText} color={colors.primary[200]}>
+                            立即註冊
+                        </Text>
+                    </Pressable>
+                </Box>
+                {loading && <Loading />}
+                <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />
             </Box>
-            {loading && <Loading />}
-            <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />
-        </Box>
+        </KeyboardAwareScrollView>
     );
 };
 
@@ -136,9 +140,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 50,
     },
-    title: {
-        fontSize: 24,
-        lineHeight: 24,
+    logo: {
+        width: 180,
+        height: 100,
     },
     subTitle: {
         fontSize: 16,

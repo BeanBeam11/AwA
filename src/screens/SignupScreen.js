@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, TextInput, Dimensions } from 'react-native';
+import { StyleSheet, TextInput, Dimensions, Image, Keyboard } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { goToLogin, signupAsync, selectStatus } from '../redux/accountSlice';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ActionButton } from '../components/ActionButton';
@@ -25,6 +26,7 @@ const SignupScreen = ({ navigation }) => {
     const loginStatus = useSelector(selectStatus);
 
     const handleSignup = () => {
+        Keyboard.dismiss();
         if (name !== '' && email !== '' && password !== '' && passwordConfirm !== '') {
             dispatch(signupAsync({ name, email, password, passwordConfirm }));
         } else {
@@ -51,119 +53,126 @@ const SignupScreen = ({ navigation }) => {
     };
 
     return (
-        <Box
-            style={[
-                styles.container,
-                { width: Dimensions.get('window').width, height: Dimensions.get('window').height },
-            ]}
-            _dark={{ bg: colors.dark[50] }}
-            _light={{ bg: colors.dark[600] }}
+        <KeyboardAwareScrollView
+            style={{ flex: 1, backgroundColor: colorMode === 'dark' ? colors.dark[50] : colors.dark[600] }}
         >
-            <Text style={styles.title} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                註冊
-            </Text>
-            <Text style={styles.subTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                立即加入來開始你的旅程！
-            </Text>
-            <Box>
-                <TextInput
-                    placeholder="Name"
-                    placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
-                    value={name}
-                    onChangeText={(text) => setName(text)}
-                    returnKeyType="done"
-                    style={[
-                        styles.input,
-                        inputStyle,
-                        isNameFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
-                    ]}
-                    onBlur={() => setIsNameFocused(false)}
-                    onFocus={() => setIsNameFocused(true)}
-                />
-                <MaterialCommunityIcons name="account" size={24} color={colors.dark[300]} style={styles.inputIcon} />
+            <Box
+                style={[
+                    styles.container,
+                    { width: Dimensions.get('window').width, height: Dimensions.get('window').height },
+                ]}
+                _dark={{ bg: colors.dark[50] }}
+                _light={{ bg: colors.dark[600] }}
+            >
+                <Image source={require('../../assets/logo/logo_auth.png')} style={styles.logo} />
+                <Text style={styles.subTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                    立即加入 - 享受專屬於你的旅程！
+                </Text>
+                <Box>
+                    <TextInput
+                        placeholder="Name"
+                        placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
+                        value={name}
+                        onChangeText={(text) => setName(text)}
+                        returnKeyType="done"
+                        style={[
+                            styles.input,
+                            inputStyle,
+                            isNameFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
+                        ]}
+                        onBlur={() => setIsNameFocused(false)}
+                        onFocus={() => setIsNameFocused(true)}
+                    />
+                    <MaterialCommunityIcons
+                        name="account"
+                        size={24}
+                        color={colors.dark[300]}
+                        style={styles.inputIcon}
+                    />
+                </Box>
+                <Box>
+                    <TextInput
+                        placeholder="Email"
+                        placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
+                        value={email}
+                        onChangeText={(text) => setEmail(text)}
+                        returnKeyType="done"
+                        keyboardType="email-address"
+                        style={[
+                            styles.input,
+                            inputStyle,
+                            isEmailFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
+                        ]}
+                        onBlur={() => setIsEmailFocused(false)}
+                        onFocus={() => setIsEmailFocused(true)}
+                    />
+                    <MaterialCommunityIcons
+                        name="email-outline"
+                        size={24}
+                        color={colors.dark[300]}
+                        style={styles.inputIcon}
+                    />
+                </Box>
+                <Box>
+                    <TextInput
+                        placeholder="Password"
+                        placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
+                        value={password}
+                        onChangeText={(text) => setPassword(text)}
+                        returnKeyType="done"
+                        secureTextEntry={true}
+                        style={[
+                            styles.input,
+                            inputStyle,
+                            isPassFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
+                        ]}
+                        onBlur={() => setIsPassFocused(false)}
+                        onFocus={() => setIsPassFocused(true)}
+                    />
+                    <MaterialCommunityIcons
+                        name="lock-outline"
+                        size={24}
+                        color={colors.dark[300]}
+                        style={styles.inputIcon}
+                    />
+                </Box>
+                <Box>
+                    <TextInput
+                        placeholder="Confirm Password"
+                        placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
+                        value={passwordConfirm}
+                        onChangeText={(text) => setPasswordConfirm(text)}
+                        returnKeyType="done"
+                        secureTextEntry={true}
+                        maxLength={30}
+                        style={[
+                            styles.input,
+                            inputStyle,
+                            isPassConfirmFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
+                        ]}
+                        onBlur={() => setIsPassConfirmFocused(false)}
+                        onFocus={() => setIsPassConfirmFocused(true)}
+                    />
+                    <MaterialCommunityIcons
+                        name="lock-outline"
+                        size={24}
+                        color={colors.dark[300]}
+                        style={styles.inputIcon}
+                    />
+                </Box>
+                <ActionButton text={'註冊'} style={{ marginTop: 50 }} onPress={() => handleSignup()} />
+                <Box style={styles.instruction}>
+                    <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>已經有帳號了！</Text>
+                    <Pressable onPress={() => handleGoToLogin()}>
+                        <Text style={styles.instructionText} color={colors.primary[200]}>
+                            立即登入
+                        </Text>
+                    </Pressable>
+                </Box>
+                {loading && <Loading />}
+                <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />
             </Box>
-            <Box>
-                <TextInput
-                    placeholder="Email"
-                    placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
-                    value={email}
-                    onChangeText={(text) => setEmail(text)}
-                    returnKeyType="done"
-                    keyboardType="email-address"
-                    style={[
-                        styles.input,
-                        inputStyle,
-                        isEmailFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
-                    ]}
-                    onBlur={() => setIsEmailFocused(false)}
-                    onFocus={() => setIsEmailFocused(true)}
-                />
-                <MaterialCommunityIcons
-                    name="email-outline"
-                    size={24}
-                    color={colors.dark[300]}
-                    style={styles.inputIcon}
-                />
-            </Box>
-            <Box>
-                <TextInput
-                    placeholder="Password"
-                    placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
-                    value={password}
-                    onChangeText={(text) => setPassword(text)}
-                    returnKeyType="done"
-                    secureTextEntry={true}
-                    style={[
-                        styles.input,
-                        inputStyle,
-                        isPassFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
-                    ]}
-                    onBlur={() => setIsPassFocused(false)}
-                    onFocus={() => setIsPassFocused(true)}
-                />
-                <MaterialCommunityIcons
-                    name="lock-outline"
-                    size={24}
-                    color={colors.dark[300]}
-                    style={styles.inputIcon}
-                />
-            </Box>
-            <Box>
-                <TextInput
-                    placeholder="Confirm Password"
-                    placeholderTextColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[400]}
-                    value={passwordConfirm}
-                    onChangeText={(text) => setPasswordConfirm(text)}
-                    returnKeyType="done"
-                    secureTextEntry={true}
-                    maxLength={30}
-                    style={[
-                        styles.input,
-                        inputStyle,
-                        isPassConfirmFocused && { borderWidth: 1.2, borderColor: colors.primary[100] },
-                    ]}
-                    onBlur={() => setIsPassConfirmFocused(false)}
-                    onFocus={() => setIsPassConfirmFocused(true)}
-                />
-                <MaterialCommunityIcons
-                    name="lock-outline"
-                    size={24}
-                    color={colors.dark[300]}
-                    style={styles.inputIcon}
-                />
-            </Box>
-            <ActionButton text={'註冊'} style={{ marginTop: 50 }} onPress={() => handleSignup()} />
-            <Box style={styles.instruction}>
-                <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>已經有帳號了！</Text>
-                <Pressable onPress={() => handleGoToLogin()}>
-                    <Text style={styles.instructionText} color={colors.primary[200]}>
-                        立即登入
-                    </Text>
-                </Pressable>
-            </Box>
-            {loading && <Loading />}
-            <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />
-        </Box>
+        </KeyboardAwareScrollView>
     );
 };
 
@@ -176,9 +185,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 50,
     },
-    title: {
-        fontSize: 24,
-        lineHeight: 24,
+    logo: {
+        width: 180,
+        height: 100,
     },
     subTitle: {
         fontSize: 16,
