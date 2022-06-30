@@ -30,7 +30,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
     const tripStatus = useSelector(selectTripStatus);
     const sharedUser = useSelector(selectSharedUser);
     const userStatus = useSelector(selectUserStatus);
-    const isOwner = trip.owner_id === user._id ? true : false;
+    const isOwner = trip.owner._id === user._id ? true : false;
 
     const [tripData, setTripData] = useState(trip);
     const [loading, setLoading] = useState(true);
@@ -100,14 +100,22 @@ const PlanDetailScreen = ({ navigation, route }) => {
 
     const updateSharedUser = (userData) => {
         if (!userData) return;
-        const isExist = tripData.shared_users.find((item) => item.user_id === userData._id) ? true : false;
-        if (isExist) {
+        let isExist = tripData.shared_users.filter((item) => item._id === userData._id);
+        isExist = isExist.length !== 0 ? true : false;
+        if (isExist && tripData.shared_users.length !== 0) {
             alert('此使用者已經在共用名單中啦');
+            dispatch(setSharedUser(null));
             setLoading(false);
             return;
         } else {
-            let newData = [...tripData.shared_users, { user_id: userData._id, user_image: userData.photo }];
-            setTripData({ ...tripData, shared_users: [...newData] });
+            let newData = [...tripData.shared_users.map((item) => item._id), userData._id];
+            setTripData({
+                ...tripData,
+                shared_users: [
+                    ...tripData.shared_users,
+                    { photo: userData.photo, _id: userData._id, name: userData.name },
+                ],
+            });
             dispatch(updateUserTripSharedAsync({ token, tripId: tripData._id, shared_users: newData }));
         }
     };
@@ -292,7 +300,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                         )}
                         <Box style={styles.groupWrapper}>
                             <Image
-                                source={{ uri: tripData.owner_image }}
+                                source={{ uri: tripData.owner.photo }}
                                 style={styles.ownerAvatar}
                                 resizeMode="cover"
                             />
@@ -301,10 +309,10 @@ const PlanDetailScreen = ({ navigation, route }) => {
                                     tripData.shared_users.map((item, index) => {
                                         return (
                                             <Image
-                                                source={{ uri: item.user_image }}
+                                                source={{ uri: item.photo }}
                                                 style={styles.sharedAvatar}
                                                 resizeMode="cover"
-                                                key={item.user_id}
+                                                key={item._id}
                                             />
                                         );
                                     })}

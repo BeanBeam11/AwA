@@ -29,9 +29,9 @@ const Plan_H = ({ navigation, item }) => {
                     ) : null}
                 </Box>
                 <Pressable style={styles.owner} onPress={null}>
-                    <Image source={{ uri: item.owner_image }} style={styles.ownerImage} resizeMode="cover" />
+                    <Image source={{ uri: item.owner.photo }} style={styles.ownerImage} resizeMode="cover" />
                     <Text style={styles.ownerName} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                        {item.owner ? item.owner : null}
+                        {item.owner.name}
                     </Text>
                 </Pressable>
             </Box>
@@ -46,7 +46,7 @@ const Plan_H = ({ navigation, item }) => {
                     {planDay1[0].length > 11 ? `${planDay1[0].slice(0, 11)}...` : planDay1[0]}
                 </Text>
                 <Text style={styles.planDetail} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
-                    {planDay1[1]}
+                    {planDay1[1].length > 11 ? `${planDay1[1].slice(0, 11)}...` : planDay1[1]}
                 </Text>
                 <Text style={styles.planDetail} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
                     ...

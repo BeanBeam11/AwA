@@ -59,19 +59,7 @@ const getUserSavedTripsAsync = createAsyncThunk('trip/getUserSavedTrips', async 
 
 const createUserTripAsync = createAsyncThunk(
     'trip/createUserTrip',
-    async ({
-        token,
-        name,
-        cover_image,
-        start_date,
-        end_date,
-        duration,
-        is_private,
-        owner_id,
-        owner_image,
-        trips,
-        days_start_time,
-    }) => {
+    async ({ token, name, cover_image, start_date, end_date, duration, is_private, owner, trips, days_start_time }) => {
         try {
             const { data } = await createUserTrip({
                 token,
@@ -81,8 +69,7 @@ const createUserTripAsync = createAsyncThunk(
                 end_date,
                 duration,
                 is_private,
-                owner_id,
-                owner_image,
+                owner,
                 trips,
                 days_start_time,
             });

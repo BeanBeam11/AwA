@@ -160,8 +160,7 @@ const PlannerScreen = ({ navigation }) => {
                     end_date: endDate,
                     duration: dayArray.length,
                     is_private: !isPublic,
-                    owner_id: user._id,
-                    owner_image: user.photo,
+                    owner: user._id,
                     trips: dayArray,
                     days_start_time: daysStartTimeArray,
                 })
@@ -176,8 +175,7 @@ const PlannerScreen = ({ navigation }) => {
                     end_date: null,
                     duration,
                     is_private: !isPublic,
-                    owner_id: user._id,
-                    owner_image: user.photo,
+                    owner: user._id,
                     trips: dayArray,
                     days_start_time: daysStartTimeArray,
                 })

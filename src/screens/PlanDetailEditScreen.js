@@ -470,7 +470,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                         )}
                         <Box style={styles.groupWrapper}>
                             <Image
-                                source={{ uri: tripData.owner_image }}
+                                source={{ uri: tripData.owner.photo }}
                                 style={styles.ownerAvatar}
                                 resizeMode="cover"
                             />
@@ -479,10 +479,10 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                                     tripData.shared_users.map((item, index) => {
                                         return (
                                             <Image
-                                                source={{ uri: item.user_image }}
+                                                source={{ uri: item.photo }}
                                                 style={styles.sharedAvatar}
                                                 resizeMode="cover"
-                                                key={item.user_id}
+                                                key={item._id}
                                             />
                                         );
                                     })}

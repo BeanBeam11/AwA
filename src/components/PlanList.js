@@ -4,13 +4,15 @@ import { Plan } from './Plan';
 import { Plan_H } from './Plan_H';
 
 const PlanList = ({ navigation, data }) => {
+    const filteredData = data.filter((el) => el.trips[0].length !== 0);
+
     const renderItem = ({ item }) => {
         return <Plan item={item} navigation={navigation} />;
     };
 
     return (
         <FlatList
-            data={data}
+            data={filteredData}
             renderItem={renderItem}
             keyExtractor={(item, index) => index}
             horizontal={true}
@@ -21,6 +23,8 @@ const PlanList = ({ navigation, data }) => {
 };
 
 const PlanList_V = ({ navigation, data }) => {
+    const filteredData = data.filter((el) => el.trips[0].length !== 0);
+
     const renderItem = ({ item }) => {
         return <Plan_H item={item} navigation={navigation} />;
     };
@@ -29,7 +33,7 @@ const PlanList_V = ({ navigation, data }) => {
 
     return (
         <FlatList
-            data={data}
+            data={filteredData}
             renderItem={renderItem}
             keyExtractor={(item, index) => index}
             horizontal={false}

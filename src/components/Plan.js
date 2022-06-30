@@ -32,7 +32,7 @@ const Plan = ({ navigation, item }) => {
                 </Text>
             )}
             <Pressable _dark={{ bg: '#fff' }} _light={{ bg: '#C4C4C4' }} style={styles.ownerAvatar} onPress={null}>
-                <Image source={{ uri: item.owner_image }} style={styles.ownerImage} resizeMode="cover" />
+                <Image source={{ uri: item.owner.photo }} style={styles.ownerImage} resizeMode="cover" />
             </Pressable>
         </Pressable>
     );
