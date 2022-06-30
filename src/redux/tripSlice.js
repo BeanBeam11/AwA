@@ -66,6 +66,7 @@ const createUserTripAsync = createAsyncThunk(
         start_date,
         end_date,
         duration,
+        is_private,
         owner_id,
         owner_image,
         trips,
@@ -79,6 +80,7 @@ const createUserTripAsync = createAsyncThunk(
                 start_date,
                 end_date,
                 duration,
+                is_private,
                 owner_id,
                 owner_image,
                 trips,
@@ -95,7 +97,18 @@ const createUserTripAsync = createAsyncThunk(
 
 const updateUserTripInfoAsync = createAsyncThunk(
     'trip/updateUserTripInfo',
-    async ({ token, tripId, name, cover_image, start_date, end_date, duration, trips, days_start_time }) => {
+    async ({
+        token,
+        tripId,
+        name,
+        cover_image,
+        start_date,
+        end_date,
+        duration,
+        is_private,
+        trips,
+        days_start_time,
+    }) => {
         try {
             const { data } = await updateUserTripInfo({
                 token,
@@ -105,6 +118,7 @@ const updateUserTripInfoAsync = createAsyncThunk(
                 start_date,
                 end_date,
                 duration,
+                is_private,
                 trips,
                 days_start_time,
             });

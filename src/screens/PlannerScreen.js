@@ -12,7 +12,7 @@ import {
     ActionSheetIOS,
     Alert,
 } from 'react-native';
-import { useColorMode, useTheme, Box, Text, Pressable, Radio } from 'native-base';
+import { useColorMode, useTheme, Box, Text, Pressable, Radio, Switch } from 'native-base';
 import RNModal from 'react-native-modal';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -60,6 +60,7 @@ const PlannerScreen = ({ navigation }) => {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [duration, setDuration] = useState(1);
+    const [isPublic, setIsPublic] = useState(false);
     const [isEditable, setIsEditable] = useState(false);
     const [tripIndex, setTripIndex] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -143,6 +144,11 @@ const PlannerScreen = ({ navigation }) => {
         dispatch(getUserSavedTripsAsync({ token, userId: user._id }));
     };
 
+    const showCreateTrip = () => {
+        clearState();
+        setModalVisible(true);
+    };
+
     const handleCreateTrip = () => {
         if (isAsigned) {
             dispatch(
@@ -153,6 +159,7 @@ const PlannerScreen = ({ navigation }) => {
                     start_date: startDate,
                     end_date: endDate,
                     duration: dayArray.length,
+                    is_private: !isPublic,
                     owner_id: user._id,
                     owner_image: user.photo,
                     trips: dayArray,
@@ -168,6 +175,7 @@ const PlannerScreen = ({ navigation }) => {
                     start_date: null,
                     end_date: null,
                     duration,
+                    is_private: !isPublic,
                     owner_id: user._id,
                     owner_image: user.photo,
                     trips: dayArray,
@@ -219,6 +227,7 @@ const PlannerScreen = ({ navigation }) => {
                     start_date: startDate,
                     end_date: endDate,
                     duration: dayArray.length,
+                    is_private: !isPublic,
                     trips: newData,
                     days_start_time: newStartTime,
                 })
@@ -233,6 +242,7 @@ const PlannerScreen = ({ navigation }) => {
                     start_date: null,
                     end_date: null,
                     duration,
+                    is_private: !isPublic,
                     trips: newData,
                     days_start_time: newStartTime,
                 })
@@ -244,9 +254,12 @@ const PlannerScreen = ({ navigation }) => {
 
     const clearState = () => {
         setName('');
+        setCoverImage(null);
+        setSpotImages([]);
         setStartDate(new Date());
         setEndDate(new Date());
         setDuration(1);
+        setIsPublic(false);
     };
 
     const handleNextStep = () => {
@@ -315,6 +328,8 @@ const PlannerScreen = ({ navigation }) => {
         });
         spotImagesData = spotImagesData.filter((el) => el !== '');
         setSpotImages(spotImagesData);
+        setIsPublic(!currentTrip.is_private);
+
         if (currentTrip.start_date) {
             setIsAssigned(true);
             setStartDate(new Date(currentTrip.start_date));
@@ -580,9 +595,7 @@ const PlannerScreen = ({ navigation }) => {
                 appearance={colorMode === 'dark' ? 'dark' : 'light'}
             />
             <SegmentedContent />
-            {!isEditable && (
-                <AddButton size={'large'} style={styles.fabWrapper} onPress={() => setModalVisible(true)} />
-            )}
+            {!isEditable && <AddButton size={'large'} style={styles.fabWrapper} onPress={() => showCreateTrip()} />}
             {modalVisible && (
                 <Box
                     style={{
@@ -619,7 +632,12 @@ const PlannerScreen = ({ navigation }) => {
                                 },
                             ]}
                         >
-                            <Text style={styles.modalHeaderText}>{isEditable ? '編輯行程' : '建立行程'}</Text>
+                            <Text
+                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                                style={styles.modalHeaderText}
+                            >
+                                {isEditable ? '編輯行程' : '建立行程'}
+                            </Text>
                             <Pressable style={styles.modalClose} onPress={() => setModalVisible(!modalVisible)}>
                                 <MaterialIcon
                                     name="close"
@@ -662,25 +680,57 @@ const PlannerScreen = ({ navigation }) => {
                                     },
                                 ]}
                             />
-                            <Radio.Group
-                                style={{ marginVertical: 20 }}
-                                colorScheme="gray"
-                                name="AsignDate"
-                                value={isAsigned}
-                                onChange={(nextValue) => {
-                                    setIsAssigned(nextValue);
-                                }}
-                            >
-                                <Radio value={true} size="sm" style={styles.radioOption}>
-                                    <Text style={styles.radioText}>指定日期</Text>
-                                </Radio>
-                                <Radio value={false} size="sm" style={styles.radioOption}>
-                                    <Text style={styles.radioText}>不指定日期</Text>
-                                </Radio>
-                            </Radio.Group>
+                            <Box style={styles.optionWrapper}>
+                                <Radio.Group
+                                    colorScheme="gray"
+                                    name="AsignDate"
+                                    value={isAsigned}
+                                    onChange={(nextValue) => {
+                                        setIsAssigned(nextValue);
+                                    }}
+                                >
+                                    <Radio value={true} size="sm" style={styles.radioOption}>
+                                        <Text
+                                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                                            style={styles.radioText}
+                                        >
+                                            指定日期
+                                        </Text>
+                                    </Radio>
+                                    <Radio value={false} size="sm" style={styles.radioOption}>
+                                        <Text
+                                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                                            style={styles.radioText}
+                                        >
+                                            不指定日期
+                                        </Text>
+                                    </Radio>
+                                </Radio.Group>
+                                <Box style={{ marginLeft: 50 }}>
+                                    <Box style={styles.toggleWrapper}>
+                                        <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                                            公開
+                                        </Text>
+                                        <Switch
+                                            size="sm"
+                                            isChecked={isPublic}
+                                            onToggle={() => setIsPublic(!isPublic)}
+                                            onTrackColor={colors.primary[100]}
+                                        />
+                                    </Box>
+                                    <Text style={{ fontSize: 11 }} color={colors.dark[300]}>
+                                        （任何人皆可查看此行程）
+                                    </Text>
+                                </Box>
+                            </Box>
                             {isAsigned === true ? (
                                 <Box>
-                                    <Text style={styles.modalLabel}>日期</Text>
+                                    <Text
+                                        color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                                        style={styles.modalLabel}
+                                    >
+                                        日期
+                                    </Text>
                                     <Box style={styles.dateWrapper}>
                                         <Pressable
                                             _dark={{ bg: colors.dark[200] }}
@@ -711,9 +761,16 @@ const PlannerScreen = ({ navigation }) => {
                                 </Box>
                             ) : (
                                 <Box>
-                                    <Text style={styles.modalLabel}>天數</Text>
+                                    <Text
+                                        color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                                        style={styles.modalLabel}
+                                    >
+                                        天數
+                                    </Text>
                                     <Box style={styles.daysWrapper}>
-                                        <Text>預計共</Text>
+                                        <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                                            預計共
+                                        </Text>
                                         <Pressable
                                             style={styles.dayBox}
                                             _dark={{ bg: colors.dark[200] }}
@@ -754,7 +811,9 @@ const PlannerScreen = ({ navigation }) => {
                                                 }}
                                             />
                                         </Pressable>
-                                        <Text>天</Text>
+                                        <Text color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                                            天
+                                        </Text>
                                     </Box>
                                 </Box>
                             )}
@@ -920,6 +979,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    optionWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginVertical: 20,
+    },
     radioOption: {
         marginTop: 5,
     },
@@ -927,6 +992,12 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 5,
         marginLeft: 10,
+    },
+    toggleWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 5,
     },
     modalLabel: {
         fontSize: 14,

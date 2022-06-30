@@ -206,6 +206,7 @@ export const createUserTrip = async ({
     start_date,
     end_date,
     duration,
+    is_private,
     owner_id,
     owner_image,
     trips,
@@ -214,7 +215,18 @@ export const createUserTrip = async ({
     try {
         const res = await axios.post(
             `${baseUrl}api/v1/trips`,
-            { name, cover_image, start_date, end_date, duration, owner_id, owner_image, trips, days_start_time },
+            {
+                name,
+                cover_image,
+                start_date,
+                end_date,
+                duration,
+                is_private,
+                owner_id,
+                owner_image,
+                trips,
+                days_start_time,
+            },
             { headers: { Authorization: `Bearer ${token}` } }
         );
         return res.data;
@@ -231,13 +243,14 @@ export const updateUserTripInfo = async ({
     start_date,
     end_date,
     duration,
+    is_private,
     trips,
     days_start_time,
 }) => {
     try {
         const res = await axios.patch(
             `${baseUrl}api/v1/trips/${tripId}`,
-            { name, cover_image, start_date, end_date, duration, trips, days_start_time },
+            { name, cover_image, start_date, end_date, duration, is_private, trips, days_start_time },
             { headers: { Authorization: `Bearer ${token}` } }
         );
         return res.data;
