@@ -237,7 +237,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                                     color={colors.dark[400]}
                                     style={{ marginRight: 4, lineHeight: 16 }}
                                 />
-                                <Text style={{ lineHeight: 16 }} color={colors.dark[300]}>
+                                <Text style={{ lineHeight: 16, paddingRight: 18 }} color={colors.dark[300]}>
                                     {item.note}
                                 </Text>
                             </Box>
