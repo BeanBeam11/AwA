@@ -193,54 +193,55 @@ const PlanDetailScreen = ({ navigation, route }) => {
                         <Text color={colors.dark[300]}>{formatTime(time)}</Text>
                     </Box>
                 )}
-                <Box>
+                <Box
+                    style={[
+                        styles.detailBox,
+                        {
+                            borderLeftColor: colors.primary[100],
+                            width: detailboxWidth,
+                        },
+                    ]}
+                >
                     <Box
-                        style={[
-                            styles.detailBox,
-                            {
-                                borderLeftColor: colors.primary[100],
-                                width: detailboxWidth,
-                            },
-                        ]}
+                        _dark={{ bg: colors.primary[100] }}
+                        _light={{ bg: colors.primary[100] }}
+                        style={styles.planIndexBox}
                     >
-                        <Box
-                            _dark={{ bg: colors.primary[100] }}
-                            _light={{ bg: colors.primary[100] }}
-                            style={styles.planIndexBox}
-                        >
-                            <Text style={styles.planIndex} color={colorMode === 'dark' ? colors.dark[200] : '#fff'}>
-                                {index + 1}
+                        <Text style={styles.planIndex} color={colorMode === 'dark' ? colors.dark[200] : '#fff'}>
+                            {index + 1}
+                        </Text>
+                    </Box>
+                    <Text
+                        style={styles.planSightName}
+                        color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                    >
+                        {item.spot}
+                    </Text>
+                    <Box style={styles.planBoxNote}>
+                        <Box style={styles.planStayTime}>
+                            <MaterialCommunityIcons
+                                name="clock-time-four"
+                                size={14}
+                                color={colors.dark[400]}
+                                style={{ marginRight: 4, lineHeight: 16 }}
+                            />
+                            <Text color={colors.dark[300]} style={{ lineHeight: 16 }}>
+                                {formatStayTime(item.stay_time[0], item.stay_time[1])}
                             </Text>
                         </Box>
-                        <Text
-                            style={styles.planSightName}
-                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                        >
-                            {item.spot}
-                        </Text>
-                        <Box style={styles.planBoxNote}>
-                            <Box style={styles.planStayTime}>
+                        {item.note.length !== 0 && (
+                            <Box style={styles.planNote}>
                                 <MaterialCommunityIcons
-                                    name="clock-time-four"
+                                    name="clipboard-text"
                                     size={14}
                                     color={colors.dark[400]}
-                                    style={{ marginRight: 4 }}
+                                    style={{ marginRight: 4, lineHeight: 16 }}
                                 />
-                                <Text color={colors.dark[300]}>
-                                    {formatStayTime(item.stay_time[0], item.stay_time[1])}
+                                <Text style={{ lineHeight: 16 }} color={colors.dark[300]}>
+                                    {item.note}
                                 </Text>
                             </Box>
-                            {item.note && (
-                                <Text
-                                    style={{
-                                        marginTop: 12,
-                                    }}
-                                    color={colors.dark[300]}
-                                >
-                                    註：{item.note}
-                                </Text>
-                            )}
-                        </Box>
+                        )}
                     </Box>
                 </Box>
                 {item.image ? (
@@ -548,7 +549,7 @@ const styles = StyleSheet.create({
     detailBox: {
         marginLeft: 10,
         paddingLeft: 20,
-        paddingBottom: 20,
+        paddingBottom: 36,
         borderLeftWidth: 1.5,
     },
     planIndexBox: {
@@ -573,9 +574,13 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        fontSize: 11,
-        marginRight: 8,
-        marginTop: 3,
+        marginTop: 4,
+    },
+    planNote: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginTop: 4,
     },
     detailImage: {
         width: 50,

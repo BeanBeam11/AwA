@@ -41,6 +41,11 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
     const [spotImage, setSpotImage] = useState(spotImagesData[0].image);
     const [spotName, setSpotName] = useState('');
     const [spotNote, setSpotNote] = useState('');
+    const [spotLoaction, setSpotLoaction] = useState('');
+    const [spotAddress, setSpotAddress] = useState('');
+    const [spotOpenTime, setSpotOpenTime] = useState('');
+    const [spotPhone, setSpotPhone] = useState('');
+    const [spotCity, setSpotCity] = useState('');
     const [isStartTimePickerVisible, setStartTimePickerVisibility] = useState(false);
     const [stayTime, setStayTime] = useState({ hours: 0, minutes: 0 });
     const [dayIndex, setDayIndex] = useState(0);
@@ -72,6 +77,9 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
             note: item.note,
             location: item.location,
             address: item.address,
+            open_time: item.open_time,
+            phone: item.phone,
+            city: item.city,
         };
     });
     const [dragData, setDragData] = useState(initialData);
@@ -112,6 +120,9 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                 note: item.note,
                 location: item.location,
                 address: item.address,
+                open_time: item.open_time,
+                phone: item.phone,
+                city: item.city,
             };
         });
         setDragData(newDragData);
@@ -123,6 +134,11 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
         setStayTime({ hours: 0, minutes: 0 });
         setSpotImage(null);
         setSpotId('');
+        setSpotLoaction('');
+        setSpotAddress('');
+        setSpotOpenTime('');
+        setSpotPhone('');
+        setSpotCity('');
     };
 
     const handleAddSpot = () => {
@@ -142,6 +158,9 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                         note: spotNote,
                         location: [],
                         address: '',
+                        open_time: '',
+                        phone: '',
+                        city: '',
                     },
                 ];
             } else {
@@ -177,6 +196,11 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
         setStayTime({ hours: currentSpot.stay_time[0], minutes: currentSpot.stay_time[1] });
         setSpotImage(currentSpot.image);
         setSpotId(currentSpot.spot_id);
+        setSpotLoaction(currentSpot.location);
+        setSpotAddress(currentSpot.address);
+        setSpotOpenTime(currentSpot.open_time);
+        setSpotPhone(currentSpot.phone);
+        setSpotCity(currentSpot.city);
     };
 
     const checkDeleteSpot = () => {
@@ -221,12 +245,15 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                         return {
                             ...val,
                             spot: spotName,
-                            spot_id: '',
+                            spot_id: spotId,
                             image: spotImage,
                             stay_time: [stayTime.hours, stayTime.minutes],
                             note: spotNote,
-                            location: [],
-                            address: '',
+                            location: spotLoaction,
+                            address: spotAddress,
+                            open_time: spotOpenTime,
+                            phone: spotPhone,
+                            city: spotCity,
                         };
                     } else {
                         return val;
@@ -268,6 +295,9 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                 note: item.note,
                 location: item.location,
                 address: item.address,
+                open_time: item.open_time,
+                phone: item.phone,
+                city: item.city,
             };
         });
         let newData = tripData.trips.map((item, index) => {
@@ -299,6 +329,9 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                     note: item.note,
                     location: item.location,
                     address: item.address,
+                    open_time: item.open_time,
+                    phone: item.phone,
+                    city: item.city,
                 };
             })
         );
@@ -337,6 +370,10 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
             _dark={{ bg: colors.dark[100] }}
             _light={{ bg: '#fff' }}
             onLongPress={drag}
+            onPress={() => {
+                setIsAddingSpot(false);
+                handleEditSpot(index);
+            }}
         >
             <MaterialCommunityIcons
                 name="drag-vertical"
@@ -344,35 +381,48 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                 color={colorMode === 'dark' ? colors.dark[200] : colors.dark[500]}
             />
             <Box style={[styles.planBoxDivider, { backgroundColor: colors.secondary[200] }]}></Box>
-            {/* {item.image ? (
+            {item.image ? (
                 <Image source={{ uri: item.image }} style={styles.planBoxImage} resizeMode="cover" />
             ) : (
                 <Box style={styles.planBoxImage} _dark={{ bg: colors.dark[200] }} _light={{ bg: colors.dark[500] }} />
-            )} */}
-            <Box style={[styles.planBoxInfo, { width: Dimensions.get('window').width - 160 }]}>
+            )}
+            <Box
+                style={[
+                    styles.planBoxInfo,
+                    {
+                        width: item.image ? Dimensions.get('window').width - 190 : Dimensions.get('window').width - 160,
+                    },
+                ]}
+            >
                 <Text style={styles.planSightName}>{item?.label}</Text>
                 <Box style={styles.planStayTime}>
                     <MaterialCommunityIcons
                         name="clock-time-four"
                         size={14}
                         color={colors.dark[400]}
-                        style={{ marginRight: 4 }}
+                        style={{ marginRight: 4, lineHeight: 16 }}
                     />
-                    <Text color={colors.dark[300]}>{formatStayTime(item.stay_time[0], item.stay_time[1])}</Text>
+                    <Text color={colors.dark[300]} style={{ lineHeight: 16 }}>
+                        {formatStayTime(item.stay_time[0], item.stay_time[1])}
+                    </Text>
                 </Box>
-                <Box>
-                    <Text color={colors.dark[300]}>{item.note}</Text>
-                </Box>
+                {item.note.length !== 0 && (
+                    <Box style={styles.planNote}>
+                        <MaterialCommunityIcons
+                            name="clipboard-text"
+                            size={14}
+                            color={colors.dark[400]}
+                            style={{ marginRight: 4, lineHeight: 16 }}
+                        />
+                        <Text color={colors.dark[300]} style={{ lineHeight: 16 }}>
+                            {item.note}
+                        </Text>
+                    </Box>
+                )}
             </Box>
-            <Pressable
-                style={{ marginLeft: 'auto' }}
-                onPress={() => {
-                    setIsAddingSpot(false);
-                    handleEditSpot(index);
-                }}
-            >
+            <Box style={{ marginLeft: 'auto' }}>
                 <MaterialIcon name="edit" size={24} color={colors.dark[400]} />
-            </Pressable>
+            </Box>
         </Pressable>
     );
 
@@ -910,8 +960,13 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        fontSize: 11,
-        marginRight: 8,
+        marginTop: 4,
+    },
+    planNote: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginTop: 4,
     },
     modalView: {
         width: '100%',
