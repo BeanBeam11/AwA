@@ -170,7 +170,7 @@ const SpotDetailModal = (props) => {
                         {name}
                     </Text>
                     <Text style={styles.location} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
-                        {city}・{town}
+                        {town.length !== 0 ? `${city}・${town}` : `${city}`}
                     </Text>
                     {rating && (
                         <Rating
@@ -190,7 +190,7 @@ const SpotDetailModal = (props) => {
                             name="map-marker-outline"
                             size={20}
                             color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                            style={{ marginTop: 2 }}
+                            style={{ paddingTop: 1 }}
                         />
                         <Text style={styles.info} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
                             {address ? address : `尚無資訊`}
@@ -201,7 +201,7 @@ const SpotDetailModal = (props) => {
                             name="clock-outline"
                             size={18}
                             color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                            style={{ paddingHorizontal: 1, marginTop: 2 }}
+                            style={{ paddingHorizontal: 1, paddingTop: 5 }}
                         />
                         <TextInput
                             multiline={true}
@@ -215,7 +215,7 @@ const SpotDetailModal = (props) => {
                             name="phone-outline"
                             size={16}
                             color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                            style={{ paddingHorizontal: 2, marginTop: 3 }}
+                            style={{ paddingHorizontal: 2, paddingTop: 3 }}
                         />
                         <Text style={styles.info} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
                             {phone ? phone : `尚無資訊`}

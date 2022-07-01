@@ -25,13 +25,10 @@ const PostDetailScreen = ({ navigation, route }) => {
     const [selectedSpot, setSelectedSpot] = useState(sight);
 
     return (
-        <KeyboardAwareScrollView style={{ flex: 1 }}>
+        <KeyboardAwareScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
                 <GoBackHeader title={post.title} navigation={navigation} />
-                <ScrollView
-                    contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 60 }}
-                    showsVerticalScrollIndicator={false}
-                >
+                <Box style={{ paddingHorizontal: 24, paddingBottom: 60 }}>
                     <Image source={{ uri: post.cover_image }} style={styles.image} resizeMode="cover" />
                     <Box style={styles.postInfoBox}>
                         <Text
@@ -226,7 +223,7 @@ const PostDetailScreen = ({ navigation, route }) => {
                             </Pressable>
                         </Box>
                     </Box>
-                </ScrollView>
+                </Box>
                 <StatusBar style={colorMode === 'dark' ? 'light' : 'dark'} />
             </Box>
             {selectedSpot && (

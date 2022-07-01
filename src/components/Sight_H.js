@@ -154,7 +154,7 @@ const Sight_H = ({ navigation, item, style, onPress }) => {
                         {name.length > 9 ? `${name.slice(0, 9)}...` : name}
                     </Text>
                     <Text style={styles.sightLocation} color={colors.dark[300]}>
-                        {city}・{town}
+                        {town.length !== 0 ? `${city}・${town}` : `${city}`}
                     </Text>
                     {rating && (
                         <Rating

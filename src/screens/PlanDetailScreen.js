@@ -384,7 +384,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                             name="map-marker-outline"
                             size={20}
                             color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                            style={{}}
+                            style={{ paddingTop: 1 }}
                         />
                         <Text style={styles.info} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
                             {selectedSpot.address ? selectedSpot.address : '尚無資訊'}
@@ -395,7 +395,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                             name="clock-outline"
                             size={18}
                             color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                            style={{ paddingHorizontal: 1, paddingTop: 4 }}
+                            style={{ paddingHorizontal: 1, paddingTop: 5 }}
                         />
                         <TextInput
                             multiline={true}
@@ -409,7 +409,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                             name="phone-outline"
                             size={16}
                             color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                            style={{ paddingHorizontal: 2, paddingTop: 4 }}
+                            style={{ paddingHorizontal: 2, paddingTop: 3 }}
                         />
                         <Text style={styles.info} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
                             {selectedSpot.phone ? selectedSpot.phone : '尚無資訊'}
