@@ -328,6 +328,17 @@ export const getPost = async ({ token, postId }) => {
     }
 };
 
+export const getPostsByCategory = async ({ token, category }) => {
+    try {
+        const res = await axios.get(`${baseUrl}api/v1/posts?category=${category}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
 export const createPost = async ({
     token,
     cover_image,

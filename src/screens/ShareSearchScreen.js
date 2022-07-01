@@ -3,18 +3,34 @@ import { StyleSheet, FlatList, Image, ScrollView, Platform } from 'react-native'
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import { SearchBar } from '../components/SearchBar';
 import { Post } from '../components/Post';
+import Loading from '../components/Loading';
+import { getPostsByCategory } from '../api';
 import postData from '../json/post.json';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { selectToken } from '../redux/accountSlice';
 
 const ShareSearchScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
     const { category } = route.params;
+
     const [keyword, setKeyword] = useState(category ? `#${category}` : '');
     const [postResult, setPostResult] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    const token = useSelector(selectToken);
 
     useEffect(() => {
-        setPostResult(postData.filter((el) => el.category === category));
+        category && fetchPostsByCategory();
     }, []);
+
+    const fetchPostsByCategory = async () => {
+        setLoading(true);
+        const res = await getPostsByCategory({ token, category });
+        setPostResult(res.data.data);
+        setLoading(false);
+    };
 
     const handleSearch = (text) => {
         if (text) {
@@ -70,6 +86,7 @@ const ShareSearchScreen = ({ navigation, route }) => {
                     </Box>
                 </Box>
             </ScrollView>
+            {loading && <Loading />}
         </Box>
     );
 };
