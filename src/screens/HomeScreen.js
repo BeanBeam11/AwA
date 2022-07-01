@@ -15,7 +15,7 @@ import { getAllTrips } from '../api';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectToken, selectUser } from '../redux/accountSlice';
 import { selectAccessToken } from '../redux/spotSlice';
-import { getUserTripsAsync, getUserSharedTripsAsync, getUserSavedTripsAsync } from '../redux/tripSlice';
+import { getUserTripsAsync } from '../redux/tripSlice';
 
 const HomeScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
@@ -33,8 +33,6 @@ const HomeScreen = ({ navigation }) => {
         fetchRecommendSpots();
         fetchAllTrips();
         dispatch(getUserTripsAsync({ token, userId: user._id }));
-        dispatch(getUserSharedTripsAsync({ token, userId: user._id }));
-        dispatch(getUserSavedTripsAsync({ token, userId: user._id }));
     }, []);
 
     const fetchRecommendSpots = async () => {

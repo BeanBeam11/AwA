@@ -25,25 +25,20 @@ import { PlannerHeader } from '../components/Header';
 import Loading from '../components/Loading';
 import { formatDate } from '../utils/formatter';
 import { coverImagesData } from '../data/coverImages';
+import { getUserSharedTrips, getUserSavedTrips } from '../api';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectToken, selectUser } from '../redux/accountSlice';
 import {
     selectUserTrips,
-    selectUserSharedTrips,
     selectCreatedTrip,
     selectTripStatus,
-    selectSharedTripStatus,
-    selectSavedTripStatus,
     selectCreateTripStatus,
     selectDeleteTripStatus,
     getUserTripsAsync,
-    getUserSharedTripsAsync,
-    getUserSavedTripsAsync,
     createUserTripAsync,
     updateUserTripInfoAsync,
     deleteUserTripAsync,
-    selectUserSavedTrips,
 } from '../redux/tripSlice';
 
 const PlannerScreen = ({ navigation }) => {
@@ -76,14 +71,15 @@ const PlannerScreen = ({ navigation }) => {
     const user = useSelector(selectUser);
     const token = useSelector(selectToken);
     const userTrips = useSelector(selectUserTrips);
-    const userSharedTrips = useSelector(selectUserSharedTrips);
-    const userSavedTrips = useSelector(selectUserSavedTrips);
     const createdTrip = useSelector(selectCreatedTrip);
     const tripStatus = useSelector(selectTripStatus);
-    const sharedTripStatus = useSelector(selectSharedTripStatus);
-    const savedTripStatus = useSelector(selectSavedTripStatus);
     const createTripStatus = useSelector(selectCreateTripStatus);
     const deleteTripStatus = useSelector(selectDeleteTripStatus);
+
+    useEffect(() => {
+        fetchUserSharedTrips();
+        fetchUserSavedTrips();
+    }, []);
 
     useEffect(() => {
         if (tripStatus == 'error') {
@@ -93,24 +89,6 @@ const PlannerScreen = ({ navigation }) => {
             if (tripStatus) setLoading(false);
         }
     }, [tripStatus]);
-
-    useEffect(() => {
-        if (sharedTripStatus == 'error') {
-            setLoading(false);
-        } else if (sharedTripStatus == 'idle') {
-            setSharedTrips(userSharedTrips);
-            if (sharedTrips) setLoading(false);
-        }
-    }, [sharedTripStatus]);
-
-    useEffect(() => {
-        if (savedTripStatus == 'error') {
-            setLoading(false);
-        } else if (savedTripStatus == 'idle') {
-            setSavedTrips(userSavedTrips);
-            if (savedTrips) setLoading(false);
-        }
-    }, [savedTripStatus]);
 
     useEffect(() => {
         if (createTripStatus == 'idle') {
@@ -136,12 +114,14 @@ const PlannerScreen = ({ navigation }) => {
         dispatch(getUserTripsAsync({ token, userId: user._id }));
     };
 
-    const fetchUserSharedTrips = () => {
-        dispatch(getUserSharedTripsAsync({ token, userId: user._id }));
+    const fetchUserSharedTrips = async () => {
+        const res = await getUserSharedTrips({ token, userId: user._id });
+        setSharedTrips(res.data.data);
     };
 
-    const fetchUserSavedTrips = () => {
-        dispatch(getUserSavedTripsAsync({ token, userId: user._id }));
+    const fetchUserSavedTrips = async () => {
+        const res = await getUserSavedTrips({ token, userId: user._id });
+        setSavedTrips(res.data.data);
     };
 
     const showCreateTrip = () => {
