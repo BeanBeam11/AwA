@@ -28,7 +28,11 @@ const SightScreen = ({ navigation, route }) => {
 
     const image = spot.Picture.PictureUrl1 ? spot.Picture.PictureUrl1 : null;
     const name = spot.ScenicSpotName;
-    const city = spot.City ? spot.City : null;
+    const city = spot.City
+        ? spot.City
+        : spot.Address
+        ? spot.Address.replace(/\s/g, '').replace(/[0-9]/g, '').slice(0, 3)
+        : '';
     const town = spot.Address ? spot.Address.replace(/\s/g, '').replace(/[0-9]/g, '').slice(3, 6) : '';
     const address = spot.Address ? spot.Address.replace(/\s/g, '') : '';
     const open_time = spot.OpenTime ? spot.OpenTime : null;
@@ -219,9 +223,11 @@ const SightScreen = ({ navigation, route }) => {
                         </Text>
                     </Pressable>
                 </Box>
-                <Text style={styles.description} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                    {description}
-                </Text>
+                {description && (
+                    <Text style={styles.description} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
+                        {description}
+                    </Text>
+                )}
             </ScrollView>
             <Modal
                 isVisible={modalVisible}

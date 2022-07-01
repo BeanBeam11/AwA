@@ -24,7 +24,11 @@ const Sight_H = ({ navigation, item, style, onPress }) => {
 
     const image = item.Picture.PictureUrl1 ? item.Picture.PictureUrl1 : null;
     const name = item.ScenicSpotName;
-    const city = item.City ? item.City : null;
+    const city = item.City
+        ? item.City
+        : item.Address
+        ? item.Address.replace(/\s/g, '').replace(/[0-9]/g, '').slice(0, 3)
+        : '';
     const town = item.Address ? item.Address.replace(/\s/g, '').replace(/[0-9]/g, '').slice(3, 6) : '';
     const address = item.Address ? item.Address.replace(/\s/g, '') : '';
     const open_time = item.OpenTime ? item.OpenTime : null;

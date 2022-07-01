@@ -9,17 +9,18 @@ import { PlanList } from '../components/PlanList';
 import { SearchBar } from '../components/SearchBar';
 import { News } from '../components/News';
 import Loading from '../components/Loading';
+import { getRecommendScenicSpots } from '../api/transportData';
 import { getAllTrips } from '../api';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectToken, selectUser } from '../redux/accountSlice';
-import { selectAccessToken, selectRecommendSpots, selectSpotStatus, getRecommendSpotsAsync } from '../redux/spotSlice';
+import { selectAccessToken } from '../redux/spotSlice';
 import { getUserTripsAsync, getUserSharedTripsAsync, getUserSavedTripsAsync } from '../redux/tripSlice';
 
 const HomeScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [spots, setSpots] = useState([]);
     const [trips, setTrips] = useState([]);
 
@@ -27,31 +28,25 @@ const HomeScreen = ({ navigation }) => {
     const token = useSelector(selectToken);
     const user = useSelector(selectUser);
     const accessToken = useSelector(selectAccessToken);
-    const recommendSpots = useSelector(selectRecommendSpots);
-    const spotStatus = useSelector(selectSpotStatus);
 
     useEffect(() => {
+        fetchRecommendSpots();
         fetchAllTrips();
-        dispatch(getRecommendSpotsAsync({ accessToken }));
         dispatch(getUserTripsAsync({ token, userId: user._id }));
         dispatch(getUserSharedTripsAsync({ token, userId: user._id }));
         dispatch(getUserSavedTripsAsync({ token, userId: user._id }));
     }, []);
 
-    useEffect(() => {
-        if (spotStatus == 'loading') {
-            setLoading(true);
-        } else if (spotStatus == 'error') {
-            setLoading(false);
-        } else if (spotStatus == 'idle') {
-            setSpots(recommendSpots);
-            if (spots) setLoading(false);
-        }
-    }, [spotStatus]);
+    const fetchRecommendSpots = async () => {
+        const res = await getRecommendScenicSpots({ accessToken });
+        setSpots(res.data);
+        setLoading(false);
+    };
 
     const fetchAllTrips = async () => {
         const res = await getAllTrips({ page: 1, limit: 5 });
         setTrips(res.data.data);
+        setLoading(false);
     };
 
     return (
@@ -98,7 +93,7 @@ const HomeScreen = ({ navigation }) => {
                         </Text>
                         <Pressable
                             style={styles.sectionRightBox}
-                            onPress={() => navigation.navigate('RecommendSightScreen')}
+                            onPress={() => navigation.navigate('RecommendSightScreen', { spots })}
                         >
                             <Text
                                 style={styles.sectionTitleRight}
