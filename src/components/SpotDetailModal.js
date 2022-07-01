@@ -37,6 +37,7 @@ const SpotDetailModal = (props) => {
     const spotId = spot.ScenicSpotID ? spot.ScenicSpotID : null;
     const latitude = spot.Position ? spot.Position.PositionLat : null;
     const longitude = spot.Position ? spot.Position.PositionLon : null;
+    const rating = spot.Rating ? spot.Rating : '0';
 
     const handleDone = () => {
         if (selectedTrip === null || selectedTripIndex === null) {
@@ -171,16 +172,19 @@ const SpotDetailModal = (props) => {
                     <Text style={styles.location} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
                         {city}・{town}
                     </Text>
-                    <Rating
-                        count={5}
-                        type="custom"
-                        imageSize={20}
-                        ratingColor={colors.secondary[200]}
-                        ratingBackgroundColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[600]}
-                        tintColor={colorMode === 'dark' ? colors.dark[100] : '#fff'}
-                        readonly={true}
-                        style={styles.rating}
-                    />
+                    {rating && (
+                        <Rating
+                            ratingCount={5}
+                            startingValue={rating}
+                            type="custom"
+                            imageSize={20}
+                            ratingColor={colors.secondary[200]}
+                            ratingBackgroundColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[600]}
+                            tintColor={colorMode === 'dark' ? colors.dark[100] : '#fff'}
+                            readonly={true}
+                            style={styles.rating}
+                        />
+                    )}
                     <Box style={styles.infoWrapper}>
                         <MaterialCommunityIcons
                             name="map-marker-outline"
@@ -344,10 +348,11 @@ const styles = StyleSheet.create({
     location: {
         fontSize: 16,
         marginTop: 8,
+        marginBottom: 10,
     },
     rating: {
         marginRight: 'auto',
-        marginVertical: 10,
+        marginBottom: 10,
     },
     infoWrapper: {
         display: 'flex',

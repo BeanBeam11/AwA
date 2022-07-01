@@ -61,6 +61,7 @@ const MapScreen = ({ navigation }) => {
                     PositionLat: item.geometry.location.lat,
                 },
                 City: item.formatted_address.slice(5, 8),
+                Rating: item.rating,
             };
         });
         if (newCarouselData.length > 3) newCarouselData.pop();

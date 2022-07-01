@@ -33,6 +33,7 @@ const Sight_H = ({ navigation, item, style, onPress }) => {
     const spotId = item.ScenicSpotID ? item.ScenicSpotID : null;
     const latitude = item.Position ? item.Position.PositionLat : null;
     const longitude = item.Position ? item.Position.PositionLon : null;
+    const rating = item.Rating ? item.Rating : '0';
 
     const showActionSheet = () =>
         ActionSheetIOS.showActionSheetWithOptions(
@@ -155,16 +156,19 @@ const Sight_H = ({ navigation, item, style, onPress }) => {
                     <Text style={styles.sightLocation} color={colors.dark[300]}>
                         {city}・{town}
                     </Text>
-                    <Rating
-                        count={5}
-                        type="custom"
-                        imageSize={14}
-                        ratingColor={colors.secondary[200]}
-                        ratingBackgroundColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[600]}
-                        tintColor={colorMode === 'dark' ? colors.dark[100] : '#fff'}
-                        readonly={true}
-                        style={styles.rating}
-                    />
+                    {rating && (
+                        <Rating
+                            ratingCount={5}
+                            startingValue={rating}
+                            type="custom"
+                            imageSize={14}
+                            ratingColor={colors.secondary[200]}
+                            ratingBackgroundColor={colorMode === 'dark' ? colors.dark[200] : colors.dark[600]}
+                            tintColor={colorMode === 'dark' ? colors.dark[100] : '#fff'}
+                            readonly={true}
+                            style={styles.rating}
+                        />
+                    )}
                 </Box>
                 <AddButton size={'medium'} style={styles.addSightBtn} onPress={() => showActionSheet()} />
             </Box>

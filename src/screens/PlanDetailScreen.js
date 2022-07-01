@@ -379,65 +379,42 @@ const PlanDetailScreen = ({ navigation, route }) => {
                         <Image source={{ uri: selectedSpot.image }} style={styles.modalImage} resizeMode="cover" />
                     )}
                     <Text style={styles.modalName}>{selectedSpot.spot}</Text>
-                    {selectedSpot.spot_id && (
-                        <Box style={styles.infoBox}>
-                            <MaterialCommunityIcons
-                                name="map-marker-outline"
-                                size={20}
-                                color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                                style={{}}
-                            />
-                            <Text
-                                style={styles.info}
-                                color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                            >
-                                {selectedSpot.address ? selectedSpot.address : '尚無資訊'}
-                            </Text>
-                        </Box>
-                    )}
-                    {selectedSpot.spot_id && (
-                        <Box style={styles.infoBox}>
-                            <MaterialCommunityIcons
-                                name="clock-outline"
-                                size={18}
-                                color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                                style={{ paddingHorizontal: 1, paddingTop: 4 }}
-                            />
-                            <TextInput
-                                multiline={true}
-                                value={selectedSpot.open_time ? selectedSpot.open_time : '尚無資訊'}
-                                editable={false}
-                                style={[
-                                    styles.info,
-                                    { color: colorMode === 'dark' ? colors.dark[400] : colors.dark[300] },
-                                ]}
-                            />
-                        </Box>
-                    )}
-                    {selectedSpot.spot_id && (
-                        <Box style={styles.infoBox}>
-                            <MaterialCommunityIcons
-                                name="phone-outline"
-                                size={16}
-                                color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                                style={{ paddingHorizontal: 2, paddingTop: 4 }}
-                            />
-                            <Text
-                                style={styles.info}
-                                color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                            >
-                                {selectedSpot.phone ? selectedSpot.phone : '尚無資訊'}
-                            </Text>
-                        </Box>
-                    )}
-                    {!selectedSpot.spot_id && (
-                        <Text
-                            style={{ fontSize: 14 }}
+                    <Box style={styles.infoBox}>
+                        <MaterialCommunityIcons
+                            name="map-marker-outline"
+                            size={20}
                             color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
-                        >
-                            沒有更多資訊囉！
+                            style={{}}
+                        />
+                        <Text style={styles.info} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
+                            {selectedSpot.address ? selectedSpot.address : '尚無資訊'}
                         </Text>
-                    )}
+                    </Box>
+                    <Box style={styles.infoBox}>
+                        <MaterialCommunityIcons
+                            name="clock-outline"
+                            size={18}
+                            color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
+                            style={{ paddingHorizontal: 1, paddingTop: 4 }}
+                        />
+                        <TextInput
+                            multiline={true}
+                            value={selectedSpot.open_time ? selectedSpot.open_time : '尚無資訊'}
+                            editable={false}
+                            style={[styles.info, { color: colorMode === 'dark' ? colors.dark[400] : colors.dark[300] }]}
+                        />
+                    </Box>
+                    <Box style={styles.infoBox}>
+                        <MaterialCommunityIcons
+                            name="phone-outline"
+                            size={16}
+                            color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}
+                            style={{ paddingHorizontal: 2, paddingTop: 4 }}
+                        />
+                        <Text style={styles.info} color={colorMode === 'dark' ? colors.dark[400] : colors.dark[300]}>
+                            {selectedSpot.phone ? selectedSpot.phone : '尚無資訊'}
+                        </Text>
+                    </Box>
                 </Box>
             </Modal>
             {loading && <Loading />}
@@ -616,13 +593,13 @@ const styles = StyleSheet.create({
     modalName: {
         fontSize: 16,
         fontWeight: '500',
-        marginTop: 12,
         marginBottom: 12,
     },
     modalImage: {
         width: 250,
         height: 150,
         borderRadius: 5,
+        marginBottom: 12,
     },
     infoBox: {
         display: 'flex',
