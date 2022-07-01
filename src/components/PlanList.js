@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, View, Dimensions } from 'react-native';
+import { FlatList, View, Dimensions, RefreshControl } from 'react-native';
 import { useColorMode, useTheme, Box, Text } from 'native-base';
 import { Plan } from './Plan';
 import { Plan_H } from './Plan_H';
@@ -49,6 +49,13 @@ const PlanList_V = ({ navigation, data }) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 15 }}
             ListFooterComponent={renderListFooter}
+            refreshControl={
+                <RefreshControl
+                    refreshing={false}
+                    tintColor={colorMode == 'dark' ? colors.dark[400] : colors.secondary[100]}
+                    onRefresh={onRefresh}
+                />
+            }
         />
     );
 };

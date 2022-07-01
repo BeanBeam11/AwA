@@ -9,18 +9,12 @@ import { PlanList } from '../components/PlanList';
 import { SearchBar } from '../components/SearchBar';
 import { News } from '../components/News';
 import Loading from '../components/Loading';
+import { getAllTrips } from '../api';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectToken, selectUser } from '../redux/accountSlice';
 import { selectAccessToken, selectRecommendSpots, selectSpotStatus, getRecommendSpotsAsync } from '../redux/spotSlice';
-import {
-    selectAllTrips,
-    selectTripStatus,
-    getAllTripsAsync,
-    getUserTripsAsync,
-    getUserSharedTripsAsync,
-    getUserSavedTripsAsync,
-} from '../redux/tripSlice';
+import { getUserTripsAsync, getUserSharedTripsAsync, getUserSavedTripsAsync } from '../redux/tripSlice';
 
 const HomeScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
@@ -35,12 +29,10 @@ const HomeScreen = ({ navigation }) => {
     const accessToken = useSelector(selectAccessToken);
     const recommendSpots = useSelector(selectRecommendSpots);
     const spotStatus = useSelector(selectSpotStatus);
-    const allTrips = useSelector(selectAllTrips);
-    const tripStatus = useSelector(selectTripStatus);
 
     useEffect(() => {
+        fetchAllTrips();
         dispatch(getRecommendSpotsAsync({ accessToken }));
-        dispatch(getAllTripsAsync());
         dispatch(getUserTripsAsync({ token, userId: user._id }));
         dispatch(getUserSharedTripsAsync({ token, userId: user._id }));
         dispatch(getUserSavedTripsAsync({ token, userId: user._id }));
@@ -57,16 +49,10 @@ const HomeScreen = ({ navigation }) => {
         }
     }, [spotStatus]);
 
-    useEffect(() => {
-        if (tripStatus == 'loading') {
-            setLoading(true);
-        } else if (tripStatus == 'error') {
-            setLoading(false);
-        } else if (tripStatus == 'idle') {
-            setTrips(allTrips);
-            if (trips) setLoading(false);
-        }
-    }, [tripStatus]);
+    const fetchAllTrips = async () => {
+        const res = await getAllTrips({ page: 1, limit: 5 });
+        setTrips(res.data.data);
+    };
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
@@ -152,7 +138,7 @@ const HomeScreen = ({ navigation }) => {
                     </Box>
                     <PlanList
                         navigation={navigation}
-                        data={allTrips.filter((el) => el.trips[0].length !== 0).slice(0, 5)}
+                        data={trips.filter((el) => el.trips[0].length !== 0).slice(0, 5)}
                     />
                 </Box>
                 <Box style={styles.sectionWrapper}>

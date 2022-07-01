@@ -157,9 +157,9 @@ export const getCitySpots = async (city) => {
 };
 
 // Trips
-export const getAllTrips = async () => {
+export const getAllTrips = async ({ page, limit }) => {
     try {
-        const res = await axios.get(`${baseUrl}api/v1/trips?is_private=false`);
+        const res = await axios.get(`${baseUrl}api/v1/trips?is_private=false&page=${page}&limit=${limit}`);
         return res.data;
     } catch (err) {
         console.log(err.response.data);
