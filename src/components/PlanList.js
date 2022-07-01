@@ -1,30 +1,39 @@
 import React from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, View, Dimensions } from 'react-native';
+import { useColorMode, useTheme, Box, Text } from 'native-base';
 import { Plan } from './Plan';
 import { Plan_H } from './Plan_H';
 
 const PlanList = ({ navigation, data }) => {
-    const filteredData = data.filter((el) => el.trips[0].length !== 0);
+    const { colorMode } = useColorMode();
+    const { colors } = useTheme();
 
     const renderItem = ({ item }) => {
         return <Plan item={item} navigation={navigation} />;
     };
 
+    const renderListEmpty = () => {
+        return (
+            <Box style={{ marginTop: 20, width: Dimensions.get('window').width - 48, alignItems: 'center' }}>
+                <Text color={colors.dark[300]}>沒有更多囉 ( ×ω× )</Text>
+            </Box>
+        );
+    };
+
     return (
         <FlatList
-            data={filteredData}
+            data={data}
             renderItem={renderItem}
             keyExtractor={(item, index) => index}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingHorizontal: 24 }}
+            ListEmptyComponent={renderListEmpty}
         />
     );
 };
 
 const PlanList_V = ({ navigation, data }) => {
-    const filteredData = data.filter((el) => el.trips[0].length !== 0);
-
     const renderItem = ({ item }) => {
         return <Plan_H item={item} navigation={navigation} />;
     };
@@ -33,7 +42,7 @@ const PlanList_V = ({ navigation, data }) => {
 
     return (
         <FlatList
-            data={filteredData}
+            data={data}
             renderItem={renderItem}
             keyExtractor={(item, index) => index}
             horizontal={false}

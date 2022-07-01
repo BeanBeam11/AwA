@@ -111,7 +111,7 @@ const RegionScreen = ({ navigation, route }) => {
                             </Text>
                         </Pressable>
                     </Box>
-                    <PlanList navigation={navigation} />
+                    <PlanList navigation={navigation} data={null} />
                 </Box>
             </ScrollView>
             {loading && <Loading />}

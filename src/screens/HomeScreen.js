@@ -150,7 +150,10 @@ const HomeScreen = ({ navigation }) => {
                             </Text>
                         </Pressable>
                     </Box>
-                    <PlanList navigation={navigation} data={allTrips.slice(0, 5)} />
+                    <PlanList
+                        navigation={navigation}
+                        data={allTrips.filter((el) => el.trips[0].length !== 0).slice(0, 5)}
+                    />
                 </Box>
                 <Box style={styles.sectionWrapper}>
                     <Box style={styles.sectionHeader}>
