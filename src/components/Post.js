@@ -12,10 +12,10 @@ const Post = ({ navigation, item }) => {
             _dark={{ bg: colors.dark[100] }}
             _light={{ bg: '#fff' }}
             style={styles.postBox}
-            onPress={() => navigation.navigate('PostDetailScreen', { postId: item.title })}
+            onPress={() => navigation.navigate('PostDetailScreen', { post: item })}
         >
             <Box style={styles.postLeftBox}>
-                <Image source={{ uri: item.image }} style={styles.postImage} resizeMode="cover" />
+                <Image source={{ uri: item.cover_image }} style={styles.postImage} resizeMode="cover" />
                 <Box style={styles.postInfoBox}>
                     <Text
                         style={[
@@ -29,27 +29,27 @@ const Post = ({ navigation, item }) => {
                         {item.category}
                     </Text>
                     <Text style={styles.region} color={colors.dark[300]}>
-                        {item.region}・{item.town}
+                        {item.city}・{item.town}
                     </Text>
                 </Box>
             </Box>
             <Box style={styles.postRightBox}>
                 <Box style={styles.authorBox}>
-                    <Image source={{ uri: item.image }} style={styles.authorAvatar} resizeMode="cover" />
+                    <Image source={{ uri: item.author.photo }} style={styles.authorAvatar} resizeMode="cover" />
                     <Box style={styles.postRightTopBox}>
                         <Text
                             style={styles.authorName}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         >
-                            {item.author}
+                            {item.author.name}
                         </Text>
                         <Text style={styles.createDate} color={colors.dark[400]}>
-                            {formatDate(item.create_at)}
+                            {formatDate(item.created_at)}
                         </Text>
                     </Box>
                 </Box>
                 <Text style={styles.postTitle} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
-                    {item.title}
+                    {item.title.length > 10 ? `${item.title.slice(0, 10)}...` : item.title}
                 </Text>
                 {item.content.length > 35 ? (
                     <Text style={styles.postContent} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>

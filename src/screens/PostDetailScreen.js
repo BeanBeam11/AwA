@@ -14,11 +14,9 @@ import sightData from '../json/recommendSight';
 const PostDetailScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
-    const { postId } = route.params;
-    const post = postData.find((el) => el.title === postId);
-    const sight = sightData.find((el) => el.ScenicSpotName === postId)
-        ? sightData.find((el) => el.ScenicSpotName === postId)
-        : null;
+    const { post } = route.params;
+
+    const sight = null;
 
     const [isLike, setIsLike] = useState(false);
     const [isDislike, setIsDislike] = useState(false);
@@ -34,7 +32,7 @@ const PostDetailScreen = ({ navigation, route }) => {
                     contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 60 }}
                     showsVerticalScrollIndicator={false}
                 >
-                    <Image source={{ uri: post.image }} style={styles.image} resizeMode="cover" />
+                    <Image source={{ uri: post.cover_image }} style={styles.image} resizeMode="cover" />
                     <Box style={styles.postInfoBox}>
                         <Text
                             style={[
@@ -48,22 +46,22 @@ const PostDetailScreen = ({ navigation, route }) => {
                             {post.category}
                         </Text>
                         <Text style={styles.location} color={colors.dark[300]}>
-                            {post.region}・{post.town}
+                            {post.city}・{post.town}
                         </Text>
                     </Box>
                     <Text style={styles.name} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
                         {post.title}
                     </Text>
                     <Box style={styles.infoWrapper}>
-                        <Image source={{ uri: post.image }} style={styles.authorAvatar} resizeMode="cover" />
+                        <Image source={{ uri: post.author.photo }} style={styles.authorAvatar} resizeMode="cover" />
                         <Text
                             style={styles.authorName}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         >
-                            {post.author}
+                            {post.author.name}
                         </Text>
                         <Text style={styles.createDate} color={colors.dark[400]}>
-                            {formatDate(post.create_at)}
+                            {formatDate(post.created_at)}
                         </Text>
                     </Box>
                     <Text style={styles.content} color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}>
@@ -107,7 +105,7 @@ const PostDetailScreen = ({ navigation, route }) => {
                                     )}
                                 </Pressable>
                                 <Text style={styles.reactionText} color={colors.dark[400]}>
-                                    0
+                                    {post.liked_by.length}
                                 </Text>
                             </Box>
                             <Box style={styles.reactionGroup}>
@@ -127,7 +125,7 @@ const PostDetailScreen = ({ navigation, route }) => {
                                     )}
                                 </Pressable>
                                 <Text style={styles.reactionText} color={colors.dark[400]}>
-                                    0
+                                    {post.disliked_by.length}
                                 </Text>
                             </Box>
                             <Box style={styles.reactionGroup}>
@@ -139,7 +137,7 @@ const PostDetailScreen = ({ navigation, route }) => {
                                     />
                                 </Pressable>
                                 <Text style={styles.reactionText} color={colors.dark[400]}>
-                                    0
+                                    {post.reviews ? post.reviews.length : 0}
                                 </Text>
                             </Box>
                             <Box style={styles.reactionGroup}>
@@ -155,48 +153,49 @@ const PostDetailScreen = ({ navigation, route }) => {
                                     )}
                                 </Pressable>
                                 <Text style={styles.reactionText} color={colors.dark[400]}>
-                                    0
+                                    {post.saved_by.length}
                                 </Text>
                             </Box>
                         </Box>
                         <Box style={styles.commentWrapper}>
-                            {post.comment.map((el, index) => {
-                                return (
-                                    <Box style={styles.commentBox} key={index}>
-                                        <Box style={styles.commentInfo}>
-                                            <Image
-                                                source={{ uri: post.image }}
-                                                style={styles.authorAvatar}
-                                                resizeMode="cover"
-                                            />
+                            {post.reviews &&
+                                post.reviews.map((el, index) => {
+                                    return (
+                                        <Box style={styles.commentBox} key={index}>
+                                            <Box style={styles.commentInfo}>
+                                                <Image
+                                                    source={{ uri: post.image }}
+                                                    style={styles.authorAvatar}
+                                                    resizeMode="cover"
+                                                />
+                                                <Text
+                                                    style={styles.authorName}
+                                                    color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                                                >
+                                                    {el.username}
+                                                </Text>
+                                                <Text style={styles.createDate} color={colors.dark[400]}>
+                                                    {formatDate(el.create_at)}
+                                                </Text>
+                                            </Box>
                                             <Text
-                                                style={styles.authorName}
+                                                style={styles.commentContent}
                                                 color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                                             >
-                                                {el.username}
+                                                {el.content}
                                             </Text>
-                                            <Text style={styles.createDate} color={colors.dark[400]}>
-                                                {formatDate(el.create_at)}
-                                            </Text>
+                                            <Box
+                                                style={[
+                                                    styles.commentDivider,
+                                                    {
+                                                        borderColor:
+                                                            colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
+                                                    },
+                                                ]}
+                                            ></Box>
                                         </Box>
-                                        <Text
-                                            style={styles.commentContent}
-                                            color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                                        >
-                                            {el.content}
-                                        </Text>
-                                        <Box
-                                            style={[
-                                                styles.commentDivider,
-                                                {
-                                                    borderColor:
-                                                        colorMode === 'dark' ? colors.dark[200] : colors.dark[500],
-                                                },
-                                            ]}
-                                        ></Box>
-                                    </Box>
-                                );
-                            })}
+                                    );
+                                })}
                             <Text style={styles.commentNote} color={colors.dark[400]}>
                                 沒有更多留言囉 ㅇㅅㅇ
                             </Text>

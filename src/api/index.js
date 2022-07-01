@@ -306,3 +306,73 @@ export const deleteUserTrip = async ({ token, tripId }) => {
         console.log(err.response.data);
     }
 };
+
+// Posts
+export const getAllPosts = async () => {
+    try {
+        const res = await axios.get(`${baseUrl}api/v1/posts`);
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
+export const getPost = async ({ token, postId }) => {
+    try {
+        const res = await axios.get(`${baseUrl}api/v1/posts/${postId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
+export const createPost = async ({
+    token,
+    cover_image,
+    title,
+    city,
+    town,
+    category,
+    content,
+    author,
+    related_spots,
+    liked_by,
+    disliked_by,
+    saved_by,
+}) => {
+    try {
+        const res = await axios.post(
+            `${baseUrl}api/v1/posts`,
+            {
+                cover_image,
+                title,
+                city,
+                town,
+                category,
+                content,
+                author,
+                related_spots,
+                liked_by,
+                disliked_by,
+                saved_by,
+            },
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
+export const deletePost = async ({ token, postId }) => {
+    try {
+        const res = await axios.delete(`${baseUrl}api/v1/posts/${postId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return res;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};

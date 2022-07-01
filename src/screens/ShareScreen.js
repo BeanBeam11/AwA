@@ -1,16 +1,31 @@
-import React from 'react';
-import { StyleSheet, FlatList, Image, ScrollView, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, FlatList, Image, RefreshControl } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { SearchBar } from '../components/SearchBar';
 import { Post } from '../components/Post';
 import { AddPostButton } from '../components/AddButton';
 import { categories } from '../data/categories';
+import { getAllPosts } from '../api';
+import Loading from '../components/Loading';
 import postData from '../json/post.json';
 
 const ShareScreen = ({ navigation }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
+
+    const [loading, setLoading] = useState(true);
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        fetchPosts();
+    }, []);
+
+    const fetchPosts = async () => {
+        const res = await getAllPosts();
+        setPosts(res.data.data);
+        setLoading(false);
+    };
 
     const renderCategoryItem = ({ item }) => {
         return (
@@ -71,7 +86,7 @@ const ShareScreen = ({ navigation }) => {
                 />
             </Box>
             <FlatList
-                data={postData}
+                data={posts}
                 renderItem={renderPostItem}
                 keyExtractor={(item, index) => index}
                 horizontal={false}
@@ -80,8 +95,16 @@ const ShareScreen = ({ navigation }) => {
                 stickyHeaderIndices={[0]}
                 ListHeaderComponent={renderPostHeader}
                 ListFooterComponent={renderPostFooter}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={false}
+                        tintColor={colorMode == 'dark' ? colors.dark[400] : colors.secondary[100]}
+                        onRefresh={fetchPosts}
+                    />
+                }
             />
             <AddPostButton style={styles.fabWrapper} onPress={() => alert('敬請期待！')} />
+            {loading && <Loading />}
         </Box>
     );
 };
