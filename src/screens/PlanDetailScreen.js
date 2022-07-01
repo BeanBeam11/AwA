@@ -310,7 +310,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                                         return (
                                             <Image
                                                 source={{ uri: item.photo }}
-                                                style={styles.sharedAvatar}
+                                                style={[styles.sharedAvatar, { zIndex: 100 - index }]}
                                                 resizeMode="cover"
                                                 key={item._id}
                                             />
