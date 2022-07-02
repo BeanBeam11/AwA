@@ -180,7 +180,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
             detailboxWidth = Dimensions.get('window').width - 90;
         }
 
-        if (index !== 0 && time) {
+        if (hasStartTime && index !== 0) {
             for (let i = 0; i < index; i++) {
                 const hour = tripData.trips[dayIndex][i].stay_time[0];
                 const minute = tripData.trips[dayIndex][i].stay_time[1];
@@ -349,14 +349,16 @@ const PlanDetailScreen = ({ navigation, route }) => {
                 {tripData.trips.map((item, index) => {
                     return (
                         <Box style={styles.detailWrapper} tabLabel={`Day ${index + 1}`} key={index}>
-                            <FlatList
-                                data={item}
-                                renderItem={renderItem}
-                                keyExtractor={(item, index) => index.toString()}
-                                showsVerticalScrollIndicator={false}
-                                contentContainerStyle={{ flexGrow: 1, paddingBottom: 60 }}
-                                ListHeaderComponent={() => renderListHeader(index)}
-                            />
+                            {index === dayIndex && (
+                                <FlatList
+                                    data={item}
+                                    renderItem={renderItem}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    showsVerticalScrollIndicator={false}
+                                    contentContainerStyle={{ flexGrow: 1, paddingBottom: 60 }}
+                                    ListHeaderComponent={() => renderListHeader(index)}
+                                />
+                            )}
                         </Box>
                     );
                 })}
