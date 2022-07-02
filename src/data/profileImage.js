@@ -17,18 +17,18 @@ export const profileImagesData = [
     },
     {
         name: 'avatar_01',
-        image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_01.png?alt=media&token=7f500577-095b-449b-a286-ceccae6a56db',
+        image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_01.png?alt=media&token=433cf14e-7910-412a-8b19-1fa343a821d6',
     },
     {
         name: 'avatar_02',
-        image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_02.png?alt=media&token=8da687d4-4612-4c0c-a7f2-0da95c2c6e58',
+        image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_02.png?alt=media&token=7462702f-ca05-4ab7-a410-db334b9d8f57',
     },
     {
         name: 'avatar_03',
-        image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_03.png?alt=media&token=2d52bce8-f26f-426d-ba55-e1d5b26a629b',
+        image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_03.png?alt=media&token=7b5b4200-d1e6-44b7-8be0-6681570211cc',
     },
     {
         name: 'avatar_04',
-        image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_04.png?alt=media&token=9624b299-9ceb-45b9-96fb-1641ca3fb2d4',
+        image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_04.png?alt=media&token=c5406eff-15a1-404d-bb32-476e67e4339a',
     },
 ];

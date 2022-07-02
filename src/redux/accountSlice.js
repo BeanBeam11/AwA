@@ -66,7 +66,7 @@ const initialState = {
         _id: '',
         email: '',
         name: '',
-        photo: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_01.png?alt=media&token=7f500577-095b-449b-a286-ceccae6a56db',
+        photo: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Favatar_01.png?alt=media&token=433cf14e-7910-412a-8b19-1fa343a821d6',
         profile: {
             interest: '',
             type: '',

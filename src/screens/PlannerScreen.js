@@ -109,7 +109,6 @@ const PlannerScreen = ({ navigation }) => {
     useEffect(() => {
         if (deleteTripStatus == 'idle') {
             setLoading(false);
-            alert('刪除行程成功！');
             fetchUserTrips();
         }
     }, [deleteTripStatus]);
