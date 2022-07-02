@@ -21,7 +21,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { AddButton } from '../components/AddButton';
 import { ActionButton } from '../components/ActionButton';
 import { Plan } from '../components/Plan';
-import { PlannerHeader } from '../components/Header';
+import { SimpleHeader } from '../components/Header';
 import Loading from '../components/Loading';
 import { formatDate } from '../utils/formatter';
 import { coverImagesData } from '../data/coverImages';
@@ -390,35 +390,7 @@ const PlannerScreen = ({ navigation }) => {
 
     const MyPlanList = () => {
         const renderItem = ({ item, index }) => {
-            return (
-                <Box>
-                    <Plan item={item} navigation={navigation} isEditable={isEditable} />
-                    {isEditable && (
-                        <Pressable
-                            style={[
-                                styles.editMask,
-                                {
-                                    backgroundColor:
-                                        colorMode === 'dark' ? 'rgba(41, 41, 41, 0.7)' : 'rgba(72, 72, 72, 0.3)',
-                                },
-                            ]}
-                            onPress={() => showEditSheet(index)}
-                        >
-                            <Box
-                                style={styles.editBtn}
-                                _dark={{ bg: colors.primary[100] }}
-                                _light={{ bg: colors.primary[200] }}
-                            >
-                                <MaterialIcon
-                                    name="edit"
-                                    size={36}
-                                    color={colorMode === 'dark' ? colors.dark[200] : colors.dark[600]}
-                                />
-                            </Box>
-                        </Pressable>
-                    )}
-                </Box>
-            );
+            return <Plan item={item} navigation={navigation} isOwner={true} onPress={() => showEditSheet(index)} />;
         };
 
         const renderEmptyComponent = () => {
@@ -546,13 +518,7 @@ const PlannerScreen = ({ navigation }) => {
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
-            <PlannerHeader
-                title={isEditable ? '編輯行程' : '行程'}
-                headerRight={isEditable ? '完成' : '編輯'}
-                headerRightStyle={isEditable && { color: colors.primary[200], fontWeight: '500', fontSize: 16 }}
-                navigation={navigation}
-                onPress={() => (isEditable ? setIsEditable(false) : setIsEditable(true))}
-            />
+            <SimpleHeader title={'行程'} navigation={navigation} />
             <SegmentedControl
                 values={['我的行程', '共用行程', '收藏行程']}
                 selectedIndex={selectedIndex}

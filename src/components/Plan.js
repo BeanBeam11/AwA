@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet, Image, Platform } from 'react-native';
 import { useColorMode, useTheme, Box, Text, Pressable } from 'native-base';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { formatDate } from '../utils/formatter';
 
-const Plan = ({ navigation, item }) => {
+const Plan = ({ navigation, item, onPress, isOwner }) => {
     const { colorMode } = useColorMode();
     const { colors } = useTheme();
 
@@ -31,9 +32,19 @@ const Plan = ({ navigation, item }) => {
                     共{item.duration}天
                 </Text>
             )}
-            <Pressable _dark={{ bg: '#fff' }} _light={{ bg: '#C4C4C4' }} style={styles.ownerAvatar} onPress={null}>
-                <Image source={{ uri: item.owner.photo }} style={styles.ownerImage} resizeMode="cover" />
-            </Pressable>
+            {isOwner ? (
+                <Pressable style={styles.ownerAvatar} onPress={onPress}>
+                    <MaterialIcon
+                        name="edit"
+                        size={18}
+                        color={colorMode === 'dark' ? colors.dark[300] : colors.dark[400]}
+                    />
+                </Pressable>
+            ) : (
+                <Pressable style={styles.ownerAvatar} onPress={onPress}>
+                    <Image source={{ uri: item.owner.photo }} style={styles.ownerImage} resizeMode="cover" />
+                </Pressable>
+            )}
         </Pressable>
     );
 };
@@ -82,6 +93,7 @@ const styles = StyleSheet.create({
         width: 24,
         height: 24,
         borderRadius: 12,
+        backgroundColor: '#fff',
     },
     planNullBox: {
         flex: 1,
