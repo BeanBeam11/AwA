@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     owner: {
         display: 'flex',
         flexDirection: 'row',
+        alignItems: 'center',
     },
     ownerImage: {
         width: 18,
@@ -114,11 +115,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '500',
         marginBottom: 5,
-    },
-    ownerImage: {
-        width: 24,
-        height: 24,
-        borderRadius: 12,
     },
     planDayTitle: {
         fontSize: 14,

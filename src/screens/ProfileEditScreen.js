@@ -334,7 +334,7 @@ const ProfileEditScreen = ({ navigation }) => {
                         ]}
                     >
                         <Text
-                            style={{ fontSize: 16, fontWeight: '500' }}
+                            style={{ fontSize: 16, fontWeight: '500', paddingBottom: 10 }}
                             color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
                         >
                             - 請從下列選項選擇 -
@@ -347,7 +347,7 @@ const ProfileEditScreen = ({ navigation }) => {
                             numColumns={2}
                             columnWrapperStyle={{ justifyContent: 'space-between' }}
                             showsVerticalScrollIndicator={false}
-                            contentContainerStyle={{ marginTop: 30 }}
+                            contentContainerStyle={{ paddingBottom: 30 }}
                         />
                         <Box style={styles.modalActionWrapper}>
                             <Pressable onPress={() => setModalVisible(!modalVisible)}>
@@ -449,6 +449,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        paddingTop: 10,
         marginTop: 'auto',
     },
     modalActionText: {
