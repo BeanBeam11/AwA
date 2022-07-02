@@ -15,4 +15,8 @@ export const spotImagesData = [
         name: 'spot_hotel',
         image: 'https://firebasestorage.googleapis.com/v0/b/trip-can-v1.appspot.com/o/default%2Fspot_hotel.png?alt=media&token=bd89574b-3767-4f45-88fb-251dd4c4fb2a',
     },
+    {
+        name: 'spot_null',
+        image: null,
+    },
 ];

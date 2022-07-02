@@ -94,8 +94,12 @@ const PlannerScreen = ({ navigation }) => {
         if (createTripStatus == 'idle') {
             if (createdTrip) {
                 setModalVisible(false);
-                navigation.navigate('PlanDetailScreen', { trip: createdTrip });
-                navigation.navigate('PlanDetailEditScreen', { trip: createdTrip });
+                navigation.navigate('PlanDetailScreen', {
+                    trip: { ...createdTrip, owner: { photo: user.photo, _id: user._id, name: user.name } },
+                });
+                navigation.navigate('PlanDetailEditScreen', {
+                    trip: { ...createdTrip, owner: { photo: user.photo, _id: user._id, name: user.name } },
+                });
                 clearState();
             }
             fetchUserTrips();
@@ -242,6 +246,11 @@ const PlannerScreen = ({ navigation }) => {
 
     const handleNextStep = () => {
         setLoading(true);
+        if (coverImage === null) {
+            alert('一定要選一張行程封面圖呦');
+            setLoading(false);
+            return;
+        }
         if (name.length < 2) {
             alert('行程名稱須介於2~20字');
             setLoading(false);
@@ -390,7 +399,17 @@ const PlannerScreen = ({ navigation }) => {
 
     const MyPlanList = () => {
         const renderItem = ({ item, index }) => {
-            return <Plan item={item} navigation={navigation} isOwner={true} onPress={() => showEditSheet(index)} />;
+            return (
+                <Plan
+                    item={item}
+                    navigation={navigation}
+                    isOwner={true}
+                    onPress={() => {
+                        showEditSheet(index);
+                        setIsEditable(true);
+                    }}
+                />
+            );
         };
 
         const renderEmptyComponent = () => {
@@ -414,7 +433,7 @@ const PlannerScreen = ({ navigation }) => {
                     numColumns={2}
                     columnWrapperStyle={{ justifyContent: 'space-between' }}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ width: 360, paddingLeft: 10, paddingBottom: 280 }}
+                    contentContainerStyle={{ width: 360, paddingLeft: 10, paddingBottom: 300 }}
                     ListEmptyComponent={renderEmptyComponent}
                     refreshControl={
                         <RefreshControl
@@ -458,7 +477,7 @@ const PlannerScreen = ({ navigation }) => {
                     numColumns={2}
                     columnWrapperStyle={{ justifyContent: 'space-between' }}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ width: 360, paddingLeft: 10, paddingBottom: 280 }}
+                    contentContainerStyle={{ width: 360, paddingLeft: 10, paddingBottom: 300 }}
                     ListEmptyComponent={renderEmptyComponent}
                     refreshControl={
                         <RefreshControl
@@ -502,7 +521,7 @@ const PlannerScreen = ({ navigation }) => {
                     numColumns={2}
                     columnWrapperStyle={{ justifyContent: 'space-between' }}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ width: 360, paddingLeft: 10, paddingBottom: 280 }}
+                    contentContainerStyle={{ width: 360, paddingLeft: 10, paddingBottom: 300 }}
                     ListEmptyComponent={renderEmptyComponent}
                     refreshControl={
                         <RefreshControl
@@ -539,7 +558,15 @@ const PlannerScreen = ({ navigation }) => {
                 appearance={colorMode === 'dark' ? 'dark' : 'light'}
             />
             <SegmentedContent />
-            {!isEditable && <AddButton size={'large'} style={styles.fabWrapper} onPress={() => showCreateTrip()} />}
+            <AddButton
+                size={'large'}
+                style={styles.fabWrapper}
+                onPress={() => {
+                    showCreateTrip();
+                    setIsEditable(false);
+                    setSpotImages(coverImagesData.map((item) => item.image));
+                }}
+            />
             {modalVisible && (
                 <Box
                     style={{
@@ -802,12 +829,19 @@ const PlannerScreen = ({ navigation }) => {
                         onBackdropPress={() => setCoverModalVisible(!coverModalVisible)}
                     >
                         <Box style={styles.coverModalView} _dark={{ bg: colors.dark[100] }} _light={{ bg: '#fff' }}>
-                            <Text
-                                style={{ fontSize: 16, fontWeight: '500', paddingBottom: 10 }}
-                                color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
-                            >
-                                - 請從第一天的景點中選擇 -
-                            </Text>
+                            <Box style={{ paddingBottom: 10, alignItems: 'center' }}>
+                                <Text
+                                    style={{ fontSize: 16, fontWeight: '500' }}
+                                    color={colorMode === 'dark' ? colors.dark[600] : colors.dark[200]}
+                                >
+                                    {isEditable ? `- 請從第一天景點中選擇 -` : `請從預設圖中選擇`}
+                                </Text>
+                                {!isEditable && (
+                                    <Text style={{ fontSize: 14 }} color={colors.dark[300]}>
+                                        {`（之後可從第一天景點中選擇）`}
+                                    </Text>
+                                )}
+                            </Box>
                             {spotImages.length !== 0 ? (
                                 <FlatList
                                     data={spotImages}

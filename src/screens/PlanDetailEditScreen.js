@@ -339,7 +339,15 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
 
     const renderSpotImageItem = ({ item }) => {
         return (
-            <Pressable style={styles.coverImageBox} onPress={() => setSpotImage(item.image)}>
+            <Pressable
+                style={styles.coverImageBox}
+                _dark={{ bg: colors.dark[200] }}
+                _light={{ bg: colors.dark[500] }}
+                onPress={() => setSpotImage(item.image)}
+            >
+                <Box style={styles.spotImageNull}>
+                    <MaterialCommunityIcons name="cancel" size={48} color={colors.dark[400]} />
+                </Box>
                 <Image style={styles.avatar} source={{ uri: item.image }} />
                 {item.image === spotImage && (
                     <Box style={styles.avatarMask}>
@@ -384,7 +392,9 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
             {item.image ? (
                 <Image source={{ uri: item.image }} style={styles.planBoxImage} resizeMode="cover" />
             ) : (
-                <Box style={styles.planBoxImage} _dark={{ bg: colors.dark[200] }} _light={{ bg: colors.dark[500] }} />
+                <Box style={styles.planBoxImage} _dark={{ bg: colors.dark[200] }} _light={{ bg: colors.dark[500] }}>
+                    <MaterialCommunityIcons name="cancel" size={24} color={colors.dark[400]} />
+                </Box>
             )}
             <Box
                 style={[
@@ -815,7 +825,7 @@ const PlanDetailEditScreen = ({ navigation, route }) => {
                             numColumns={2}
                             columnWrapperStyle={{ justifyContent: 'space-between' }}
                             showsVerticalScrollIndicator={false}
-                            contentContainerStyle={{ marginTop: 30 }}
+                            contentContainerStyle={{ paddingBottom: 60 }}
                         />
                         <Box style={styles.coverModalActionWrapper}>
                             <Pressable onPress={() => setSpotModalVisible(!spotModalVisible)}>
@@ -942,6 +952,8 @@ const styles = StyleSheet.create({
         width: 36,
         height: 36,
         borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     planBoxInfo: {
         marginLeft: 10,
@@ -1024,7 +1036,7 @@ const styles = StyleSheet.create({
         width: 340,
         height: 190,
         borderRadius: 5,
-        backgroundColor: 'rgba(72, 72, 72, 0.5)',
+        backgroundColor: 'rgba(72, 72, 72, 0.3)',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -1101,6 +1113,16 @@ const styles = StyleSheet.create({
     },
     coverImageBox: {
         margin: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    spotImageNull: {
+        position: 'absolute',
+        width: 145,
+        height: 92,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     avatar: {
         width: 145,
