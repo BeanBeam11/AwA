@@ -307,6 +307,17 @@ export const deleteUserTrip = async ({ token, tripId }) => {
     }
 };
 
+export const getSearchTripsByName = async ({ token, keyword, limit, skip }) => {
+    try {
+        const res = await axios.get(`${baseUrl}api/v1/trips/searchTripsByName/${keyword}?limit=${limit}&skip=${skip}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
 // Posts
 export const getAllPosts = async () => {
     try {

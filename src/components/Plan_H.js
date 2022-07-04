@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
         borderRadius: 9,
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: '#fff',
     },
     ownerName: {
         fontSize: 14,

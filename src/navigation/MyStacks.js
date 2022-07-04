@@ -2,6 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import HomeScreen from '../screens/HomeScreen';
+import HomeSearchScreen from '../screens/HomeSearchScreen';
 import SearchRegionScreen from '../screens/SearchRegionScreen';
 import RegionScreen from '../screens/RegionScreen';
 import CitySightScreen from '../screens/CitySightScreen';
@@ -30,6 +31,7 @@ export const HomeStack = () => {
             }}
         >
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
+            <Stack.Screen name="HomeSearchScreen" component={HomeSearchScreen} />
             <Stack.Screen name="SearchRegionScreen" component={SearchRegionScreen} />
             <Stack.Screen name="RegionScreen" component={RegionScreen} />
             <Stack.Screen name="CitySightScreen" component={CitySightScreen} />
