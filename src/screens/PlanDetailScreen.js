@@ -353,7 +353,7 @@ const PlanDetailScreen = ({ navigation, route }) => {
                                 <FlatList
                                     data={item}
                                     renderItem={renderItem}
-                                    keyExtractor={(item, index) => index.toString()}
+                                    keyExtractor={(item, index) => index}
                                     showsVerticalScrollIndicator={false}
                                     contentContainerStyle={{ flexGrow: 1, paddingBottom: 60 }}
                                     ListHeaderComponent={() => renderListHeader(index)}

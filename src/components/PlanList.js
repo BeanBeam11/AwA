@@ -15,7 +15,7 @@ const PlanList = ({ navigation, data }) => {
     const renderListEmpty = () => {
         return (
             <Box style={{ marginTop: 20, width: Dimensions.get('window').width - 48, alignItems: 'center' }}>
-                <Text color={colors.dark[300]}>沒有更多囉 ( ×ω× )</Text>
+                <Text color={colors.dark[300]}>( ×ω× ) 資料整理中...</Text>
             </Box>
         );
     };

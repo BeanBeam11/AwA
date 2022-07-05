@@ -166,6 +166,17 @@ export const getAllTrips = async ({ page, limit }) => {
     }
 };
 
+export const getCityTrips = async ({ token, city, limit, skip }) => {
+    try {
+        const res = await axios.get(`${baseUrl}api/v1/trips/cityTrips/${city}?limit=${limit}&skip=${skip}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.data;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
 export const getUserTrips = async ({ token, userId }) => {
     try {
         const res = await axios.get(`${baseUrl}api/v1/trips/userTrips/${userId}`, {

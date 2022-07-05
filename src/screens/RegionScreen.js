@@ -9,8 +9,10 @@ import { PlanList } from '../components/PlanList';
 import Loading from '../components/Loading';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAccessToken, selectCitySpots, selectSpotStatus, getCitySpotsAsync } from '../redux/spotSlice';
+import { selectAccessToken } from '../redux/spotSlice';
+import { selectToken } from '../redux/accountSlice';
 import { getCityScenicSpots } from '../api/transportData';
+import { getCityTrips } from '../api';
 
 const RegionScreen = ({ navigation, route }) => {
     const { colorMode } = useColorMode();
@@ -18,33 +20,34 @@ const RegionScreen = ({ navigation, route }) => {
     const { city } = route.params;
     const [loading, setLoading] = useState(true);
     const [spots, setSpots] = useState([]);
+    const [trips, setTrips] = useState([]);
 
-    const dispatch = useDispatch();
     const accessToken = useSelector(selectAccessToken);
-    const citySpots = useSelector(selectCitySpots);
-    const spotStatus = useSelector(selectSpotStatus);
+    const token = useSelector(selectToken);
 
     const region = cities.find((el) => el.city === city);
 
     useEffect(() => {
         setLoading(true);
         fetchCitySpots();
+        fetchCityTrips();
     }, []);
 
     const fetchCitySpots = async () => {
         const res = await getCityScenicSpots({ accessToken, city, top: 10, skip: 0 });
         setSpots(res.data);
+        setLoading(false);
     };
 
-    useEffect(() => {
-        if (spots.length !== 0) {
-            setLoading(false);
-        }
-    }, [spots]);
+    const fetchCityTrips = async () => {
+        const res = await getCityTrips({ token, city, limit: 5, skip: 0 });
+        setTrips(res.data.data);
+        setLoading(false);
+    };
 
     return (
         <Box style={styles.container} _dark={{ bg: colors.dark[50] }} _light={{ bg: colors.dark[600] }}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
                 <GoBackHeader title={''} navigation={navigation} />
                 <Box style={styles.regionHeader}>
                     <Image source={region.map} style={styles.mapImage} resizeMode="cover" />
@@ -111,7 +114,7 @@ const RegionScreen = ({ navigation, route }) => {
                             </Text>
                         </Pressable>
                     </Box>
-                    <PlanList navigation={navigation} data={null} />
+                    <PlanList navigation={navigation} data={trips} />
                 </Box>
             </ScrollView>
             {loading && <Loading />}
