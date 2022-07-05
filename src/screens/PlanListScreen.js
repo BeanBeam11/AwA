@@ -26,7 +26,8 @@ const PlanListScreen = ({ navigation }) => {
         setLoading(true);
         const res = await getAllTrips({ page: pageNumber, limit: 6 });
         if (res.data.data.length === 0) setIsEnd(true);
-        setTrips([...trips, ...res.data.data]);
+        const result = res.data.data.filter((el) => el.trips[0].length !== 0);
+        setTrips([...trips, ...result]);
         setLoading(false);
     };
 
