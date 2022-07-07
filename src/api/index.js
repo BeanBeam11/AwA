@@ -354,7 +354,7 @@ export const getPost = async ({ token, postId }) => {
 
 export const getPostsByCategory = async ({ token, category }) => {
     try {
-        const res = await axios.get(`${baseUrl}api/v1/posts?category=${category}`, {
+        const res = await axios.get(`${baseUrl}api/v1/posts/getPostsByCategory/${category}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         return res.data;
@@ -407,6 +407,20 @@ export const deletePost = async ({ token, postId }) => {
             headers: { Authorization: `Bearer ${token}` },
         });
         return res;
+    } catch (err) {
+        console.log(err.response.data);
+    }
+};
+
+export const getSearchPostsByTitle = async ({ token, keyword, limit, skip }) => {
+    try {
+        const res = await axios.get(
+            `${baseUrl}api/v1/posts/searchPostsByTitle/${keyword}?limit=${limit}&skip=${skip}`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+        return res.data;
     } catch (err) {
         console.log(err.response.data);
     }
